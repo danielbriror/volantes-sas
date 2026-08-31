@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SAS Brasil • Gestor de Volantes & Filas</title>
+  <meta name="theme-color" content="#1A2B4C">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sas-navy: #1A2B4C;
+      --sas-navy-dark: #0F1B30;
+      --sas-orange: #F37021;
+      --sas-orange-hover: #D95C10;
+      --sas-bg: #F4F6F9;
+      --sas-card-bg: #FFFFFF;
+      --sas-text: #1E293B;
+      --sas-text-muted: #64748B;
+      --sas-border: #E2E8F0;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--sas-bg);
+      color: var(--sas-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 80px;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--sas-navy-dark) 0%, var(--sas-navy) 100%);
+      color: #fff;
+      padding: 14px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(15,27,48,0.25);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      background-color: var(--sas-orange);
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(243,112,33,0.4);
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: #94A3B8;
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 17px;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.92);
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* Specialty Selector Pill Bar */
+    .specialty-nav {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .specialty-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .spec-pill {
+      background: rgba(255,255,255,0.1);
+      border: 1.5px solid transparent;
+      color: #CBD5E1;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .spec-pill .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .spec-pill.active {
+      background: #FFFFFF;
+      color: var(--sas-navy);
+      border-color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    /* Top Stats Quick Bar */
+    .stats-bar {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--sas-border);
+      padding: 10px 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--sas-navy);
+    }
+
+    .stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--sas-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 16px;
+    }
+
+    /* Specialty Section */
+    .specialty-section {
+      background: var(--sas-card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--sas-border);
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .spec-header {
+      padding: 12px 16px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top-left-radius: var(--radius-md);
+      border-top-right-radius: var(--radius-md);
+    }
+
+    .spec-header-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .spec-header-badge {
+      background: rgba(255,255,255,0.25);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+
+    /* Specialty Sub-columns (Tenda, Porta, Consultório) */
+    .queues-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 14px;
+    }
+
+    @media (min-width: 768px) {
+      .queues-grid {
+        grid-template-columns: 1.2fr 1fr 1fr;
+      }
+    }
+
+    .queue-col {
+      background: #F8FAFC;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--sas-border);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .queue-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--sas-navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--sas-border);
+      padding-bottom: 6px;
+    }
+
+    .queue-count {
+      font-size: 11px;
+      background: var(--sas-border);
+      color: var(--sas-text);
+      padding: 2px 7px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    .patient-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 50px;
+    }
+
+    /* Patient Cards */
+    .patient-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--sas-border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .patient-card.status-free {
+      border-left: 5px solid #10B981;
+    }
+
+    .patient-card.status-door {
+      border-left: 5px solid #F59E0B;
+      background: #FFFDF8;
+    }
+
+    .patient-card.status-in_room {
+      border-left: 5px solid #3B82F6;
+      background: #F4F8FF;
+    }
+
+    .patient-card.status-busy-elsewhere {
+      border-left: 5px solid #EF4444;
+      background: #FFF7F7;
+      opacity: 0.85;
+    }
+
+    .patient-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .patient-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--sas-navy);
+      line-height: 1.25;
+    }
+
+    .patient-id {
+      font-size: 11px;
+      color: var(--sas-text-muted);
+      font-weight: 600;
+      background: #F1F5F9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    /* Pulseiras & Tags */
+    .wristband-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .wristband-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .wristband-tag.done {
+      background: #94A3B8 !important;
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    /* Status Warnings */
+    .status-alert {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-alert.busy {
+      background: #FEE2E2;
+      color: #991B1B;
+      border: 1px solid #FCA5A5;
+    }
+
+    .status-alert.free {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-primary {
+      background: var(--sas-orange);
+      color: #fff;
+      box-shadow: 0 2px 4px rgba(243,112,33,0.3);
+    }
+
+    .btn-primary:disabled {
+      background: #CBD5E1;
+      color: #64748B;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-door {
+      background: #F59E0B;
+      color: #fff;
+    }
+
+    .btn-success {
+      background: #10B981;
+      color: #fff;
+    }
+
+    .btn-undo {
+      background: #E2E8F0;
+      color: #475569;
+      flex: 0 0 auto;
+      padding: 8px 10px;
+    }
+
+    /* Modal Sheet / Popups */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15,27,48,0.7);
+      backdrop-filter: blur(3px);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.25s ease;
+    }
+
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-sheet {
+      background: #fff;
+      width: 100%;
+      max-width: 600px;
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
+      padding: 20px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.active .modal-sheet {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--sas-border);
+      padding-bottom: 10px;
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--sas-navy);
+    }
+
+    .close-btn {
+      background: #F1F5F9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748B;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--sas-navy);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--sas-border);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--sas-orange);
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .checkbox-pill {
+      border: 1.5px solid var(--sas-border);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .checkbox-pill.selected {
+      border-color: var(--sas-orange);
+      background: #FFF7ED;
+      color: var(--sas-orange-hover);
+    }
+
+    /* Floating Search Bar Bottom */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #FFFFFF;
+      border-top: 1px solid var(--sas-border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.06);
+      z-index: 90;
+    }
+
+    .search-input-wrapper {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #F1F5F9;
+      border: 1px solid var(--sas-border);
+      border-radius: 30px;
+      padding: 10px 16px 10px 38px;
+      font-size: 13px;
+      font-weight: 500;
+      outline: none;
+    }
+
+    .search-input:focus {
+      background: #fff;
+      border-color: var(--sas-orange);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94A3B8;
+      font-size: 14px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 20px 10px;
+      color: var(--sas-text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="header-top">
+      <div class="brand">
+        <span class="brand-badge">SAS</span>
+        <div>
+          <div class="brand-title">Gestão de Volantes</div>
+          <div class="brand-sub">Sincronização de Filas • Alpha</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="openAddModal()" title="Adicionar Paciente">➕</button>
+        <button class="icon-btn" onclick="openSettingsModal()" title="Configurações & Planilha">⚙️</button>
+      </div>
+    </div>
+
+    <!-- Specialty Quick Filter -->
+    <div class="specialty-nav" id="specialtyFilterBar">
+      <!-- Populated by JS -->
+    </div>
+  </header>
+
+  <!-- Real-time Stats -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-num" id="statTotal">0</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statWaiting" style="color: #10B981;">0</span>
+      <span class="stat-label">Na Tenda</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statDoor" style="color: #F59E0B;">0</span>
+      <span class="stat-label">Na Porta</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statInRoom" style="color: #3B82F6;">0</span>
+      <span class="stat-label">Em Consulta</span>
+    </div>
+  </div>
+
+  <!-- Main Queues Content -->
+  <main id="queuesContainer">
+    <!-- Populated by JS -->
+  </main>
+
+  <!-- Bottom Search Bar -->
+  <div class="bottom-bar">
+    <div class="search-input-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="globalSearchInput" placeholder="Buscar paciente por nome ou pulseira..." oninput="handleSearch(this.value)">
+    </div>
+    <button class="btn btn-primary" style="flex:0 0 auto; border-radius: 30px; padding: 10px 16px;" onclick="loadDemoData()">
+      🔄 Demo
+    </button>
+  </div>
+
+  <!-- Search Results Modal -->
+  <div class="modal-overlay" id="searchModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">Resultado da Busca</div>
+        <button class="close-btn" onclick="closeModal('searchModal')">✕</button>
+      </div>
+      <div id="searchResultsList" style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Patient Modal -->
+  <div class="modal-overlay" id="addPatientModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">Novo Paciente na Triagem</div>
+        <button class="close-btn" onclick="closeModal('addPatientModal')">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nome Completo do Paciente</label>
+        <input type="text" class="form-input" id="newPatientName" placeholder="Ex: Maria José da Silva">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Número da Pulseira / ID</label>
+        <input type="text" class="form-input" id="newPatientId" placeholder="Ex: SAS-104">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Especialidades (Pulseiras Recebidas):</label>
+        <div class="checkbox-grid" id="specCheckboxGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 14px; margin-top: 10px;" onclick="saveNewPatient()">
+        Cadastrar e Entrar nas Filas
+      </button>
+    </div>
+  </div>
+
+  <!-- Settings & Google Sheets Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">Configurações & Planilha Google</div>
+        <button class="close-btn" onclick="closeModal('settingsModal')">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">URL da Planilha do Google (CSV ou WebApp)</label>
+        <input type="text" class="form-input" id="sheetUrlInput" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv">
+        <div style="font-size: 11px; color: var(--sas-text-muted); margin-top: 4px;">
+          Na versão Alfa, o sistema simula os dados localmente. Você pode conectar a planilha real a qualquer momento.
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px; margin-top: 15px;">
+        <button class="btn btn-primary" onclick="loadDemoData(); closeModal('settingsModal');">Recarregar Dados Demo</button>
+        <button class="btn btn-undo" onclick="clearAllData(); closeModal('settingsModal');">Limpar Tudo</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- 1. DEFINIÇÃO DAS ESPECIALIDADES & CORES DAS PULSEIRAS ---
+    const SPECIALTIES = [
+      { id: 'oftalmo', name: 'Oftalmologia (Ver Magia)', color: '#2563EB', bg: '#EFF6FF', icon: '👁️' },
+      { id: 'odonto', name: 'Odontologia', color: '#059669', bg: '#ECFDF5', icon: '🦷' },
+      { id: 'dermato', name: 'Dermatologia', color: '#D97706', bg: '#FFFBEB', icon: '🧴' },
+      { id: 'gineco', name: 'Saúde da Mulher (Colo Útero)', color: '#DB2777', bg: '#FDF2F8', icon: '🌸' },
+      { id: 'pediatria', name: 'Pediatria / Neuroped', color: '#7C3AED', bg: '#F5F3FF', icon: '🧸' },
+      { id: 'clinica', name: 'Clínica Geral', color: '#DC2626', bg: '#FEF2F2', icon: '🩺' }
+    ];
+
+    // --- 2. ESTADO DO APP ---
+    let patients = JSON.parse(localStorage.getItem('sas_volantes_patients')) || [];
+    let selectedSpecialtyFilter = 'all'; // 'all' or specialty id
+
+    // --- 3. DADOS DE DEMONSTRAÇÃO (ALFA) ---
+    const DEMO_PATIENTS = [
+      {
+        id: 'SAS-101',
+        name: 'Maria Francisca dos Santos',
+        specialties: ['oftalmo', 'odonto'],
+        // status por especialidade: 'waiting' (tenda), 'door' (na porta), 'in_room' (atendimento), 'done' (concluído)
+        statusBySpec: { oftalmo: 'door', odonto: 'waiting' },
+        currentLocation: { spec: 'oftalmo', stage: 'door' }, // 'door' ou 'in_room'
+        registeredAt: new Date(Date.now() - 40 * 60000).toISOString()
+      },
+      {
+        id: 'SAS-102',
+        name: 'Antônio Carlos Silva',
+        specialties: ['dermato', 'oftalmo'],
+        statusBySpec: { dermato: 'in_room', oftalmo: 'waiting' },
+        currentLocation: { spec: 'dermato', stage: 'in_room' },
+        registeredAt: new Date(Date.now() - 35 * 60000).toISOString()
+      },
+      {
+        id: 'SAS-103',
+        name: 'João Pedro de Oliveira (Criança)',
+        specialties: ['pediatria', 'oftalmo', 'odonto'],
+        statusBySpec: { pediatria: 'waiting', oftalmo: 'waiting', odonto: 'waiting' },
+        currentLocation: null,
+        registeredAt: new Date(Date.now() - 25 * 60000).toISOString()
+      },
+      {
+        id: 'SAS-104',
+        name: 'Raimunda Nonata Lima',
+        specialties: ['gineco', 'dermato'],
+        statusBySpec: { gineco: 'waiting', dermato: 'waiting' },
+        currentLocation: null,
+        registeredAt: new Date(Date.now() - 20 * 60000).toISOString()
+      },
+      {
+        id: 'SAS-105',
+        name: 'Sebastião Gomes Pereira',
+        specialties: ['oftalmo', 'clinica'],
+        statusBySpec: { oftalmo: 'waiting', clinica: 'waiting' },
+        currentLocation: null,
+        registeredAt: new Date(Date.now() - 15 * 60000).toISOString()
+      },
+      {
+        id: 'SAS-106',
+        name: 'Ana Lúcia Barbosa',
+        specialties: ['odonto', 'gineco'],
+        statusBySpec: { odonto: 'in_room', gineco: 'waiting' },
+        currentLocation: { spec: 'odonto', stage: 'in_room' },
+        registeredAt: new Date(Date.now() - 10 * 60000).toISOString()
+      }
+    ];
+
+    function saveState() {
+      localStorage.setItem('sas_volantes_patients', JSON.stringify(patients));
+      render();
+    }
+
+    function loadDemoData() {
+      patients = JSON.parse(JSON.stringify(DEMO_PATIENTS));
+      saveState();
+      vibrate();
+    }
+
+    function clearAllData() {
+      patients = [];
+      saveState();
+    }
+
+    function vibrate() {
+      if (navigator.vibrate) {
+        navigator.vibrate(30);
+      }
+    }
+
+    // --- 4. RENDERIZAÇÃO ---
+    function render() {
+      renderSpecialtyFilters();
+      renderQueues();
+      renderStats();
+    }
+
+    function renderSpecialtyFilters() {
+      const container = document.getElementById('specialtyFilterBar');
+      let html = `
+        <button class="spec-pill ${selectedSpecialtyFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">
+          🌐 Visão Geral (Todas)
+        </button>
+      `;
+
+      SPECIALTIES.forEach(spec => {
+        const count = patients.filter(p => p.specialties.includes(spec.id) && p.statusBySpec[spec.id] !== 'done').length;
+        html += `
+          <button class="spec-pill ${selectedSpecialtyFilter === spec.id ? 'active' : ''}" onclick="setFilter('${spec.id}')">
+            <span class="dot" style="background: ${spec.color};"></span>
+            ${spec.name} (${count})
+          </button>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function setFilter(specId) {
+      selectedSpecialtyFilter = specId;
+      render();
+      vibrate();
+    }
+
+    function renderQueues() {
+      const container = document.getElementById('queuesContainer');
+      const specsToRender = selectedSpecialtyFilter === 'all' 
+        ? SPECIALTIES 
+        : SPECIALTIES.filter(s => s.id === selectedSpecialtyFilter);
+
+      let html = '';
+
+      specsToRender.forEach(spec => {
+        const specPatients = patients.filter(p => p.specialties.includes(spec.id));
+        const waitingList = specPatients.filter(p => p.statusBySpec[spec.id] === 'waiting');
+        const doorList = specPatients.filter(p => p.statusBySpec[spec.id] === 'door');
+        const inRoomList = specPatients.filter(p => p.statusBySpec[spec.id] === 'in_room');
+
+        html += `
+          <div class="specialty-section">
+            <div class="spec-header" style="background: ${spec.color};">
+              <div class="spec-header-title">
+                <span>${spec.icon}</span>
+                <span>${spec.name}</span>
+              </div>
+              <div class="spec-header-badge">
+                ${waitingList.length + doorList.length + inRoomList.length} Ativos
+              </div>
+            </div>
+
+            <div class="queues-grid">
+              <!-- Coluna 1: Tenda / Espera -->
+              <div class="queue-col">
+                <div class="queue-title">
+                  <span>1. Aguardando na Tenda</span>
+                  <span class="queue-count">${waitingList.length}</span>
+                </div>
+                <div class="patient-list">
+                  ${waitingList.length === 0 ? '<div class="empty-state">Nenhum paciente aguardando</div>' : ''}
+                  ${waitingList.map(p => renderPatientCard(p, spec, 'waiting')).join('')}
+                </div>
+              </div>
+
+              <!-- Coluna 2: Na Porta do Consultório -->
+              <div class="queue-col" style="background: #FFFDF8;">
+                <div class="queue-title" style="color: #B45309;">
+                  <span>2. Na Porta (Buffer 2-3)</span>
+                  <span class="queue-count" style="background: #FEF3C7; color: #B45309;">${doorList.length}</span>
+                </div>
+                <div class="patient-list">
+                  ${doorList.length === 0 ? '<div class="empty-state">Porta vazia (chame 2 a 3)</div>' : ''}
+                  ${doorList.map(p => renderPatientCard(p, spec, 'door')).join('')}
+                </div>
+              </div>
+
+              <!-- Coluna 3: Em Atendimento -->
+              <div class="queue-col" style="background: #F4F8FF;">
+                <div class="queue-title" style="color: #1D4ED8;">
+                  <span>3. Em Consulta com Médico</span>
+                  <span class="queue-count" style="background: #DBEAFE; color: #1D4ED8;">${inRoomList.length}</span>
+                </div>
+                <div class="patient-list">
+                  ${inRoomList.length === 0 ? '<div class="empty-state">Consultório livre</div>' : ''}
+                  ${inRoomList.map(p => renderPatientCard(p, spec, 'in_room')).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderPatientCard(patient, currentSpec, currentStage) {
+      // Checa se o paciente está ocupado em outra especialidade
+      const isBusyElsewhere = patient.currentLocation && patient.currentLocation.spec !== currentSpec.id;
+      const busySpecObj = isBusyElsewhere ? SPECIALTIES.find(s => s.id === patient.currentLocation.spec) : null;
+      const busyStageLabel = isBusyElsewhere ? (patient.currentLocation.stage === 'door' ? 'Na Porta' : 'Em Consulta') : '';
+
+      let cardClass = 'status-free';
+      if (currentStage === 'door') cardClass = 'status-door';
+      if (currentStage === 'in_room') cardClass = 'status-in_room';
+      if (isBusyElsewhere) cardClass = 'status-busy-elsewhere';
+
+      return `
+        <div class="patient-card ${cardClass}">
+          <div class="patient-top">
+            <div>
+              <div class="patient-name">${patient.name}</div>
+              <div class="wristband-tags" style="margin-top: 4px;">
+                ${patient.specialties.map(sId => {
+                  const spec = SPECIALTIES.find(s => s.id === sId);
+                  const isDone = patient.statusBySpec[sId] === 'done';
+                  return `<span class="wristband-tag ${isDone ? 'done' : ''}" style="background: ${spec.color};">${spec.name.split(' ')[0]}</span>`;
+                }).join('')}
+              </div>
+            </div>
+            <span class="patient-id">${patient.id}</span>
+          </div>
+
+          ${isBusyElsewhere ? `
+            <div class="status-alert busy">
+              <span>⛔</span>
+              <span>Ocupado em <b>${busySpecObj ? busySpecObj.name.split(' ')[0] : ''}</b> (${busyStageLabel})</span>
+            </div>
+          ` : ''}
+
+          <!-- Ações do Volante -->
+          <div class="card-actions">
+            ${currentStage === 'waiting' ? `
+              <button class="btn btn-primary" ${isBusyElsewhere ? 'disabled title="Paciente em atendimento em outra especialidade"' : ''} onclick="moveToDoor('${patient.id}', '${currentSpec.id}')">
+                🚶‍♂️ Chamar p/ Porta
+              </button>
+            ` : ''}
+
+            ${currentStage === 'door' ? `
+              <button class="btn btn-door" onclick="enterRoom('${patient.id}', '${currentSpec.id}')">
+                🚪 Entrou na Consulta
+              </button>
+              <button class="btn btn-undo" title="Devolver para Tenda" onclick="returnToWaiting('${patient.id}', '${currentSpec.id}')">
+                ↩️
+              </button>
+            ` : ''}
+
+            ${currentStage === 'in_room' ? `
+              <button class="btn btn-success" onclick="finishConsultation('${patient.id}', '${currentSpec.id}')">
+                ✅ Concluir Atendimento
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStats() {
+      document.getElementById('statTotal').innerText = patients.length;
+      
+      let waitingCount = 0;
+      let doorCount = 0;
+      let inRoomCount = 0;
+
+      patients.forEach(p => {
+        if (p.currentLocation) {
+          if (p.currentLocation.stage === 'door') doorCount++;
+          if (p.currentLocation.stage === 'in_room') inRoomCount++;
+        } else {
+          waitingCount++;
+        }
+      });
+
+      document.getElementById('statWaiting').innerText = waitingCount;
+      document.getElementById('statDoor').innerText = doorCount;
+      document.getElementById('statInRoom').innerText = inRoomCount;
+    }
+
+    // --- 5. TRANSIÇÕES DE ESTADO DO PACIENTE ---
+    function moveToDoor(patientId, specId) {
+      const p = patients.find(x => x.id === patientId);
+      if (!p) return;
+
+      p.statusBySpec[specId] = 'door';
+      p.currentLocation = { spec: specId, stage: 'door' };
+      saveState();
+      vibrate();
+    }
+
+    function returnToWaiting(patientId, specId) {
+      const p = patients.find(x => x.id === patientId);
+      if (!p) return;
+
+      p.statusBySpec[specId] = 'waiting';
+      p.currentLocation = null;
+      saveState();
+      vibrate();
+    }
+
+    function enterRoom(patientId, specId) {
+      const p = patients.find(x => x.id === patientId);
+      if (!p) return;
+
+      p.statusBySpec[specId] = 'in_room';
+      p.currentLocation = { spec: specId, stage: 'in_room' };
+      saveState();
+      vibrate();
+    }
+
+    function finishConsultation(patientId, specId) {
+      const p = patients.find(x => x.id === patientId);
+      if (!p) return;
+
+      p.statusBySpec[specId] = 'done';
+      p.currentLocation = null; // Libera o paciente para as outras especialidades!
+
+      // Verifica se o paciente concluiu todas as suas especialidades
+      const allDone = p.specialties.every(s => p.statusBySpec[s] === 'done');
+      if (allDone) {
+        p.isComplete = true;
+      }
+
+      saveState();
+      vibrate();
+    }
+
+    // --- 6. BUSCA GLOBAL DE PACIENTES ---
+    function handleSearch(query) {
+      if (!query || query.trim().length === 0) {
+        closeModal('searchModal');
+        return;
+      }
+
+      const q = query.toLowerCase().trim();
+      const results = patients.filter(p => 
+        p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q)
+      );
+
+      const listEl = document.getElementById('searchResultsList');
+      if (results.length === 0) {
+        listEl.innerHTML = '<div class="empty-state">Nenhum paciente encontrado com esse termo.</div>';
+      } else {
+        listEl.innerHTML = results.map(p => {
+          let locText = '🟢 Disponível na Tenda de Espera';
+          if (p.currentLocation) {
+            const sObj = SPECIALTIES.find(s => s.id === p.currentLocation.spec);
+            const stageText = p.currentLocation.stage === 'door' ? 'Na Porta do Consultório' : 'Dentro do Consultório em Atendimento';
+            locText = `🔴 <b>${sObj.name}</b> (${stageText})`;
+          } else if (p.isComplete) {
+            locText = '🏁 <b>Circuito Completo (Alta)</b>';
+          }
+
+          return `
+            <div class="patient-card">
+              <div class="patient-top">
+                <div>
+                  <div class="patient-name">${p.name}</div>
+                  <div style="font-size: 12px; color: var(--sas-text-muted); margin-top: 2px;">Localização Atual: ${locText}</div>
+                </div>
+                <span class="patient-id">${p.id}</span>
+              </div>
+              <div class="wristband-tags" style="margin-top: 6px;">
+                ${p.specialties.map(sId => {
+                  const spec = SPECIALTIES.find(s => s.id === sId);
+                  const st = p.statusBySpec[sId];
+                  let badgeLabel = 'Aguardando';
+                  if (st === 'door') badgeLabel = 'Na Porta';
+                  if (st === 'in_room') badgeLabel = 'Em Consulta';
+                  if (st === 'done') badgeLabel = 'Concluído';
+
+                  return `<span class="wristband-tag ${st === 'done' ? 'done' : ''}" style="background: ${spec.color};">${spec.name.split(' ')[0]}: ${badgeLabel}</span>`;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      openModal('searchModal');
+    }
+
+    // --- 7. MODAIS & CADASTRO ---
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function openAddModal() {
+      const grid = document.getElementById('specCheckboxGrid');
+      grid.innerHTML = SPECIALTIES.map(spec => `
+        <label class="checkbox-pill" id="pill_${spec.id}" onclick="toggleSpecSelection('${spec.id}')">
+          <input type="checkbox" value="${spec.id}" id="check_${spec.id}" style="display:none;">
+          <span style="color:${spec.color}; font-weight:800;">●</span>
+          <span>${spec.name.split(' ')[0]}</span>
+        </label>
+      `).join('');
+
+      document.getElementById('newPatientName').value = '';
+      document.getElementById('newPatientId').value = 'SAS-' + Math.floor(100 + Math.random() * 900);
+      openModal('addPatientModal');
+    }
+
+    function toggleSpecSelection(specId) {
+      const check = document.getElementById('check_' + specId);
+      const pill = document.getElementById('pill_' + specId);
+      check.checked = !check.checked;
+      pill.classList.toggle('selected', check.checked);
+      vibrate();
+    }
+
+    function saveNewPatient() {
+      const name = document.getElementById('newPatientName').value.trim();
+      const id = document.getElementById('newPatientId').value.trim();
+      
+      const selectedSpecs = [];
+      SPECIALTIES.forEach(s => {
+        const check = document.getElementById('check_' + s.id);
+        if (check && check.checked) selectedSpecs.push(s.id);
+      });
+
+      if (!name) {
+        alert('Por favor, digite o nome do paciente.');
+        return;
+      }
+      if (selectedSpecs.length === 0) {
+        alert('Selecione pelo menos uma especialidade (pulseira).');
+        return;
+      }
+
+      const statusBySpec = {};
+      selectedSpecs.forEach(s => statusBySpec[s] = 'waiting');
+
+      const newPatient = {
+        id: id || ('SAS-' + Math.floor(100 + Math.random() * 900)),
+        name: name,
+        specialties: selectedSpecs,
+        statusBySpec: statusBySpec,
+        currentLocation: null,
+        registeredAt: new Date().toISOString()
+      };
+
+      patients.unshift(newPatient);
+      saveState();
+      closeModal('addPatientModal');
+      vibrate();
+    }
+
+    function openSettingsModal() {
+      openModal('settingsModal');
+    }
+
+    // Inicialização
+    if (patients.length === 0) {
+      loadDemoData();
+    } else {
+      render();
+    }
+  </script>
+</body>
+</html>
