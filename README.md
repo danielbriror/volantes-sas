@@ -17,10 +17,16 @@ quem está em consulta, especialidade por especialidade.
 
 - Lista todas as especialidades (Oftalmologia, Odontologia, Dermatologia,
   Saúde da Mulher, Pediatria/Neuroped e Clínica Geral por padrão — editáveis),
-  cada uma com sua fila dividida em 3 etapas:
+  cada uma com quatro estados visíveis:
   1. **Aguardando na Tenda**
   2. **Na Porta** (buffer de 2–3 pacientes chamados)
   3. **Em Consulta com o Médico**
+  4. **Finalizados** — histórico somente para consulta de quem já concluiu
+     aquela especialidade; não possui botões de movimentação.
+- A Visão Geral também inclui **Circuitos Finalizados**, reunindo pacientes que
+  concluíram todas as especialidades previstas, com pulseira/ID, horário de
+  conclusão e tempo total. O contador superior **Circuito Completo** usa essa
+  mesma regra; esses pacientes não entram mais no número de **Na Tenda**.
 - Cada card de paciente mostra nome, pulseira/ID, especialidades paralelas,
   tempo na etapa atual e tempo total de espera.
 - Um botão por etapa move o paciente pela fila (Chamar para Porta → Entrou na
