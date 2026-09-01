@@ -685,12 +685,6 @@
       border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
-    .status-alert.warning {
-      background: rgba(245, 158, 11, 0.15);
-      color: #D97706;
-      border: 1px solid rgba(245, 158, 11, 0.35);
-    }
-
     .card-actions {
       display: flex;
       gap: 5px;
@@ -1868,10 +1862,6 @@
         const waitingList = specPatients.filter(p => p.statusBySpec[spec.id] === 'waiting');
         const doorList = specPatients.filter(p => p.statusBySpec[spec.id] === 'door');
         const inRoomList = specPatients.filter(p => p.statusBySpec[spec.id] === 'in_room');
-        const hasLongWait = waitingList.some(p => {
-          const st = p.stages && p.stages[spec.id];
-          return st && (Date.now() - (st.waitingStart || p.registeredAt) > 30 * 60000);
-        });
 
         const isExpanded = !!expandedSpecialties[spec.id];
 
@@ -1887,7 +1877,6 @@
               </div>
               <div class="specialty-row-info">
                 <div class="specialty-row-counts">
-                  ${hasLongWait ? '<span class="count-badge" style="background: rgba(239,68,68,0.2); color: #EF4444;" title="Paciente aguardando há mais de 30 min na tenda">⚠️ 1+ Espera Longa</span>' : ''}
                   <span class="count-badge tenda" title="Na Tenda">⏱️ ${waitingList.length}</span>
                   <span class="count-badge porta" title="Na Porta">🚪 ${doorList.length}</span>
                   <span class="count-badge sala" title="Em Consulta">🩺 ${inRoomList.length}</span>
@@ -1955,10 +1944,6 @@
       const stageTimerText = getCurrentStageTimeText(patient, currentSpec.id, currentStage);
       const totalTimerText = getTotalTimeText(patient);
 
-      // Warning se tempo de espera na tenda > 30min
-      const st = patient.stages && patient.stages[currentSpec.id];
-      const isLongWait = currentStage === 'waiting' && st && (Date.now() - (st.waitingStart || patient.registeredAt) > 30 * 60000);
-
       return `
         <div class="patient-card ${cardClass}">
           <div class="patient-top">
@@ -1980,13 +1965,6 @@
             <span class="timer-stage stage-${currentStage}">${stageTimerText}</span>
             <span class="timer-total">${totalTimerText}</span>
           </div>
-
-          ${isLongWait ? `
-            <div class="status-alert warning">
-              <span>⚠️</span>
-              <span>Aguardando há mais de 30 min na tenda</span>
-            </div>
-          ` : ''}
 
           ${isBusyElsewhere ? `
             <div class="status-alert busy" style="border-left: 4px solid ${busySpecObj ? busySpecObj.color : '#EF4444'};">
