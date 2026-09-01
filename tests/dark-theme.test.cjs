@@ -53,13 +53,15 @@ function buildDemoPatientsForTest() {
   return sandbox.result;
 }
 
-test('dados demo simulam 60 pacientes com 9 conflitos concorrentes dispersos', () => {
+test('dados demo preservam 60 pacientes ativos com 9 conflitos concorrentes dispersos', () => {
   const patients = buildDemoPatientsForTest();
-  const busyPatients = patients.filter(patient => patient.currentLocation);
+  const activePatients = patients.filter(patient => !patient.isComplete);
+  const busyPatients = activePatients.filter(patient => patient.currentLocation);
 
-  assert.equal(patients.length, 60);
+  assert.equal(patients.length, 72);
+  assert.equal(activePatients.length, 60);
   assert.equal(busyPatients.length, 9);
-  assert.equal(new Set(patients.map(patient => patient.id)).size, 60);
+  assert.equal(new Set(patients.map(patient => patient.id)).size, 72);
   assert.deepEqual(Array.from(busyPatients, patient => patient.id), [
     'SAS-102', 'SAS-109', 'SAS-115', 'SAS-124', 'SAS-131',
     'SAS-138', 'SAS-144', 'SAS-149', 'SAS-160'
@@ -72,8 +74,8 @@ test('dados demo simulam 60 pacientes com 9 conflitos concorrentes dispersos', (
   }
 });
 
-test('dados demo reduzem a proporção conforme cresce o número de especialidades', () => {
-  const patients = buildDemoPatientsForTest();
+test('os 60 pacientes ativos mantêm proporção decrescente por número de especialidades', () => {
+  const patients = buildDemoPatientsForTest().filter(patient => !patient.isComplete);
   const distribution = { 1: 0, 2: 0, 3: 0, 4: 0 };
 
   for (const patient of patients) {
@@ -85,6 +87,28 @@ test('dados demo reduzem a proporção conforme cresce o número de especialidad
   assert.ok(distribution[1] > distribution[2]);
   assert.ok(distribution[2] > distribution[3]);
   assert.ok(distribution[3] > distribution[4]);
+});
+
+test('os 12 pacientes históricos já chegam com circuitos e tempos concluídos', () => {
+  const referenceTime = 1700000000000;
+  const completedPatients = buildDemoPatientsForTest().filter(patient => patient.isComplete);
+  const distribution = { 1: 0, 2: 0, 3: 0, 4: 0 };
+
+  assert.equal(completedPatients.length, 12);
+  assert.deepEqual(Array.from(completedPatients, patient => patient.id), [
+    'SAS-161', 'SAS-162', 'SAS-163', 'SAS-164', 'SAS-165', 'SAS-166',
+    'SAS-167', 'SAS-168', 'SAS-169', 'SAS-170', 'SAS-171', 'SAS-172'
+  ]);
+
+  for (const patient of completedPatients) {
+    distribution[patient.specialties.length] += 1;
+    assert.equal(patient.currentLocation, null);
+    assert.ok(patient.completedAt < referenceTime);
+    assert.ok(patient.specialties.every(specId => patient.statusBySpec[specId] === 'done'));
+    assert.ok(patient.specialties.every(specId => patient.stages[specId].roomEnd < referenceTime));
+  }
+
+  assert.deepEqual(distribution, { 1: 6, 2: 3, 3: 2, 4: 1 });
 });
 
 function getPostConsultationPlanForTest(patient, allPatients, specialties) {

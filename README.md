@@ -63,7 +63,10 @@ Controle simples de tempo por paciente para o atendimento de Oftalmologia
 
 ## Dados de demonstração
 
-O app contém **60 pacientes inteiramente fictícios** (`SAS-101` a `SAS-160`). A composição diminui conforme cresce o número de especialidades: 30 pacientes têm 1, 18 têm 2, 9 têm 3 e 3 têm 4 especialidades. Exatamente 9 pacientes (15%) iniciam o mockup já ocupados em uma fila enquanto aguardam outra; esses conflitos são distribuídos por toda a base, não concentrados no início.
+O app contém **72 pacientes inteiramente fictícios** (`SAS-101` a `SAS-172`) para simular uma expedição já em andamento:
+
+- **60 pacientes ativos** (`SAS-101` a `SAS-160`): 30 têm 1 especialidade, 18 têm 2, 9 têm 3 e 3 têm 4. Exatamente 9 (15% dos ativos) iniciam o mockup já ocupados em uma fila enquanto aguardam outra; esses conflitos são distribuídos por toda a base.
+- **12 circuitos já concluídos** (`SAS-161` a `SAS-172`): 6 têm 1 especialidade, 3 têm 2, 2 têm 3 e 1 tem 4. Eles chegam com os tempos de cada etapa e o horário de conclusão registrados, preenchendo os históricos por especialidade e o painel **Circuitos Finalizados**.
 
 Use **Recarregar Dados Demo** em Configurações para reiniciar esse cenário e
 seus cronômetros. Não use esses dados como registro clínico.

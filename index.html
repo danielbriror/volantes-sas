@@ -1510,9 +1510,10 @@
     // Estado de cards expandidos na visão geral
     let expandedSpecialties = JSON.parse(localStorage.getItem('sas_expanded_specs')) || {};
 
-    // Dados inteiramente fictícios para ensaiar volume operacional no celular.
-    // 60 pacientes: 30 com 1 especialidade, 18 com 2, 9 com 3 e 3 com 4.
+    // Dados inteiramente fictícios para ensaiar uma operação já em andamento.
+    // 60 pacientes ativos: 30 com 1 especialidade, 18 com 2, 9 com 3 e 3 com 4.
     // Exatos 9/60 (15%) estão na porta ou em consulta, espalhados pela base.
+    // Mais 12 circuitos concluídos preservam um histórico visível no início do teste.
     const DEMO_PATIENT_NAMES = [
       'Maria Francisca dos Santos', 'Antônio Carlos Silva', 'João Pedro de Oliveira', 'Raimunda Nonata Lima',
       'Sebastião Gomes Pereira', 'Ana Lúcia Barbosa', 'José Roberto Almeida', 'Francisca das Chagas Costa',
@@ -1531,13 +1532,20 @@
       'Marcelo Pereira Alves', 'Juliana Moreira Lima', 'Caio Henrique Souza', 'Vanessa da Silva Ramos'
     ];
 
+    const DEMO_COMPLETED_PATIENT_NAMES = [
+      'Helena Maria de Souza', 'João Batista Ferreira', 'Célia Regina Alves', 'Manoel Pereira Costa',
+      'Irene Barbosa Lima', 'Francisco Antônio Rocha', 'Madalena Silva Santos', 'Otávio Nunes Barros',
+      'Neide Cristina Lopes', 'Alberto Gomes de Freitas', 'Doralice Martins Ribeiro', 'Sérgio Luiz Andrade'
+    ];
+    const DEMO_COMPLETED_SPECIALTY_COUNTS = [1, 2, 1, 3, 1, 2, 1, 1, 4, 1, 2, 3];
+
     const DEMO_SPECIALTY_IDS = ['oftalmo', 'odonto', 'dermato', 'gineco', 'pediatria', 'clinica'];
     const DEMO_SPECIALTY_COUNT_PATTERN = [1, 2, 1, 3, 1, 2, 1, 1, 4, 1, 2, 1, 3, 1, 2, 1, 1, 2, 3, 2];
     const DEMO_BUSY_PATIENT_INDEXES = [1, 8, 14, 23, 30, 37, 43, 48, 59];
     const DEMO_SPECIALTY_OFFSETS = [0, 2, 4, 1];
 
     function buildDemoPatients(referenceTime = Date.now()) {
-      return DEMO_PATIENT_NAMES.map((name, index) => {
+      const activePatients = DEMO_PATIENT_NAMES.map((name, index) => {
         const primarySpecIndex = index % DEMO_SPECIALTY_IDS.length;
         const specialtyCount = DEMO_SPECIALTY_COUNT_PATTERN[index % DEMO_SPECIALTY_COUNT_PATTERN.length];
         const specialties = DEMO_SPECIALTY_OFFSETS
@@ -1571,6 +1579,39 @@
           stages
         };
       });
+
+      const completedPatients = DEMO_COMPLETED_PATIENT_NAMES.map((name, index) => {
+        const specialtyCount = DEMO_COMPLETED_SPECIALTY_COUNTS[index];
+        const primarySpecIndex = (index + 3) % DEMO_SPECIALTY_IDS.length;
+        const specialties = DEMO_SPECIALTY_OFFSETS
+          .slice(0, specialtyCount)
+          .map(offset => DEMO_SPECIALTY_IDS[(primarySpecIndex + offset) % DEMO_SPECIALTY_IDS.length]);
+        const completedAt = referenceTime - (24 + index * 11) * 60000;
+        const registeredAt = completedAt - ((specialtyCount - 1) * 30 + 25) * 60000;
+        const stages = Object.fromEntries(specialties.map((specId, specIndex) => {
+          const waitingStart = registeredAt + specIndex * 30 * 60000;
+          return [specId, {
+            waitingStart,
+            doorStart: waitingStart + 10 * 60000,
+            roomStart: waitingStart + 15 * 60000,
+            roomEnd: waitingStart + 25 * 60000
+          }];
+        }));
+
+        return {
+          id: `SAS-${String(161 + index).padStart(3, '0')}`,
+          name,
+          specialties,
+          statusBySpec: Object.fromEntries(specialties.map(specId => [specId, 'done'])),
+          currentLocation: null,
+          registeredAt,
+          stages,
+          isComplete: true,
+          completedAt
+        };
+      });
+
+      return [...activePatients, ...completedPatients];
     }
 
     function saveState() {
