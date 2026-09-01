@@ -38,10 +38,7 @@ Controle simples de tempo por paciente para o atendimento de Oftalmologia
 
 ## Dados de demonstração
 
-O app contém **60 pacientes inteiramente fictícios** (`SAS-101` a `SAS-160`),
-com 20 pacientes por especialidade. Exatamente 9 pacientes (15%) iniciam o
-mockup já ocupados em uma fila enquanto aguardam outra, para testar conflitos
-de agenda em volume maior.
+O app contém **60 pacientes inteiramente fictícios** (`SAS-101` a `SAS-160`). A composição diminui conforme cresce o número de especialidades: 30 pacientes têm 1, 18 têm 2, 9 têm 3 e 3 têm 4 especialidades. Exatamente 9 pacientes (15%) iniciam o mockup já ocupados em uma fila enquanto aguardam outra; esses conflitos são distribuídos por toda a base, não concentrados no início.
 
 Use **Recarregar Dados Demo** em Configurações para reiniciar esse cenário e
 seus cronômetros. Não use esses dados como registro clínico.
