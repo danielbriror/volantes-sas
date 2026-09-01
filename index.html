@@ -1123,7 +1123,7 @@
       <div class="header-actions">
         <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Tema">🌓</button>
         <button class="icon-btn" id="headerColorsBtn" onclick="openColorsModal()" title="Cores das Pulseiras">🎨</button>
-        <button class="icon-btn" id="headerAddBtn" onclick="openAddModal()" title="Adicionar Paciente">➕</button>
+        
         <button class="icon-btn" onclick="openSettingsModal()" title="Configurações & Planilha">⚙️</button>
       </div>
     </div>
@@ -1373,7 +1373,7 @@
       const timerStats = document.getElementById('timerStatsBar');
       const volantesBottom = document.getElementById('volantesBottomBar');
       const headerColorsBtn = document.getElementById('headerColorsBtn');
-      const headerAddBtn = document.getElementById('headerAddBtn');
+      
 
       if (tab === 'volantes') {
         btnVolantes.classList.add('active');
@@ -1385,7 +1385,7 @@
         timerStats.style.display = 'none';
         volantesBottom.style.display = 'flex';
         headerColorsBtn.style.display = 'flex';
-        headerAddBtn.style.display = 'flex';
+        
         render();
       } else {
         btnVolantes.classList.remove('active');
@@ -1397,7 +1397,7 @@
         timerStats.style.display = 'grid';
         volantesBottom.style.display = 'none';
         headerColorsBtn.style.display = 'none';
-        headerAddBtn.style.display = 'none';
+        
         renderTimerList();
       }
       vibrate();
