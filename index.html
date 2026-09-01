@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SAS Brasil • Gestor de Volantes & Filas</title>
+  <title>SAS Brasil • Hub de Volantes & Ver Magia</title>
   <meta name="theme-color" content="#1A2B4C">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -17,7 +17,7 @@
       --sas-orange: #F37021;
       --sas-orange-hover: #D95C10;
       
-      /* Light Theme (Padrão) */
+      /* Light Theme */
       --bg-app: #F8FAFC;
       --bg-card: #FFFFFF;
       --bg-card-sub: #F8FAFC;
@@ -46,9 +46,17 @@
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
       --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
       --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+
+      /* Timer States Colors */
+      --color-green-bg: #065F46;
+      --color-green-border: #10B981;
+      --color-yellow-bg: #854D0E;
+      --color-yellow-border: #F59E0B;
+      --color-red-bg: #991B1B;
+      --color-red-border: #EF4444;
     }
 
-    /* Dark Theme Automático pelo Sistema */
+    /* Dark Theme Automático */
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
         --bg-app: #0A0F1D;
@@ -75,7 +83,7 @@
       }
     }
 
-    /* Dark Theme Manual Forçado */
+    /* Dark Theme Manual */
     :root[data-theme="dark"] {
       --bg-app: #0A0F1D;
       --bg-card: #131E34;
@@ -100,7 +108,7 @@
       --timer-bar-bg: #17243E;
     }
 
-    /* Light Theme Manual Forçado */
+    /* Light Theme Manual */
     :root[data-theme="light"] {
       --bg-app: #F8FAFC;
       --bg-card: #FFFFFF;
@@ -143,11 +151,11 @@
       transition: background-color 0.25s ease, color 0.25s ease;
     }
 
-    /* Header */
+    /* Top Global Header */
     header {
       background: var(--bg-header);
       color: #fff;
-      padding: 14px 16px;
+      padding: 12px 16px 0 16px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -218,13 +226,45 @@
       background: rgba(255,255,255,0.25);
     }
 
-    /* Specialty Selector Pill Bar */
+    /* Main App Switcher Tabs (Volantes vs Temporizador) */
+    .app-nav-tabs {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .app-tab-btn {
+      flex: 1;
+      padding: 10px 12px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: #94A3B8;
+      font-weight: 700;
+      font-size: 13.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+    }
+
+    .app-tab-btn.active {
+      color: #FFFFFF;
+      border-bottom-color: var(--sas-orange);
+      background: rgba(255,255,255,0.06);
+      border-top-left-radius: var(--radius-sm);
+      border-top-right-radius: var(--radius-sm);
+    }
+
+    /* Specialty Selector Pill Bar (Inside Tab Volantes) */
     .specialty-nav {
-      margin-top: 12px;
+      padding: 10px 0;
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding-bottom: 6px;
       scrollbar-width: none;
     }
 
@@ -296,13 +336,21 @@
       letter-spacing: 0.3px;
     }
 
-    /* Main Container */
+    /* Main App Views */
     main {
       flex: 1;
       max-width: 1200px;
       margin: 0 auto;
       width: 100%;
       padding: 16px;
+    }
+
+    .app-view {
+      display: none;
+    }
+
+    .app-view.active {
+      display: block;
     }
 
     /* Specialty Section */
@@ -344,7 +392,7 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.15);
     }
 
-    /* Specialty Sub-columns (Tenda, Porta, Consultório) */
+    /* Specialty Sub-columns */
     .queues-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -587,7 +635,124 @@
       padding: 10px 12px;
     }
 
-    /* Modal Sheet / Popups */
+    /* ===================================================
+       TAB 2: TEMPORIZADOR VER MAGIA (ESTILOS ESPECÍFICOS)
+       =================================================== */
+    .timer-app-container {
+      max-width: 650px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-add-timer {
+      display: flex;
+      gap: 8px;
+      background: var(--bg-card);
+      padding: 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .timer-person-item {
+      width: 100%;
+      display: flex;
+      position: relative;
+      background-color: var(--bg-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 12px;
+    }
+
+    .timer-main-btn {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 16px 50px 16px 16px;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      color: #ffffff;
+      min-height: 90px;
+    }
+
+    .timer-main-btn:active {
+      transform: scale(0.99);
+    }
+
+    .timer-state-green {
+      background-color: var(--color-green-bg);
+      border-left: 8px solid var(--color-green-border);
+    }
+
+    .timer-state-yellow {
+      background-color: var(--color-yellow-bg);
+      border-left: 8px solid var(--color-yellow-border);
+    }
+
+    .timer-state-red {
+      background-color: var(--color-red-bg);
+      border-left: 8px solid var(--color-red-border);
+    }
+
+    .timer-person-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+
+    .timer-status-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+      opacity: 0.95;
+      font-weight: 600;
+    }
+
+    .timer-badge-clock {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 1.1rem;
+      font-weight: 800;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 3px 9px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .timer-btn-delete {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .timer-btn-delete:active {
+      transform: translateY(-50%) scale(0.9);
+      background: rgba(239, 68, 68, 0.8);
+    }
+
+    /* Modal Sheet */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -872,26 +1037,36 @@
       <div class="brand">
         <span class="brand-badge">SAS</span>
         <div>
-          <div class="brand-title">Gestão de Volantes</div>
-          <div class="brand-sub">Sincronização de Filas • Alpha</div>
+          <div class="brand-title">SAS Brasil • Suite Clínica</div>
+          <div class="brand-sub">Volantes, Filas & Ver Magia</div>
         </div>
       </div>
       <div class="header-actions">
         <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Tema">🌓</button>
-        <button class="icon-btn" onclick="openColorsModal()" title="Cores das Pulseiras">🎨</button>
-        <button class="icon-btn" onclick="openAddModal()" title="Adicionar Paciente">➕</button>
+        <button class="icon-btn" id="headerColorsBtn" onclick="openColorsModal()" title="Cores das Pulseiras">🎨</button>
+        <button class="icon-btn" id="headerAddBtn" onclick="openAddModal()" title="Adicionar Paciente">➕</button>
         <button class="icon-btn" onclick="openSettingsModal()" title="Configurações & Planilha">⚙️</button>
       </div>
     </div>
 
-    <!-- Specialty Quick Filter (Nomes Completos) -->
+    <!-- Main Navigation Tabs -->
+    <div class="app-nav-tabs">
+      <button class="app-tab-btn active" id="tabBtnVolantes" onclick="switchAppTab('volantes')">
+        🏃‍♂️ Volantes & Filas
+      </button>
+      <button class="app-tab-btn" id="tabBtnTimer" onclick="switchAppTab('timer')">
+        ⏱️ Temporizador Ver Magia
+      </button>
+    </div>
+
+    <!-- Specialty Quick Filter (Visível apenas na aba Volantes) -->
     <div class="specialty-nav" id="specialtyFilterBar">
       <!-- Populated by JS -->
     </div>
   </header>
 
-  <!-- Real-time Stats -->
-  <div class="stats-bar">
+  <!-- Real-time Stats (Aba Volantes) -->
+  <div class="stats-bar" id="volantesStatsBar">
     <div class="stat-item">
       <span class="stat-num" id="statTotal">0</span>
       <span class="stat-label">Total</span>
@@ -910,13 +1085,63 @@
     </div>
   </div>
 
-  <!-- Main Queues Content -->
-  <main id="queuesContainer">
-    <!-- Populated by JS -->
+  <!-- Real-time Stats (Aba Temporizador) -->
+  <div class="stats-bar" id="timerStatsBar" style="display: none;">
+    <div class="stat-item">
+      <span class="stat-num" id="statTimerTotal">0</span>
+      <span class="stat-label">Pacientes</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statTimer5min" style="color: #10B981;">0</span>
+      <span class="stat-label">Timer 5 min</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statTimer30min" style="color: #F59E0B;">0</span>
+      <span class="stat-label">Timer 30 min</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statTimerDone" style="color: #EF4444;">0</span>
+      <span class="stat-label">Concluídos</span>
+    </div>
+  </div>
+
+  <!-- Main Views Container -->
+  <main>
+    <!-- ABA 1: VOLANTES & GESTÃO DE FILAS -->
+    <div class="app-view active" id="viewVolantes">
+      <div id="queuesContainer">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ABA 2: TEMPORIZADOR VER MAGIA (DILATAÇÃO / PROCEDIMENTOS) -->
+    <div class="app-view" id="viewTimer">
+      <div class="timer-app-container">
+        <form class="form-add-timer" onsubmit="handleTimerAddPerson(event)">
+          <input type="text" class="form-input" id="timerInputName" placeholder="Nome do paciente / criança...">
+          <button type="submit" class="btn btn-primary" style="flex:0 0 auto; padding:10px 18px;">
+            Adicionar
+          </button>
+        </form>
+
+        <div class="timer-list-container" id="timerList">
+          <!-- Populated by JS -->
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+          <button class="btn btn-undo" style="flex:0 0 auto;" onclick="resetAllTimerPersons()">
+            Limpar Todos os Timers
+          </button>
+          <div style="font-size:11.5px; color:var(--text-muted);">
+            1º Toque: 5m (Colírio) • 2º Toque: 30m (Espera) • 3º Toque: Reset
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
-  <!-- Bottom Search Bar -->
-  <div class="bottom-bar">
+  <!-- Bottom Search Bar (Volantes) -->
+  <div class="bottom-bar" id="volantesBottomBar">
     <div class="search-input-wrapper">
       <span class="search-icon">🔍</span>
       <input type="text" class="search-input" id="globalSearchInput" placeholder="Buscar paciente por nome ou pulseira..." oninput="handleSearch(this.value)">
@@ -959,7 +1184,7 @@
     </div>
   </div>
 
-  <!-- Add Patient Modal -->
+  <!-- Add Patient Modal (Volantes) -->
   <div class="modal-overlay" id="addPatientModal">
     <div class="modal-sheet">
       <div class="modal-header">
@@ -1022,7 +1247,9 @@
   </div>
 
   <script>
-    // --- 1. TEMA CLARO / ESCURO ---
+    // ==========================================
+    // 1. GESTÃO DE TEMA (CLARO / ESCURO)
+    // ==========================================
     let currentTheme = localStorage.getItem('sas_volantes_theme') || 'auto';
 
     function applyTheme() {
@@ -1036,7 +1263,7 @@
         root.setAttribute('data-theme', 'light');
         if (btn) btn.innerText = '☀️';
       } else {
-        root.removeAttribute('data-theme'); // Deixa o @media (prefers-color-scheme) cuidar
+        root.removeAttribute('data-theme');
         if (btn) btn.innerText = '🌓';
       }
     }
@@ -1061,7 +1288,57 @@
       vibrate();
     }
 
-    // --- 2. DEFINIÇÃO PADRÃO DAS ESPECIALIDADES & CORES ---
+    // ==========================================
+    // 2. NAVEGAÇÃO ENTRE ABAS DO APP
+    // ==========================================
+    let activeAppTab = localStorage.getItem('sas_active_app_tab') || 'volantes';
+
+    function switchAppTab(tab) {
+      activeAppTab = tab;
+      localStorage.setItem('sas_active_app_tab', tab);
+
+      const btnVolantes = document.getElementById('tabBtnVolantes');
+      const btnTimer = document.getElementById('tabBtnTimer');
+      const viewVolantes = document.getElementById('viewVolantes');
+      const viewTimer = document.getElementById('viewTimer');
+      const specFilterBar = document.getElementById('specialtyFilterBar');
+      const volantesStats = document.getElementById('volantesStatsBar');
+      const timerStats = document.getElementById('timerStatsBar');
+      const volantesBottom = document.getElementById('volantesBottomBar');
+      const headerColorsBtn = document.getElementById('headerColorsBtn');
+      const headerAddBtn = document.getElementById('headerAddBtn');
+
+      if (tab === 'volantes') {
+        btnVolantes.classList.add('active');
+        btnTimer.classList.remove('active');
+        viewVolantes.classList.add('active');
+        viewTimer.classList.remove('active');
+        specFilterBar.style.display = 'flex';
+        volantesStats.style.display = 'grid';
+        timerStats.style.display = 'none';
+        volantesBottom.style.display = 'flex';
+        headerColorsBtn.style.display = 'flex';
+        headerAddBtn.style.display = 'flex';
+        render();
+      } else {
+        btnVolantes.classList.remove('active');
+        btnTimer.classList.add('active');
+        viewVolantes.classList.remove('active');
+        viewTimer.classList.add('active');
+        specFilterBar.style.display = 'none';
+        volantesStats.style.display = 'none';
+        timerStats.style.display = 'grid';
+        volantesBottom.style.display = 'none';
+        headerColorsBtn.style.display = 'none';
+        headerAddBtn.style.display = 'none';
+        renderTimerList();
+      }
+      vibrate();
+    }
+
+    // ==========================================
+    // 3. ABA 1: VOLANTES & FILAS (LÓGICA)
+    // ==========================================
     const DEFAULT_SPECIALTIES = [
       { id: 'oftalmo', name: 'Oftalmologia (Ver Magia)', color: '#2563EB', icon: '👁️' },
       { id: 'odonto', name: 'Odontologia', color: '#059669', icon: '🦷' },
@@ -1072,25 +1349,13 @@
     ];
 
     const COLOR_PRESETS = [
-      '#2563EB', // Azul
-      '#059669', // Verde
-      '#D97706', // Âmbar / Laranja
-      '#DB2777', // Rosa
-      '#7C3AED', // Roxo
-      '#DC2626', // Vermelho
-      '#0891B2', // Ciano
-      '#475569', // Cinza
-      '#EAB308', // Amarelo
-      '#000000'  // Preto
+      '#2563EB', '#059669', '#D97706', '#DB2777', '#7C3AED', '#DC2626', '#0891B2', '#475569', '#EAB308', '#000000'
     ];
 
     let SPECIALTIES = JSON.parse(localStorage.getItem('sas_volantes_specialties')) || DEFAULT_SPECIALTIES;
-
-    // --- 3. ESTADO DO APP ---
     let patients = JSON.parse(localStorage.getItem('sas_volantes_patients')) || [];
-    let selectedSpecialtyFilter = 'all'; // 'all' or specialty id
+    let selectedSpecialtyFilter = 'all';
 
-    // --- 4. DADOS DE DEMONSTRAÇÃO (ALFA COM CRONÔMETROS REAIS) ---
     const now = Date.now();
     const DEMO_PATIENTS = [
       {
@@ -1195,16 +1460,13 @@
       }
     }
 
-    // --- 5. FORMATADORES DE TEMPO E CRONÔMETRO ---
     function formatDuration(ms) {
       if (!ms || ms < 0) return '0 min';
       const totalSeconds = Math.floor(ms / 1000);
       const minutes = Math.floor(totalSeconds / 60);
       const hours = Math.floor(minutes / 60);
-      
       if (hours > 0) {
-        const remainingMin = minutes % 60;
-        return `${hours}h ${remainingMin}m`;
+        return `${hours}h ${minutes % 60}m`;
       }
       return `${minutes} min`;
     }
@@ -1216,18 +1478,15 @@
 
       if (stage === 'waiting') {
         const start = st.waitingStart || patient.registeredAt;
-        const dur = curTime - start;
-        return `⏱️ ${formatDuration(dur)} na tenda`;
+        return `⏱️ ${formatDuration(curTime - start)} na tenda`;
       }
       if (stage === 'door') {
         const start = st.doorStart || curTime;
-        const dur = curTime - start;
-        return `🚪 ${formatDuration(dur)} na porta`;
+        return `🚪 ${formatDuration(curTime - start)} na porta`;
       }
       if (stage === 'in_room') {
         const start = st.roomStart || curTime;
-        const dur = curTime - start;
-        return `🩺 ${formatDuration(dur)} em consulta`;
+        return `🩺 ${formatDuration(curTime - start)} em consulta`;
       }
       return '';
     }
@@ -1238,7 +1497,6 @@
       return `⏳ Total: ${formatDuration(end - start)}`;
     }
 
-    // --- 6. GESTÃO DE CORES DAS ESPECIALIDADES ---
     function openColorsModal() {
       renderColorsCustomizer();
       openModal('colorsModal');
@@ -1281,7 +1539,6 @@
       vibrate();
     }
 
-    // --- 7. RENDERIZAÇÃO ---
     function render() {
       renderSpecialtyFilters();
       renderQueues();
@@ -1475,7 +1732,6 @@
       document.getElementById('statInRoom').innerText = inRoomCount;
     }
 
-    // --- 8. TRANSIÇÕES DE ESTADO COM MARCAÇÃO DE TEMPO ---
     function moveToDoor(patientId, specId) {
       const p = patients.find(x => x.id === patientId);
       if (!p) return;
@@ -1533,7 +1789,6 @@
       p.statusBySpec[specId] = 'done';
       p.currentLocation = null;
 
-      // Para as demais especialidades pendentes, reseta o início do tempo de espera na tenda a partir de agora
       p.specialties.forEach(s => {
         if (p.statusBySpec[s] === 'waiting') {
           if (!p.stages[s]) p.stages[s] = {};
@@ -1551,7 +1806,6 @@
       vibrate();
     }
 
-    // --- 9. BUSCA GLOBAL DE PACIENTES COM HISTÓRICO DE TEMPOS ---
     function handleSearch(query) {
       if (!query || query.trim().length === 0) {
         closeModal('searchModal');
@@ -1602,12 +1856,10 @@
                 }).join('')}
               </div>
 
-              <!-- Detalhamento de Tempos por Especialidade -->
               <div class="timeline-box">
                 <div style="font-size:11px; font-weight:800; color:var(--text-main); margin-bottom:4px;">⏱️ Tempos por Especialidade:</div>
                 ${p.specialties.map(sId => {
                   const spec = SPECIALTIES.find(s => s.id === sId) || { name: sId };
-                  const st = p.stages && p.stages[sId] ? p.stages[sId] : {};
                   const curSt = p.statusBySpec[sId];
                   return `
                     <div class="timeline-row">
@@ -1629,7 +1881,6 @@
       openModal('searchModal');
     }
 
-    // --- 10. MODAIS & CADASTRO ---
     function openModal(id) {
       document.getElementById(id).classList.add('active');
     }
@@ -1708,18 +1959,270 @@
       openModal('settingsModal');
     }
 
-    // Inicialização do Tema e App
+    // ==========================================
+    // 4. ABA 2: TEMPORIZADOR VER MAGIA (LÓGICA)
+    // ==========================================
+    const TIMER_5_MIN = 5 * 60;
+    const TIMER_30_MIN = 30 * 60;
+
+    let timerPersons = JSON.parse(localStorage.getItem('sas_timer_persons_v2')) || [];
+    let autoCounter = parseInt(localStorage.getItem('sas_timer_auto_counter_v2') || '1', 10);
+
+    function saveTimerState() {
+      localStorage.setItem('sas_timer_persons_v2', JSON.stringify(timerPersons));
+      localStorage.setItem('sas_timer_auto_counter_v2', autoCounter.toString());
+      renderTimerList();
+    }
+
+    function handleTimerAddPerson(e) {
+      e.preventDefault();
+      const input = document.getElementById('timerInputName');
+      let name = input.value.trim();
+
+      if (!name) {
+        name = `Pessoa ${autoCounter}`;
+        autoCounter++;
+      }
+
+      const newPerson = {
+        id: 'tp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        name: name,
+        state: 'green',
+        targetTime: null,
+        totalDuration: null,
+        isFinished: false
+      };
+
+      timerPersons.unshift(newPerson);
+      input.value = '';
+      saveTimerState();
+      vibrate();
+    }
+
+    function deleteTimerPerson(id, e) {
+      if (e) e.stopPropagation();
+      timerPersons = timerPersons.filter(p => p.id !== id);
+      saveTimerState();
+      vibrate();
+    }
+
+    function resetAllTimerPersons() {
+      if (confirm('Deseja zerar e limpar a lista de timers do Ver Magia?')) {
+        timerPersons = [];
+        autoCounter = 1;
+        saveTimerState();
+        vibrate();
+      }
+    }
+
+    function handleTimerButtonClick(id) {
+      const person = timerPersons.find(p => p.id === id);
+      if (!person) return;
+
+      const cur = Date.now();
+
+      if (person.state === 'green') {
+        if (!person.targetTime) {
+          // Inicia contagem de 5 min (continua verde)
+          person.targetTime = cur + (TIMER_5_MIN * 1000);
+          person.totalDuration = TIMER_5_MIN;
+          person.isFinished = false;
+        } else if (person.isFinished) {
+          // Já finalizou 5 min -> vai para amarelo (inicia 30 min)
+          person.state = 'yellow';
+          person.targetTime = cur + (TIMER_30_MIN * 1000);
+          person.totalDuration = TIMER_30_MIN;
+          person.isFinished = false;
+        }
+      } else if (person.state === 'yellow') {
+        if (!person.targetTime) {
+          // Inicia contagem de 30 min
+          person.targetTime = cur + (TIMER_30_MIN * 1000);
+          person.totalDuration = TIMER_30_MIN;
+          person.isFinished = false;
+        } else if (person.isFinished) {
+          // Já finalizou 30 min -> vai para vermelho
+          person.state = 'red';
+          person.targetTime = null;
+          person.totalDuration = null;
+          person.isFinished = true;
+        }
+      } else if (person.state === 'red') {
+        // Reinicia o ciclo para verde
+        person.state = 'green';
+        person.targetTime = null;
+        person.totalDuration = null;
+        person.isFinished = false;
+      }
+
+      saveTimerState();
+      vibrate();
+    }
+
+    function renderTimerList() {
+      const listEl = document.getElementById('timerList');
+      if (!listEl) return;
+
+      if (timerPersons.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty-state" style="background:var(--bg-card); border-radius:var(--radius-md); border:1px solid var(--border-light);">
+            Nenhum paciente no temporizador do Ver Magia.<br>Adicione acima para iniciar o controle de colírio/dilatação.
+          </div>
+        `;
+        renderTimerStats();
+        return;
+      }
+
+      const cur = Date.now();
+      let html = '';
+
+      timerPersons.forEach(person => {
+        let remaining = 0;
+        let running = false;
+
+        if (person.targetTime) {
+          remaining = Math.max(0, Math.ceil((person.targetTime - cur) / 1000));
+          if (remaining > 0) {
+            running = true;
+          } else {
+            if (!person.isFinished) {
+              person.isFinished = true;
+              playTimerBeep();
+              vibrate();
+            }
+          }
+        }
+
+        let cssClass = 'timer-state-green';
+        let statusText = 'Verde • Toque p/ iniciar 5 min';
+        let badgeText = '05:00';
+
+        if (person.state === 'green') {
+          if (running) {
+            cssClass = 'timer-state-green';
+            statusText = 'Verde (5 min rodando...)';
+            badgeText = formatSeconds(remaining);
+          } else if (person.isFinished) {
+            cssClass = 'timer-state-yellow';
+            statusText = 'Amarelo • 5m concluídos! Toque p/ 30m';
+            badgeText = '00:00';
+          } else {
+            cssClass = 'timer-state-green';
+            statusText = 'Verde • Toque p/ iniciar 5 min';
+            badgeText = '05:00';
+          }
+        } else if (person.state === 'yellow') {
+          if (running) {
+            cssClass = 'timer-state-yellow';
+            statusText = 'Amarelo (30 min rodando...)';
+            badgeText = formatSeconds(remaining);
+          } else if (person.isFinished) {
+            cssClass = 'timer-state-red';
+            statusText = 'Vermelho • 30m concluídos! Toque p/ reiniciar';
+            badgeText = '00:00';
+          } else {
+            cssClass = 'timer-state-yellow';
+            statusText = 'Amarelo • Toque p/ iniciar 30 min';
+            badgeText = '30:00';
+          }
+        } else if (person.state === 'red') {
+          cssClass = 'timer-state-red';
+          statusText = 'Vermelho • Ciclo finalizado (Toque p/ reiniciar)';
+          badgeText = 'Concluído';
+        }
+
+        html += `
+          <div class="timer-person-item">
+            <button class="timer-main-btn ${cssClass}" onclick="handleTimerButtonClick('${person.id}')">
+              <div class="timer-person-name">${person.name}</div>
+              <div class="timer-status-info">
+                <span class="timer-badge-clock">${badgeText}</span>
+                <span>${statusText}</span>
+              </div>
+            </button>
+            <button class="timer-btn-delete" title="Excluir" onclick="deleteTimerPerson('${person.id}', event)">
+              ✕
+            </button>
+          </div>
+        `;
+      });
+
+      listEl.innerHTML = html;
+      renderTimerStats();
+    }
+
+    function renderTimerStats() {
+      document.getElementById('statTimerTotal').innerText = timerPersons.length;
+      let count5 = 0;
+      let count30 = 0;
+      let countDone = 0;
+
+      timerPersons.forEach(p => {
+        if (p.state === 'green') count5++;
+        else if (p.state === 'yellow') count30++;
+        else if (p.state === 'red') countDone++;
+      });
+
+      document.getElementById('statTimer5min').innerText = count5;
+      document.getElementById('statTimer30min').innerText = count30;
+      document.getElementById('statTimerDone').innerText = countDone;
+    }
+
+    function formatSeconds(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function playTimerBeep() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.4);
+
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.4);
+      } catch (err) {
+        console.log('Audio alert bypass:', err);
+      }
+    }
+
+    // ==========================================
+    // 5. INICIALIZAÇÃO GERAL E LOOP CONTÍNUO
+    // ==========================================
     applyTheme();
 
     if (patients.length === 0) {
       loadDemoData();
-    } else {
-      render();
     }
 
-    // Atualização Contínua dos Cronômetros (a cada 15s)
+    // Inicializa na aba ativa
+    switchAppTab(activeAppTab);
+
+    // Loop rápido (a cada 1 segundo) para atualização suave dos cronômetros do Ver Magia
     setInterval(() => {
-      render();
+      if (activeAppTab === 'timer') {
+        renderTimerList();
+      }
+    }, 1000);
+
+    // Loop de 15 segundos para os cronômetros da aba Volantes
+    setInterval(() => {
+      if (activeAppTab === 'volantes') {
+        render();
+      }
     }, 15000);
   </script>
 </body>
