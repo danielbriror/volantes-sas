@@ -533,34 +533,31 @@
     /* Patient Cards */
     .patient-card {
       background: var(--bg-card);
-      border: 1.5px solid var(--border-light);
-      border-radius: var(--radius-sm);
-      padding: 10px 11px;
-      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 12px 13px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 10px rgba(0,0,0,0.035);
       transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 9px;
     }
 
     .patient-card:hover {
       box-shadow: var(--shadow-md);
     }
 
-    .patient-card.status-free {
-      border-left: 6px solid #10B981;
-    }
-
-    .patient-card.status-door {
-      border-left: 6px solid #F59E0B;
-    }
-
-    .patient-card.status-in_room {
-      border-left: 6px solid #3B82F6;
+    /* Cor da borda esquerda é definida inline por card (cor da especialidade
+       correspondente); aqui só a largura/estilo, iguais para todo status. */
+    .patient-card.status-free,
+    .patient-card.status-door,
+    .patient-card.status-in_room,
+    .patient-card.status-busy-elsewhere {
+      border-left-width: 4px;
+      border-left-style: solid;
     }
 
     .patient-card.status-busy-elsewhere {
-      border-left: 6px solid #EF4444;
       opacity: 0.92;
     }
 
@@ -569,6 +566,13 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 8px;
+    }
+
+    .patient-name-line {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     .patient-name {
@@ -581,13 +585,12 @@
     .patient-id {
       font-family: 'JetBrains Mono', monospace;
       font-size: 9.5px;
-      color: var(--text-main);
-      font-weight: 700;
+      color: var(--text-muted);
+      font-weight: 600;
       background: var(--badge-bg);
-      padding: 2px 5px;
+      padding: 2px 6px;
       border-radius: 5px;
       white-space: nowrap;
-      border: 1px solid var(--border-light);
       cursor: pointer;
     }
 
@@ -596,10 +599,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--timer-bar-bg);
-      border: 1px solid var(--border-light);
-      padding: 4px 7px;
-      border-radius: 6px;
+      border-top: 1px solid var(--border-light);
+      padding-top: 7px;
       font-size: 10px;
       font-weight: 700;
     }
@@ -672,23 +673,13 @@
     .status-alert {
       font-size: 10px;
       font-weight: 700;
-      padding: 4px 7px;
-      border-radius: 6px;
       display: flex;
       align-items: center;
       gap: 5px;
     }
 
     .status-alert.busy {
-      background: rgba(239, 68, 68, 0.12);
-      color: #EF4444;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    .status-alert.warning {
-      background: rgba(245, 158, 11, 0.15);
-      color: #D97706;
-      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: var(--text-muted);
     }
 
     .card-actions {
@@ -1712,6 +1703,14 @@
       }
     }
 
+    function hexToRgba(hex, alpha) {
+      const h = hex.replace('#', '');
+      const r = parseInt(h.substring(0, 2), 16);
+      const g = parseInt(h.substring(2, 4), 16);
+      const b = parseInt(h.substring(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
     function formatDuration(ms) {
       if (!ms || ms < 0) return '0 min';
       const totalSeconds = Math.floor(ms / 1000);
@@ -1868,17 +1867,13 @@
         const waitingList = specPatients.filter(p => p.statusBySpec[spec.id] === 'waiting');
         const doorList = specPatients.filter(p => p.statusBySpec[spec.id] === 'door');
         const inRoomList = specPatients.filter(p => p.statusBySpec[spec.id] === 'in_room');
-        const hasLongWait = waitingList.some(p => {
-          const st = p.stages && p.stages[spec.id];
-          return st && (Date.now() - (st.waitingStart || p.registeredAt) > 30 * 60000);
-        });
 
         const isExpanded = !!expandedSpecialties[spec.id];
 
         // Layout Minimizável (1 por linha) na Visão Geral
         html += `
           <div class="specialty-row-card ${isExpanded ? 'expanded' : ''}">
-            <div class="specialty-row-header" onclick="toggleExpandSpecialty('${spec.id}')" style="border-left: 6px solid ${spec.color};">
+            <div class="specialty-row-header" onclick="toggleExpandSpecialty('${spec.id}')" style="border-left: 4px solid ${spec.color}; background: ${hexToRgba(spec.color, 0.14)};">
               <div class="specialty-row-info">
                 <span class="specialty-row-title">
                   <span style="font-size:18px;">${spec.icon}</span>
@@ -1887,7 +1882,6 @@
               </div>
               <div class="specialty-row-info">
                 <div class="specialty-row-counts">
-                  ${hasLongWait ? '<span class="count-badge" style="background: rgba(239,68,68,0.2); color: #EF4444;" title="Paciente aguardando há mais de 30 min na tenda">⚠️ 1+ Espera Longa</span>' : ''}
                   <span class="count-badge tenda" title="Na Tenda">⏱️ ${waitingList.length}</span>
                   <span class="count-badge porta" title="Na Porta">🚪 ${doorList.length}</span>
                   <span class="count-badge sala" title="Em Consulta">🩺 ${inRoomList.length}</span>
@@ -1952,25 +1946,28 @@
       if (currentStage === 'in_room') cardClass = 'status-in_room';
       if (isBusyElsewhere) cardClass = 'status-busy-elsewhere';
 
+      // Cor de destaque do card: por padrão a da especialidade da lista atual;
+      // se ocupado em outra especialidade, usa a cor de lá em vez de vermelho genérico.
+      let borderColor = currentSpec.color;
+      if (currentStage === 'door') borderColor = '#F59E0B';
+      if (currentStage === 'in_room') borderColor = '#3B82F6';
+      if (isBusyElsewhere) borderColor = busySpecObj ? busySpecObj.color : '#EF4444';
+
       const stageTimerText = getCurrentStageTimeText(patient, currentSpec.id, currentStage);
       const totalTimerText = getTotalTimeText(patient);
 
-      // Warning se tempo de espera na tenda > 30min
-      const st = patient.stages && patient.stages[currentSpec.id];
-      const isLongWait = currentStage === 'waiting' && st && (Date.now() - (st.waitingStart || patient.registeredAt) > 30 * 60000);
-
       return `
-        <div class="patient-card ${cardClass}">
+        <div class="patient-card ${cardClass}" style="border-left-color: ${borderColor};">
           <div class="patient-top">
-            <div>
-              <div class="patient-name">${patient.name}</div>
-              <div class="wristband-tags" style="margin-top: 5px;">
+            <div class="patient-name-line">
+              <span class="patient-name">${patient.name}</span>
+              <span class="wristband-tags">
                 ${patient.specialties.map(sId => {
                   const spec = SPECIALTIES.find(s => s.id === sId) || { color: '#94A3B8', name: sId };
                   const isDone = patient.statusBySpec[sId] === 'done';
                   return `<span class="wristband-dot ${isDone ? 'done' : ''}" style="background: ${spec.color};" title="${spec.name}${isDone ? ' (Concluído)' : ''}">${isDone ? '✓' : ''}</span>`;
                 }).join('')}
-              </div>
+              </span>
             </div>
             <span class="patient-id" title="Toque para ver ficha" onclick="handleSearch('${patient.id}')">${patient.id}</span>
           </div>
@@ -1981,15 +1978,8 @@
             <span class="timer-total">${totalTimerText}</span>
           </div>
 
-          ${isLongWait ? `
-            <div class="status-alert warning">
-              <span>⚠️</span>
-              <span>Aguardando há mais de 30 min na tenda</span>
-            </div>
-          ` : ''}
-
           ${isBusyElsewhere ? `
-            <div class="status-alert busy" style="border-left: 4px solid ${busySpecObj ? busySpecObj.color : '#EF4444'};">
+            <div class="status-alert busy">
               <span>⛔</span>
               <span>Ocupado em <b style="color: ${busySpecObj ? busySpecObj.color : 'inherit'};">${busySpecObj ? busySpecObj.name : ''}</b> (${busyStageLabel})</span>
             </div>
