@@ -322,7 +322,7 @@
     .patient-card.status-busy-elsewhere {
       border-left: 5px solid #EF4444;
       background: #FFF7F7;
-      opacity: 0.85;
+      opacity: 0.9;
     }
 
     .patient-top {
@@ -377,11 +377,11 @@
     .status-alert {
       font-size: 11px;
       font-weight: 700;
-      padding: 4px 8px;
+      padding: 5px 8px;
       border-radius: 6px;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
 
     .status-alert.busy {
@@ -504,6 +504,9 @@
       font-size: 17px;
       font-weight: 800;
       color: var(--sas-navy);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .close-btn {
@@ -570,6 +573,74 @@
       border-color: var(--sas-orange);
       background: #FFF7ED;
       color: var(--sas-orange-hover);
+    }
+
+    /* Color Customizer List */
+    .color-spec-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--sas-border);
+      margin-bottom: 8px;
+      background: #F8FAFC;
+    }
+
+    .color-spec-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--sas-navy);
+    }
+
+    .color-spec-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .color-picker-input {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      cursor: pointer;
+      padding: 0;
+      background: transparent;
+    }
+
+    .color-picker-input::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    .color-picker-input::-webkit-color-swatch {
+      border: none;
+      border-radius: 50%;
+    }
+
+    .color-presets {
+      display: flex;
+      gap: 4px;
+    }
+
+    .color-preset-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1px solid rgba(0,0,0,0.15);
+      transition: transform 0.15s;
+    }
+
+    .color-preset-dot:hover {
+      transform: scale(1.2);
     }
 
     /* Floating Search Bar Bottom */
@@ -640,6 +711,7 @@
         </div>
       </div>
       <div class="header-actions">
+        <button class="icon-btn" onclick="openColorsModal()" title="Cores das Pulseiras">🎨</button>
         <button class="icon-btn" onclick="openAddModal()" title="Adicionar Paciente">➕</button>
         <button class="icon-btn" onclick="openSettingsModal()" title="Configurações & Planilha">⚙️</button>
       </div>
@@ -700,6 +772,26 @@
     </div>
   </div>
 
+  <!-- Colors & Wristbands Customization Modal -->
+  <div class="modal-overlay" id="colorsModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">🎨 Cores das Especialidades & Pulseiras</div>
+        <button class="close-btn" onclick="closeModal('colorsModal')">✕</button>
+      </div>
+      <p style="font-size: 12px; color: var(--sas-text-muted); margin-bottom: 14px;">
+        Ajuste as cores de cada especialidade conforme o estoque físico de pulseiras ou cordões disponíveis na expedição:
+      </p>
+      <div id="colorsCustomizerList">
+        <!-- Populated by JS -->
+      </div>
+      <div style="margin-top: 15px; display: flex; gap: 8px;">
+        <button class="btn btn-primary" onclick="closeModal('colorsModal')">Salvar e Voltar</button>
+        <button class="btn btn-undo" onclick="resetDefaultColors()">Restaurar Cores Padrão</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Add Patient Modal -->
   <div class="modal-overlay" id="addPatientModal">
     <div class="modal-sheet">
@@ -741,23 +833,41 @@
           Na versão Alfa, o sistema simula os dados localmente. Você pode conectar a planilha real a qualquer momento.
         </div>
       </div>
-      <div style="display: flex; gap: 8px; margin-top: 15px;">
-        <button class="btn btn-primary" onclick="loadDemoData(); closeModal('settingsModal');">Recarregar Dados Demo</button>
-        <button class="btn btn-undo" onclick="clearAllData(); closeModal('settingsModal');">Limpar Tudo</button>
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+        <button class="btn btn-primary" onclick="openColorsModal(); closeModal('settingsModal');">🎨 Alterar Cores das Pulseiras</button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-door" style="flex:1;" onclick="loadDemoData(); closeModal('settingsModal');">Recarregar Dados Demo</button>
+          <button class="btn btn-undo" style="flex:1;" onclick="clearAllData(); closeModal('settingsModal');">Limpar Tudo</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // --- 1. DEFINIÇÃO DAS ESPECIALIDADES & CORES DAS PULSEIRAS ---
-    const SPECIALTIES = [
-      { id: 'oftalmo', name: 'Oftalmologia (Ver Magia)', color: '#2563EB', bg: '#EFF6FF', icon: '👁️' },
-      { id: 'odonto', name: 'Odontologia', color: '#059669', bg: '#ECFDF5', icon: '🦷' },
-      { id: 'dermato', name: 'Dermatologia', color: '#D97706', bg: '#FFFBEB', icon: '🧴' },
-      { id: 'gineco', name: 'Saúde da Mulher (Colo Útero)', color: '#DB2777', bg: '#FDF2F8', icon: '🌸' },
-      { id: 'pediatria', name: 'Pediatria / Neuroped', color: '#7C3AED', bg: '#F5F3FF', icon: '🧸' },
-      { id: 'clinica', name: 'Clínica Geral', color: '#DC2626', bg: '#FEF2F2', icon: '🩺' }
+    // --- 1. DEFINIÇÃO PADRÃO DAS ESPECIALIDADES & CORES ---
+    const DEFAULT_SPECIALTIES = [
+      { id: 'oftalmo', name: 'Oftalmologia (Ver Magia)', color: '#2563EB', icon: '👁️' },
+      { id: 'odonto', name: 'Odontologia', color: '#059669', icon: '🦷' },
+      { id: 'dermato', name: 'Dermatologia', color: '#D97706', icon: '🧴' },
+      { id: 'gineco', name: 'Saúde da Mulher (Colo Útero)', color: '#DB2777', icon: '🌸' },
+      { id: 'pediatria', name: 'Pediatria / Neuroped', color: '#7C3AED', icon: '🧸' },
+      { id: 'clinica', name: 'Clínica Geral', color: '#DC2626', icon: '🩺' }
     ];
+
+    const COLOR_PRESETS = [
+      '#2563EB', // Azul
+      '#059669', // Verde
+      '#D97706', // Âmbar / Laranja
+      '#DB2777', // Rosa
+      '#7C3AED', // Roxo
+      '#DC2626', // Vermelho
+      '#0891B2', // Ciano
+      '#475569', // Cinza
+      '#EAB308', // Amarelo
+      '#000000'  // Preto
+    ];
+
+    let SPECIALTIES = JSON.parse(localStorage.getItem('sas_volantes_specialties')) || DEFAULT_SPECIALTIES;
 
     // --- 2. ESTADO DO APP ---
     let patients = JSON.parse(localStorage.getItem('sas_volantes_patients')) || [];
@@ -769,9 +879,8 @@
         id: 'SAS-101',
         name: 'Maria Francisca dos Santos',
         specialties: ['oftalmo', 'odonto'],
-        // status por especialidade: 'waiting' (tenda), 'door' (na porta), 'in_room' (atendimento), 'done' (concluído)
         statusBySpec: { oftalmo: 'door', odonto: 'waiting' },
-        currentLocation: { spec: 'oftalmo', stage: 'door' }, // 'door' ou 'in_room'
+        currentLocation: { spec: 'oftalmo', stage: 'door' },
         registeredAt: new Date(Date.now() - 40 * 60000).toISOString()
       },
       {
@@ -821,6 +930,11 @@
       render();
     }
 
+    function saveSpecialties() {
+      localStorage.setItem('sas_volantes_specialties', JSON.stringify(SPECIALTIES));
+      render();
+    }
+
     function loadDemoData() {
       patients = JSON.parse(JSON.stringify(DEMO_PATIENTS));
       saveState();
@@ -838,7 +952,50 @@
       }
     }
 
-    // --- 4. RENDERIZAÇÃO ---
+    // --- 4. GESTÃO DE CORES DAS ESPECIALIDADES ---
+    function openColorsModal() {
+      renderColorsCustomizer();
+      openModal('colorsModal');
+    }
+
+    function renderColorsCustomizer() {
+      const container = document.getElementById('colorsCustomizerList');
+      container.innerHTML = SPECIALTIES.map(spec => `
+        <div class="color-spec-row">
+          <div class="color-spec-info">
+            <span>${spec.icon}</span>
+            <span>${spec.name}</span>
+          </div>
+          <div class="color-spec-controls">
+            <div class="color-presets">
+              ${COLOR_PRESETS.slice(0, 5).map(cp => `
+                <div class="color-preset-dot" style="background: ${cp};" onclick="changeSpecialtyColor('${spec.id}', '${cp}')"></div>
+              `).join('')}
+            </div>
+            <input type="color" class="color-picker-input" value="${spec.color}" onchange="changeSpecialtyColor('${spec.id}', this.value)">
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function changeSpecialtyColor(specId, newColor) {
+      const spec = SPECIALTIES.find(s => s.id === specId);
+      if (spec) {
+        spec.color = newColor;
+        saveSpecialties();
+        renderColorsCustomizer();
+        vibrate();
+      }
+    }
+
+    function resetDefaultColors() {
+      SPECIALTIES = JSON.parse(JSON.stringify(DEFAULT_SPECIALTIES));
+      saveSpecialties();
+      renderColorsCustomizer();
+      vibrate();
+    }
+
+    // --- 5. RENDERIZAÇÃO ---
     function render() {
       renderSpecialtyFilters();
       renderQueues();
@@ -858,7 +1015,7 @@
         html += `
           <button class="spec-pill ${selectedSpecialtyFilter === spec.id ? 'active' : ''}" onclick="setFilter('${spec.id}')">
             <span class="dot" style="background: ${spec.color};"></span>
-            ${spec.name} (${count})
+            ${spec.name.split(' ')[0]} (${count})
           </button>
         `;
       });
@@ -960,7 +1117,7 @@
               <div class="patient-name">${patient.name}</div>
               <div class="wristband-tags" style="margin-top: 4px;">
                 ${patient.specialties.map(sId => {
-                  const spec = SPECIALTIES.find(s => s.id === sId);
+                  const spec = SPECIALTIES.find(s => s.id === sId) || { color: '#94A3B8', name: sId };
                   const isDone = patient.statusBySpec[sId] === 'done';
                   return `<span class="wristband-tag ${isDone ? 'done' : ''}" style="background: ${spec.color};">${spec.name.split(' ')[0]}</span>`;
                 }).join('')}
@@ -970,9 +1127,9 @@
           </div>
 
           ${isBusyElsewhere ? `
-            <div class="status-alert busy">
+            <div class="status-alert busy" style="border-left: 4px solid ${busySpecObj ? busySpecObj.color : '#EF4444'};">
               <span>⛔</span>
-              <span>Ocupado em <b>${busySpecObj ? busySpecObj.name.split(' ')[0] : ''}</b> (${busyStageLabel})</span>
+              <span>Ocupado em <b style="color: ${busySpecObj ? busySpecObj.color : '#000'};">${busySpecObj ? busySpecObj.name.split(' ')[0] : ''}</b> (${busyStageLabel})</span>
             </div>
           ` : ''}
 
@@ -1024,7 +1181,7 @@
       document.getElementById('statInRoom').innerText = inRoomCount;
     }
 
-    // --- 5. TRANSIÇÕES DE ESTADO DO PACIENTE ---
+    // --- 6. TRANSIÇÕES DE ESTADO DO PACIENTE ---
     function moveToDoor(patientId, specId) {
       const p = patients.find(x => x.id === patientId);
       if (!p) return;
@@ -1072,7 +1229,7 @@
       vibrate();
     }
 
-    // --- 6. BUSCA GLOBAL DE PACIENTES ---
+    // --- 7. BUSCA GLOBAL DE PACIENTES ---
     function handleSearch(query) {
       if (!query || query.trim().length === 0) {
         closeModal('searchModal');
@@ -1093,7 +1250,7 @@
           if (p.currentLocation) {
             const sObj = SPECIALTIES.find(s => s.id === p.currentLocation.spec);
             const stageText = p.currentLocation.stage === 'door' ? 'Na Porta do Consultório' : 'Dentro do Consultório em Atendimento';
-            locText = `🔴 <b>${sObj.name}</b> (${stageText})`;
+            locText = `<span style="color:${sObj ? sObj.color : '#000'}; font-weight:800;">${sObj ? sObj.name : ''}</span> (${stageText})`;
           } else if (p.isComplete) {
             locText = '🏁 <b>Circuito Completo (Alta)</b>';
           }
@@ -1109,7 +1266,7 @@
               </div>
               <div class="wristband-tags" style="margin-top: 6px;">
                 ${p.specialties.map(sId => {
-                  const spec = SPECIALTIES.find(s => s.id === sId);
+                  const spec = SPECIALTIES.find(s => s.id === sId) || { color: '#94A3B8', name: sId };
                   const st = p.statusBySpec[sId];
                   let badgeLabel = 'Aguardando';
                   if (st === 'door') badgeLabel = 'Na Porta';
@@ -1127,7 +1284,7 @@
       openModal('searchModal');
     }
 
-    // --- 7. MODAIS & CADASTRO ---
+    // --- 8. MODAIS & CADASTRO ---
     function openModal(id) {
       document.getElementById(id).classList.add('active');
     }
