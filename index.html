@@ -1151,10 +1151,7 @@
     .form-add-timer { padding: 16px; box-shadow: var(--shadow-md); border: none; }
     .timer-person-item { border: none; border-radius: 10px; box-shadow: var(--shadow-md); transition: box-shadow 0.18s ease, transform 0.18s ease; }
     .timer-person-item:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
-    .timer-main-btn { min-height: 112px; padding: 16px 54px 16px 16px; }
-
-    .operational-brief,
-    .timer-intro {
+    .timer-main-btn { min-height: 112px; padding: 16px 54px 16px 16px; }    .timer-intro {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 14px 20px;
@@ -1165,8 +1162,7 @@
       box-shadow: var(--shadow-md);
       border-radius: var(--radius-md);
     }
-    .operational-brief h1,
-    .timer-intro h1 {
+        .timer-intro h1 {
       color: var(--text-main);
       font-size: 20px;
       font-weight: 800;
@@ -1174,17 +1170,9 @@
       line-height: 1.1;
       margin: 3px 0 6px;
     }
-    .operational-brief p,
-    .timer-intro p { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; max-width: 620px; }
+        .timer-intro p { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; max-width: 620px; }
     .section-kicker { color: var(--sas-orange-hover); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
     .new-patient-cta { flex: 0 0 auto; min-height: 42px; padding: 0 15px; white-space: nowrap; }
-    .priority-list { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-    .priority-item { display: flex; gap: 9px; align-items: flex-start; background: var(--bg-card-sub); box-shadow: 0 0 0 1px var(--border-light); border-radius: 8px; padding: 10px; }
-    .priority-marker { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex: 0 0 auto; background: var(--sas-orange); }
-    .priority-marker.warning { background: #F59E0B; }
-    .priority-marker.critical { background: #EF4444; }
-    .priority-item strong { display: block; color: var(--text-main); font-size: 11.5px; line-height: 1.25; }
-    .priority-item span { color: var(--text-muted); display: block; font-size: 10.5px; line-height: 1.35; margin-top: 2px; }
 
     .specialty-overview-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
     .specialty-overview-card { appearance: none; background: var(--bg-card); border: none; border-radius: 10px; box-shadow: var(--shadow-md); color: var(--text-main); cursor: pointer; padding: 16px; text-align: left; transition: box-shadow 0.18s ease, transform 0.18s ease; }
@@ -1207,8 +1195,7 @@
       header { padding-left: 14px; padding-right: 14px; }
       main { padding: 16px 12px 24px; }
       .stats-bar, .bottom-bar { padding-left: 14px; padding-right: 14px; }
-      .queues-grid { padding: 12px; gap: 12px; }
-      .operational-brief, .timer-intro { grid-template-columns: 1fr; padding: 16px; }
+      .queues-grid { padding: 12px; gap: 12px; }    .timer-intro { grid-template-columns: 1fr; padding: 16px; }
       .new-patient-cta { width: 100%; }
       .priority-list, .specialty-overview-grid { grid-template-columns: 1fr; }
       .specialty-overview-card { padding: 14px; }
@@ -1293,17 +1280,6 @@
   <main>
     <!-- ABA 1: VOLANTES & GESTÃO DE FILAS -->
     <div class="app-view active" id="viewVolantes">
-      <section class="operational-brief" aria-labelledby="operationalBriefTitle">
-        <div class="operational-brief-copy">
-          <span class="section-kicker">Operação agora</span>
-          <h1 id="operationalBriefTitle">Prioridades da equipe</h1>
-          <p>Use a visão geral para decidir onde atuar; abra uma especialidade para operar a fila.</p>
-        </div>
-        <button class="btn btn-primary new-patient-cta" onclick="openAddModal()">
-          <span aria-hidden="true">＋</span> Novo paciente
-        </button>
-        <div class="priority-list" id="priorityList" aria-live="polite"></div>
-      </section>
       <div id="queuesContainer">
         <!-- Populated by JS -->
       </div>
@@ -1746,7 +1722,7 @@
 
     function render() {
       renderSpecialtyFilters();
-      renderOperationalBrief();
+      
       renderQueues();
       renderStats();
     }
@@ -1759,39 +1735,7 @@
         door: specPatients.filter(p => p.statusBySpec[spec.id] === 'door').length,
         inRoom: specPatients.filter(p => p.statusBySpec[spec.id] === 'in_room').length
       };
-    }
-
-    function renderOperationalBrief() {
-      const container = document.getElementById('priorityList');
-      if (!container) return;
-
-      const waitingEntries = patients.flatMap(patient => patient.specialties
-        .filter(specId => patient.statusBySpec[specId] === 'waiting')
-        .map(specId => ({ patient, specId })));
-      const lowBufferSpecs = SPECIALTIES
-        .map(spec => ({ spec, counts: getSpecialtyCounts(spec) }))
-        .filter(({ counts }) => counts.total > 0 && counts.door < 2);
-      const longestWaiting = waitingEntries
-        .map(({ patient, specId }) => ({ patient, specId, start: patient.stages?.[specId]?.waitingStart || patient.registeredAt || Date.now() }))
-        .sort((a, b) => a.start - b.start)[0];
-
-      const priorities = [
-        {
-          level: lowBufferSpecs.length ? 'warning' : '',
-          title: lowBufferSpecs.length ? `${lowBufferSpecs.length} fila(s) com buffer baixo` : 'Buffers das portas equilibrados',
-          description: lowBufferSpecs.length ? lowBufferSpecs.map(({ spec }) => spec.name).join(' • ') : 'Nenhuma fila ativa abaixo de 2 pessoas na porta.'
-        },
-        {
-          level: waitingEntries.length ? '' : '',
-          title: `${waitingEntries.length} atendimento(s) aguardando chamada`,
-          description: waitingEntries.length ? 'Abra uma especialidade para chamar o próximo paciente.' : 'Nenhum paciente aguardando na tenda agora.'
-        },
-        {
-          level: longestWaiting ? 'critical' : '',
-          title: longestWaiting ? `${longestWaiting.patient.name} aguarda há ${formatDuration(Date.now() - longestWaiting.start)}` : 'Sem espera pendente',
-          description: longestWaiting ? `Priorize na fila de ${(SPECIALTIES.find(spec => spec.id === longestWaiting.specId) || {}).name || 'especialidade'}.` : 'A operação está sem pacientes pendentes.'
-        }
-      ];
+    }      ];
 
       container.innerHTML = priorities.map(priority => `
         <div class="priority-item">

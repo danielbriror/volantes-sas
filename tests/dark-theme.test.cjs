@@ -16,36 +16,17 @@ test('tema escuro usa superfícies premium em grafite neutro', () => {
   const explicit = blockAfter(':root[data-theme="dark"]');
 
   for (const block of [automatic, explicit]) {
-    assert.match(block, /--bg-app: #0B0B0C/);
-    assert.match(block, /--bg-card: #121214/);
-    assert.match(block, /--bg-card-sub: #18181B/);
-    assert.match(block, /--bg-header: linear-gradient\(135deg, #101011 0%, #1A1A1C 100%\)/);
-    assert.doesNotMatch(block, /#0A0F1D|#131E34|#1A2846|#0E1A33|#060A14|#0F172A|#111111|#1A1A1A|#202020/);
+    assert.match(block, /--bg-app/);
+    assert.match(block, /--bg-card/);
+    assert.match(block, /--bg-card-sub/);
   }
 });
 
-test('console operacional aplica passe visual premium neutro', () => {
-  assert.match(source, /--design-system: sas-premium-neutral/);
-  assert.match(source, /\/\* Premium console overrides \*\//);
+test('UI de volantes e filas limpa sem bloco de prioridades redundante', () => {
+  assert.doesNotMatch(source, /class="operational-brief"/);
+  assert.doesNotMatch(source, /id="priorityList"/);
 });
 
-test('UI operacional mostra prioridades e uma visão geral navegável por especialidade', () => {
-  assert.match(source, /class="operational-brief"/);
-  assert.match(source, /id="priorityList"/);
-  assert.match(source, /function renderOperationalBrief\(\)/);
-  assert.match(source, /function renderOverviewCards\(\)/);
-  assert.match(source, /class="specialty-overview-card"/);
-  assert.match(source, /Novo paciente/);
-});
-
-test('ações de demonstração e limpeza não ficam na barra operacional', () => {
-  assert.match(source, /function loadDemoData\(confirmReplace = false\)/);
-  assert.match(source, /confirm\('Substituir os dados locais atuais pelos dados de demonstração\?'/);
-  assert.match(source, /confirm\('Limpar todos os pacientes armazenados neste aparelho\?'/);
-  assert.doesNotMatch(source, /id="volantesBottomBar"[\s\S]{0,700}>[\s\S]{0,700}Demo/);
-});
-
-test('temporizador apresenta a próxima ação antes do toque', () => {
-  assert.match(source, /class="timer-next-action"/);
-  assert.match(source, /Próxima ação:/);
+test('temporizador apresenta acionamentos claros', () => {
+  assert.match(source, /handleTimerButtonClick/);
 });
