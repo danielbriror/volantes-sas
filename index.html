@@ -16,18 +16,113 @@
       --sas-navy-dark: #0F1B30;
       --sas-orange: #F37021;
       --sas-orange-hover: #D95C10;
-      --sas-bg: #F4F6F9;
-      --sas-card-bg: #FFFFFF;
-      --sas-text: #0F172A;
-      --sas-text-muted: #64748B;
-      --sas-border: #CBD5E1;
-      --sas-border-light: #E2E8F0;
+      
+      /* Light Theme (Padrão) */
+      --bg-app: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --bg-card-sub: #F8FAFC;
+      --bg-header: linear-gradient(135deg, #0F1B30 0%, #1A2B4C 100%);
+      --bg-stats: #FFFFFF;
+      --bg-col-tenda: #F8FAFC;
+      --bg-col-porta: #FFFDF8;
+      --bg-col-sala: #F4F8FF;
+      --bg-modal: #FFFFFF;
+      --bg-input: #F1F5F9;
+      --bg-bottom-bar: #FFFFFF;
+      
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --text-header: #FFFFFF;
+      
+      --border-main: #CBD5E1;
+      --border-light: #E2E8F0;
+      
+      --badge-bg: #F1F5F9;
+      --timer-bar-bg: #F8FAFC;
+
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
       --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
       --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    /* Dark Theme Automático pelo Sistema */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg-app: #0A0F1D;
+        --bg-card: #131E34;
+        --bg-card-sub: #1A2846;
+        --bg-header: linear-gradient(135deg, #060A14 0%, #0F172A 100%);
+        --bg-stats: #10192C;
+        --bg-col-tenda: #0D1527;
+        --bg-col-porta: #1C1914;
+        --bg-col-sala: #0E1A33;
+        --bg-modal: #131E34;
+        --bg-input: #1A2846;
+        --bg-bottom-bar: #10192C;
+        
+        --text-main: #F8FAFC;
+        --text-muted: #94A3B8;
+        --text-header: #FFFFFF;
+        
+        --border-main: #2A3B5C;
+        --border-light: #1E2D4A;
+        
+        --badge-bg: #1A2846;
+        --timer-bar-bg: #17243E;
+      }
+    }
+
+    /* Dark Theme Manual Forçado */
+    :root[data-theme="dark"] {
+      --bg-app: #0A0F1D;
+      --bg-card: #131E34;
+      --bg-card-sub: #1A2846;
+      --bg-header: linear-gradient(135deg, #060A14 0%, #0F172A 100%);
+      --bg-stats: #10192C;
+      --bg-col-tenda: #0D1527;
+      --bg-col-porta: #1C1914;
+      --bg-col-sala: #0E1A33;
+      --bg-modal: #131E34;
+      --bg-input: #1A2846;
+      --bg-bottom-bar: #10192C;
+      
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-header: #FFFFFF;
+      
+      --border-main: #2A3B5C;
+      --border-light: #1E2D4A;
+      
+      --badge-bg: #1A2846;
+      --timer-bar-bg: #17243E;
+    }
+
+    /* Light Theme Manual Forçado */
+    :root[data-theme="light"] {
+      --bg-app: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --bg-card-sub: #F8FAFC;
+      --bg-header: linear-gradient(135deg, #0F1B30 0%, #1A2B4C 100%);
+      --bg-stats: #FFFFFF;
+      --bg-col-tenda: #F8FAFC;
+      --bg-col-porta: #FFFDF8;
+      --bg-col-sala: #F4F8FF;
+      --bg-modal: #FFFFFF;
+      --bg-input: #F1F5F9;
+      --bg-bottom-bar: #FFFFFF;
+      
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --text-header: #FFFFFF;
+      
+      --border-main: #CBD5E1;
+      --border-light: #E2E8F0;
+      
+      --badge-bg: #F1F5F9;
+      --timer-bar-bg: #F8FAFC;
     }
 
     * {
@@ -39,23 +134,24 @@
     }
 
     body {
-      background-color: var(--sas-bg);
-      color: var(--sas-text);
+      background-color: var(--bg-app);
+      color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       padding-bottom: 90px;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
 
     /* Header */
     header {
-      background: linear-gradient(135deg, var(--sas-navy-dark) 0%, var(--sas-navy) 100%);
+      background: var(--bg-header);
       color: #fff;
       padding: 14px 16px;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 4px 15px rgba(15,27,48,0.25);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
 
     .header-top {
@@ -104,7 +200,7 @@
 
     .icon-btn {
       background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.18);
       color: #fff;
       width: 38px;
       height: 38px;
@@ -113,7 +209,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 17px;
+      font-size: 16px;
       transition: all 0.2s ease;
     }
 
@@ -163,20 +259,21 @@
       background: #FFFFFF;
       color: var(--sas-navy);
       border-color: #FFFFFF;
-      font-weight: 700;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+      font-weight: 800;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
     }
 
     /* Top Stats Quick Bar */
     .stats-bar {
-      background: #FFFFFF;
-      border-bottom: 1px solid var(--sas-border-light);
+      background: var(--bg-stats);
+      border-bottom: 1px solid var(--border-light);
       padding: 10px 16px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       text-align: center;
       box-shadow: var(--shadow-sm);
+      transition: background-color 0.25s ease;
     }
 
     .stat-item {
@@ -188,13 +285,13 @@
     .stat-num {
       font-size: 18px;
       font-weight: 800;
-      color: var(--sas-navy);
+      color: var(--text-main);
     }
 
     .stat-label {
       font-size: 10px;
       font-weight: 700;
-      color: var(--sas-text-muted);
+      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
@@ -210,12 +307,13 @@
 
     /* Specialty Section */
     .specialty-section {
-      background: var(--sas-card-bg);
+      background: var(--bg-card);
       border-radius: var(--radius-md);
-      border: 1px solid var(--sas-border-light);
+      border: 1px solid var(--border-light);
       margin-bottom: 24px;
       overflow: hidden;
       box-shadow: var(--shadow-sm);
+      transition: background-color 0.25s ease, border-color 0.25s ease;
     }
 
     .spec-header {
@@ -243,7 +341,7 @@
       font-weight: 800;
       padding: 4px 12px;
       border-radius: 20px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
     }
 
     /* Specialty Sub-columns (Tenda, Porta, Consultório) */
@@ -252,7 +350,7 @@
       grid-template-columns: 1fr;
       gap: 16px;
       padding: 16px;
-      background: #FFFFFF;
+      background: var(--bg-card);
     }
 
     @media (min-width: 768px) {
@@ -262,33 +360,39 @@
     }
 
     .queue-col {
-      background: #F8FAFC;
+      background: var(--bg-card-sub);
       border-radius: var(--radius-md);
-      border: 1px solid var(--sas-border-light);
+      border: 1px solid var(--border-light);
       padding: 14px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      transition: background-color 0.25s ease;
     }
+
+    .queue-col.col-tenda { background: var(--bg-col-tenda); }
+    .queue-col.col-porta { background: var(--bg-col-porta); }
+    .queue-col.col-sala { background: var(--bg-col-sala); }
 
     .queue-title {
       font-size: 13px;
       font-weight: 800;
-      color: var(--sas-navy);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--sas-border-light);
+      border-bottom: 1px solid var(--border-light);
       padding-bottom: 8px;
     }
 
     .queue-count {
       font-size: 11px;
-      background: var(--sas-border-light);
-      color: var(--sas-navy);
+      background: var(--badge-bg);
+      color: var(--text-main);
       padding: 2px 8px;
       border-radius: 12px;
       font-weight: 800;
+      border: 1px solid var(--border-light);
     }
 
     .patient-list {
@@ -300,8 +404,8 @@
 
     /* Patient Cards */
     .patient-card {
-      background: #FFFFFF;
-      border: 1.5px solid var(--sas-border-light);
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-light);
       border-radius: var(--radius-sm);
       padding: 14px;
       box-shadow: var(--shadow-sm);
@@ -317,17 +421,14 @@
 
     .patient-card.status-door {
       border-left: 6px solid #F59E0B;
-      background: #FFFDF8;
     }
 
     .patient-card.status-in_room {
       border-left: 6px solid #3B82F6;
-      background: #F4F8FF;
     }
 
     .patient-card.status-busy-elsewhere {
       border-left: 6px solid #EF4444;
-      background: #FFF7F7;
       opacity: 0.92;
     }
 
@@ -341,19 +442,19 @@
     .patient-name {
       font-size: 14px;
       font-weight: 700;
-      color: var(--sas-navy);
+      color: var(--text-main);
       line-height: 1.3;
     }
 
     .patient-id {
       font-size: 11px;
-      color: var(--sas-navy);
+      color: var(--text-main);
       font-weight: 700;
-      background: #F1F5F9;
+      background: var(--badge-bg);
       padding: 3px 7px;
       border-radius: 6px;
       white-space: nowrap;
-      border: 1px solid var(--sas-border-light);
+      border: 1px solid var(--border-light);
     }
 
     /* Timers & Badges */
@@ -361,9 +462,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #F8FAFC;
-      border: 1px solid var(--sas-border-light);
-      padding: 5px 8px;
+      background: var(--timer-bar-bg);
+      border: 1px solid var(--border-light);
+      padding: 6px 10px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 700;
@@ -373,15 +474,15 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      color: var(--sas-navy);
+      color: var(--text-main);
     }
 
-    .timer-stage.stage-waiting { color: #059669; }
-    .timer-stage.stage-door { color: #D97706; }
-    .timer-stage.stage-in_room { color: #2563EB; }
+    .timer-stage.stage-waiting { color: #10B981; }
+    .timer-stage.stage-door { color: #F59E0B; }
+    .timer-stage.stage-in_room { color: #3B82F6; }
 
     .timer-total {
-      color: var(--sas-text-muted);
+      color: var(--text-muted);
       font-size: 10.5px;
     }
 
@@ -401,11 +502,11 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     }
 
     .wristband-tag.done {
-      background: #94A3B8 !important;
+      background: #64748B !important;
       text-decoration: line-through;
       opacity: 0.65;
     }
@@ -422,14 +523,9 @@
     }
 
     .status-alert.busy {
-      background: #FEE2E2;
-      color: #991B1B;
-      border: 1px solid #FCA5A5;
-    }
-
-    .status-alert.free {
-      background: #D1FAE5;
-      color: #065F46;
+      background: rgba(239, 68, 68, 0.12);
+      color: #EF4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
     .card-actions {
@@ -465,8 +561,8 @@
     }
 
     .btn-primary:disabled {
-      background: #CBD5E1;
-      color: #64748B;
+      background: var(--border-main);
+      color: var(--text-muted);
       cursor: not-allowed;
       box-shadow: none;
     }
@@ -484,8 +580,9 @@
     }
 
     .btn-undo {
-      background: #E2E8F0;
-      color: #334155;
+      background: var(--badge-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border-light);
       flex: 0 0 auto;
       padding: 10px 12px;
     }
@@ -497,7 +594,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15,27,48,0.7);
+      background: rgba(0,0,0,0.7);
       backdrop-filter: blur(4px);
       z-index: 1000;
       display: flex;
@@ -514,7 +611,8 @@
     }
 
     .modal-sheet {
-      background: #fff;
+      background: var(--bg-modal);
+      color: var(--text-main);
       width: 100%;
       max-width: 600px;
       border-top-left-radius: var(--radius-lg);
@@ -524,6 +622,7 @@
       overflow-y: auto;
       transform: translateY(100%);
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-top: 1px solid var(--border-light);
     }
 
     .modal-overlay.active .modal-sheet {
@@ -535,22 +634,22 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 16px;
-      border-bottom: 1px solid var(--sas-border-light);
+      border-bottom: 1px solid var(--border-light);
       padding-bottom: 12px;
     }
 
     .modal-title {
       font-size: 17px;
       font-weight: 800;
-      color: var(--sas-navy);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .close-btn {
-      background: #F1F5F9;
-      border: none;
+      background: var(--badge-bg);
+      border: 1px solid var(--border-light);
       width: 32px;
       height: 32px;
       border-radius: 50%;
@@ -560,7 +659,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #64748B;
+      color: var(--text-muted);
     }
 
     .form-group {
@@ -570,7 +669,7 @@
     .form-label {
       font-size: 12px;
       font-weight: 700;
-      color: var(--sas-navy);
+      color: var(--text-main);
       margin-bottom: 6px;
       display: block;
     }
@@ -579,7 +678,9 @@
       width: 100%;
       padding: 11px 14px;
       border-radius: var(--radius-sm);
-      border: 1.5px solid var(--sas-border);
+      border: 1.5px solid var(--border-main);
+      background: var(--bg-input);
+      color: var(--text-main);
       font-size: 14px;
       outline: none;
       transition: border-color 0.2s;
@@ -596,7 +697,7 @@
     }
 
     .checkbox-pill {
-      border: 1.5px solid var(--sas-border-light);
+      border: 1.5px solid var(--border-light);
       padding: 10px 12px;
       border-radius: var(--radius-sm);
       font-size: 12px;
@@ -606,12 +707,13 @@
       align-items: center;
       gap: 6px;
       transition: all 0.2s;
-      background: #F8FAFC;
+      background: var(--bg-card-sub);
+      color: var(--text-main);
     }
 
     .checkbox-pill.selected {
       border-color: var(--sas-orange);
-      background: #FFF7ED;
+      background: rgba(243,112,33,0.12);
       color: var(--sas-orange-hover);
     }
 
@@ -622,9 +724,9 @@
       justify-content: space-between;
       padding: 12px 14px;
       border-radius: var(--radius-sm);
-      border: 1px solid var(--sas-border-light);
+      border: 1px solid var(--border-light);
       margin-bottom: 10px;
-      background: #F8FAFC;
+      background: var(--bg-card-sub);
     }
 
     .color-spec-info {
@@ -633,7 +735,7 @@
       gap: 10px;
       font-size: 13px;
       font-weight: 700;
-      color: var(--sas-navy);
+      color: var(--text-main);
     }
 
     .color-spec-controls {
@@ -649,8 +751,8 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      border: 2px solid #FFFFFF;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      border: 2px solid var(--bg-modal);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
       cursor: pointer;
       padding: 0;
       background: transparent;
@@ -675,7 +777,7 @@
       height: 20px;
       border-radius: 50%;
       cursor: pointer;
-      border: 1px solid rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.2);
       transition: transform 0.15s;
     }
 
@@ -685,8 +787,8 @@
 
     /* Timeline Breakdown in Details */
     .timeline-box {
-      background: #F8FAFC;
-      border: 1px solid var(--sas-border-light);
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-light);
       border-radius: var(--radius-sm);
       padding: 10px 12px;
       margin-top: 8px;
@@ -697,8 +799,8 @@
       align-items: center;
       justify-content: space-between;
       font-size: 12px;
-      padding: 4px 0;
-      border-bottom: 1px dashed var(--sas-border-light);
+      padding: 5px 0;
+      border-bottom: 1px dashed var(--border-light);
     }
 
     .timeline-row:last-child {
@@ -711,14 +813,15 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: #FFFFFF;
-      border-top: 1px solid var(--sas-border-light);
+      background: var(--bg-bottom-bar);
+      border-top: 1px solid var(--border-light);
       padding: 12px 16px;
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 -4px 15px rgba(0,0,0,0.06);
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
       z-index: 90;
+      transition: background-color 0.25s ease;
     }
 
     .search-input-wrapper {
@@ -728,8 +831,9 @@
 
     .search-input {
       width: 100%;
-      background: #F1F5F9;
-      border: 1.5px solid var(--sas-border-light);
+      background: var(--bg-input);
+      color: var(--text-main);
+      border: 1.5px solid var(--border-light);
       border-radius: 30px;
       padding: 10px 16px 10px 38px;
       font-size: 13px;
@@ -738,7 +842,7 @@
     }
 
     .search-input:focus {
-      background: #fff;
+      background: var(--bg-card);
       border-color: var(--sas-orange);
     }
 
@@ -747,14 +851,14 @@
       left: 14px;
       top: 50%;
       transform: translateY(-50%);
-      color: #94A3B8;
+      color: var(--text-muted);
       font-size: 14px;
     }
 
     .empty-state {
       text-align: center;
       padding: 24px 10px;
-      color: var(--sas-text-muted);
+      color: var(--text-muted);
       font-size: 12.5px;
       font-weight: 500;
     }
@@ -773,6 +877,7 @@
         </div>
       </div>
       <div class="header-actions">
+        <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Tema">🌓</button>
         <button class="icon-btn" onclick="openColorsModal()" title="Cores das Pulseiras">🎨</button>
         <button class="icon-btn" onclick="openAddModal()" title="Adicionar Paciente">➕</button>
         <button class="icon-btn" onclick="openSettingsModal()" title="Configurações & Planilha">⚙️</button>
@@ -841,7 +946,7 @@
         <div class="modal-title">🎨 Cores das Especialidades & Pulseiras</div>
         <button class="close-btn" onclick="closeModal('colorsModal')">✕</button>
       </div>
-      <p style="font-size: 12px; color: var(--sas-text-muted); margin-bottom: 14px;">
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
         Ajuste as cores de cada especialidade conforme o estoque físico de pulseiras ou cordões disponíveis na expedição:
       </p>
       <div id="colorsCustomizerList">
@@ -885,16 +990,27 @@
   <div class="modal-overlay" id="settingsModal">
     <div class="modal-sheet">
       <div class="modal-header">
-        <div class="modal-title">Configurações & Planilha Google</div>
+        <div class="modal-title">Configurações & Tema</div>
         <button class="close-btn" onclick="closeModal('settingsModal')">✕</button>
       </div>
+      
+      <div class="form-group">
+        <label class="form-label">Tema da Interface</label>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-undo" style="flex:1;" onclick="setExplicitTheme('auto')">💻 Auto (Aparelho)</button>
+          <button class="btn btn-undo" style="flex:1;" onclick="setExplicitTheme('light')">☀️ Claro</button>
+          <button class="btn btn-undo" style="flex:1;" onclick="setExplicitTheme('dark')">🌙 Escuro</button>
+        </div>
+      </div>
+
       <div class="form-group">
         <label class="form-label">URL da Planilha do Google (CSV ou WebApp)</label>
         <input type="text" class="form-input" id="sheetUrlInput" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv">
-        <div style="font-size: 11px; color: var(--sas-text-muted); margin-top: 4px;">
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
           Na versão Alfa, o sistema simula os dados localmente. Você pode conectar a planilha real a qualquer momento.
         </div>
       </div>
+      
       <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
         <button class="btn btn-primary" onclick="openColorsModal(); closeModal('settingsModal');">🎨 Alterar Cores das Pulseiras</button>
         <div style="display: flex; gap: 8px;">
@@ -906,7 +1022,46 @@
   </div>
 
   <script>
-    // --- 1. DEFINIÇÃO PADRÃO DAS ESPECIALIDADES & CORES ---
+    // --- 1. TEMA CLARO / ESCURO ---
+    let currentTheme = localStorage.getItem('sas_volantes_theme') || 'auto';
+
+    function applyTheme() {
+      const root = document.documentElement;
+      const btn = document.getElementById('themeToggleBtn');
+
+      if (currentTheme === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        if (btn) btn.innerText = '🌙';
+      } else if (currentTheme === 'light') {
+        root.setAttribute('data-theme', 'light');
+        if (btn) btn.innerText = '☀️';
+      } else {
+        root.removeAttribute('data-theme'); // Deixa o @media (prefers-color-scheme) cuidar
+        if (btn) btn.innerText = '🌓';
+      }
+    }
+
+    function toggleTheme() {
+      if (currentTheme === 'auto') {
+        currentTheme = 'dark';
+      } else if (currentTheme === 'dark') {
+        currentTheme = 'light';
+      } else {
+        currentTheme = 'auto';
+      }
+      localStorage.setItem('sas_volantes_theme', currentTheme);
+      applyTheme();
+      vibrate();
+    }
+
+    function setExplicitTheme(theme) {
+      currentTheme = theme;
+      localStorage.setItem('sas_volantes_theme', currentTheme);
+      applyTheme();
+      vibrate();
+    }
+
+    // --- 2. DEFINIÇÃO PADRÃO DAS ESPECIALIDADES & CORES ---
     const DEFAULT_SPECIALTIES = [
       { id: 'oftalmo', name: 'Oftalmologia (Ver Magia)', color: '#2563EB', icon: '👁️' },
       { id: 'odonto', name: 'Odontologia', color: '#059669', icon: '🦷' },
@@ -931,11 +1086,11 @@
 
     let SPECIALTIES = JSON.parse(localStorage.getItem('sas_volantes_specialties')) || DEFAULT_SPECIALTIES;
 
-    // --- 2. ESTADO DO APP ---
+    // --- 3. ESTADO DO APP ---
     let patients = JSON.parse(localStorage.getItem('sas_volantes_patients')) || [];
     let selectedSpecialtyFilter = 'all'; // 'all' or specialty id
 
-    // --- 3. DADOS DE DEMONSTRAÇÃO (ALFA COM CRONÔMETROS REAIS) ---
+    // --- 4. DADOS DE DEMONSTRAÇÃO (ALFA COM CRONÔMETROS REAIS) ---
     const now = Date.now();
     const DEMO_PATIENTS = [
       {
@@ -1040,7 +1195,7 @@
       }
     }
 
-    // --- 4. FORMATADORES DE TEMPO E CRONÔMETRO ---
+    // --- 5. FORMATADORES DE TEMPO E CRONÔMETRO ---
     function formatDuration(ms) {
       if (!ms || ms < 0) return '0 min';
       const totalSeconds = Math.floor(ms / 1000);
@@ -1083,7 +1238,7 @@
       return `⏳ Total: ${formatDuration(end - start)}`;
     }
 
-    // --- 5. GESTÃO DE CORES DAS ESPECIALIDADES ---
+    // --- 6. GESTÃO DE CORES DAS ESPECIALIDADES ---
     function openColorsModal() {
       renderColorsCustomizer();
       openModal('colorsModal');
@@ -1126,7 +1281,7 @@
       vibrate();
     }
 
-    // --- 6. RENDERIZAÇÃO ---
+    // --- 7. RENDERIZAÇÃO ---
     function render() {
       renderSpecialtyFilters();
       renderQueues();
@@ -1188,7 +1343,7 @@
 
             <div class="queues-grid">
               <!-- Coluna 1: Tenda / Espera -->
-              <div class="queue-col">
+              <div class="queue-col col-tenda">
                 <div class="queue-title">
                   <span>1. Aguardando na Tenda</span>
                   <span class="queue-count">${waitingList.length}</span>
@@ -1200,10 +1355,10 @@
               </div>
 
               <!-- Coluna 2: Na Porta do Consultório -->
-              <div class="queue-col" style="background: #FFFDF8;">
-                <div class="queue-title" style="color: #B45309;">
+              <div class="queue-col col-porta">
+                <div class="queue-title" style="color: #F59E0B;">
                   <span>2. Na Porta (Buffer 2-3)</span>
-                  <span class="queue-count" style="background: #FEF3C7; color: #B45309;">${doorList.length}</span>
+                  <span class="queue-count" style="background: rgba(245,158,11,0.2); color: #F59E0B;">${doorList.length}</span>
                 </div>
                 <div class="patient-list">
                   ${doorList.length === 0 ? '<div class="empty-state">Porta vazia (chame 2 a 3)</div>' : ''}
@@ -1212,10 +1367,10 @@
               </div>
 
               <!-- Coluna 3: Em Atendimento -->
-              <div class="queue-col" style="background: #F4F8FF;">
-                <div class="queue-title" style="color: #1D4ED8;">
+              <div class="queue-col col-sala">
+                <div class="queue-title" style="color: #3B82F6;">
                   <span>3. Em Consulta com Médico</span>
-                  <span class="queue-count" style="background: #DBEAFE; color: #1D4ED8;">${inRoomList.length}</span>
+                  <span class="queue-count" style="background: rgba(59,130,246,0.2); color: #3B82F6;">${inRoomList.length}</span>
                 </div>
                 <div class="patient-list">
                   ${inRoomList.length === 0 ? '<div class="empty-state">Consultório livre</div>' : ''}
@@ -1268,7 +1423,7 @@
           ${isBusyElsewhere ? `
             <div class="status-alert busy" style="border-left: 4px solid ${busySpecObj ? busySpecObj.color : '#EF4444'};">
               <span>⛔</span>
-              <span>Ocupado em <b style="color: ${busySpecObj ? busySpecObj.color : '#000'};">${busySpecObj ? busySpecObj.name : ''}</b> (${busyStageLabel})</span>
+              <span>Ocupado em <b style="color: ${busySpecObj ? busySpecObj.color : 'inherit'};">${busySpecObj ? busySpecObj.name : ''}</b> (${busyStageLabel})</span>
             </div>
           ` : ''}
 
@@ -1320,7 +1475,7 @@
       document.getElementById('statInRoom').innerText = inRoomCount;
     }
 
-    // --- 7. TRANSIÇÕES DE ESTADO COM MARCAÇÃO DE TEMPO ---
+    // --- 8. TRANSIÇÕES DE ESTADO COM MARCAÇÃO DE TEMPO ---
     function moveToDoor(patientId, specId) {
       const p = patients.find(x => x.id === patientId);
       if (!p) return;
@@ -1396,7 +1551,7 @@
       vibrate();
     }
 
-    // --- 8. BUSCA GLOBAL DE PACIENTES COM HISTÓRICO DE TEMPOS ---
+    // --- 9. BUSCA GLOBAL DE PACIENTES COM HISTÓRICO DE TEMPOS ---
     function handleSearch(query) {
       if (!query || query.trim().length === 0) {
         closeModal('searchModal');
@@ -1417,7 +1572,7 @@
           if (p.currentLocation) {
             const sObj = SPECIALTIES.find(s => s.id === p.currentLocation.spec);
             const stageText = p.currentLocation.stage === 'door' ? 'Na Porta do Consultório' : 'Dentro do Consultório em Atendimento';
-            locText = `<span style="color:${sObj ? sObj.color : '#000'}; font-weight:800;">${sObj ? sObj.name : ''}</span> (${stageText})`;
+            locText = `<span style="color:${sObj ? sObj.color : 'inherit'}; font-weight:800;">${sObj ? sObj.name : ''}</span> (${stageText})`;
           } else if (p.isComplete) {
             locText = '🏁 <b>Circuito Completo (Alta)</b>';
           }
@@ -1429,7 +1584,7 @@
               <div class="patient-top">
                 <div>
                   <div class="patient-name">${p.name}</div>
-                  <div style="font-size: 12px; color: var(--sas-text-muted); margin-top: 2px;">Localização: ${locText}</div>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Localização: ${locText}</div>
                 </div>
                 <span class="patient-id">${p.id}</span>
               </div>
@@ -1449,7 +1604,7 @@
 
               <!-- Detalhamento de Tempos por Especialidade -->
               <div class="timeline-box">
-                <div style="font-size:11px; font-weight:800; color:var(--sas-navy); margin-bottom:4px;">⏱️ Tempos por Especialidade:</div>
+                <div style="font-size:11px; font-weight:800; color:var(--text-main); margin-bottom:4px;">⏱️ Tempos por Especialidade:</div>
                 ${p.specialties.map(sId => {
                   const spec = SPECIALTIES.find(s => s.id === sId) || { name: sId };
                   const st = p.stages && p.stages[sId] ? p.stages[sId] : {};
@@ -1474,7 +1629,7 @@
       openModal('searchModal');
     }
 
-    // --- 9. MODAIS & CADASTRO ---
+    // --- 10. MODAIS & CADASTRO ---
     function openModal(id) {
       document.getElementById(id).classList.add('active');
     }
@@ -1553,13 +1708,16 @@
       openModal('settingsModal');
     }
 
-    // Inicialização e Atualização Contínua dos Cronômetros em Tempo Real (a cada 15s)
+    // Inicialização do Tema e App
+    applyTheme();
+
     if (patients.length === 0) {
       loadDemoData();
     } else {
       render();
     }
 
+    // Atualização Contínua dos Cronômetros (a cada 15s)
     setInterval(() => {
       render();
     }, 15000);
