@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SAS Brasil • Suite Clínica & Volantes</title>
-  <meta name="theme-color" content="#171718">
+  <title>SAS Brasil • Suíte Clínica & Volantes</title>
+  <meta name="theme-color" content="#0B0B0C">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,7 +74,6 @@
         --bg-modal: #18181B;
         --bg-input: #1D1D20;
         --bg-bottom-bar: rgba(16,16,18,0.92);
-        --bg-grid: rgba(255,255,255,0.028);
         
         --text-main: #F4F4F5;
         --text-muted: #A1A1AA;
@@ -105,7 +104,6 @@
       --bg-modal: #18181B;
       --bg-input: #1D1D20;
       --bg-bottom-bar: rgba(16,16,18,0.92);
-      --bg-grid: rgba(255,255,255,0.028);
       
       --text-main: #F4F4F5;
       --text-muted: #A1A1AA;
@@ -271,7 +269,7 @@
       border-top-right-radius: var(--radius-sm);
     }
 
-    /* Specialty Selector Pill Bar (Inside Tab Volantes) */
+    /* Multi-select Specialty Selector Pill Bar */
     .specialty-nav {
       padding: 10px 0;
       display: flex;
@@ -298,6 +296,7 @@
       align-items: center;
       gap: 7px;
       transition: all 0.2s ease;
+      user-select: none;
     }
 
     .spec-pill .dot {
@@ -368,52 +367,93 @@
       display: block;
     }
 
-    /* Specialty Section */
-    .specialty-section {
+    /* Specialty Row Card (1 per line in Overview) */
+    .specialty-row-card {
       background: var(--bg-card);
       border-radius: var(--radius-md);
       border: 1px solid var(--border-light);
-      margin-bottom: 24px;
+      margin-bottom: 12px;
       overflow: hidden;
       box-shadow: var(--shadow-sm);
-      transition: background-color 0.25s ease, border-color 0.25s ease;
+      transition: all 0.25s ease;
     }
 
-    .spec-header {
-      padding: 13px 18px;
-      color: #fff;
+    .specialty-row-header {
+      padding: 14px 18px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-top-left-radius: var(--radius-md);
-      border-top-right-radius: var(--radius-md);
+      user-select: none;
+      transition: background 0.2s;
     }
 
-    .spec-header-title {
-      font-size: 15px;
-      font-weight: 800;
+    .specialty-row-header:hover {
+      filter: brightness(0.98);
+    }
+
+    .specialty-row-info {
       display: flex;
       align-items: center;
-      gap: 10px;
-      letter-spacing: -0.01em;
+      gap: 12px;
     }
 
-    .spec-header-badge {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255,255,255,0.2);
+    .specialty-row-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .specialty-row-counts {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .count-badge {
+      padding: 4px 9px;
+      border-radius: 12px;
       font-size: 11.5px;
       font-weight: 800;
-      padding: 3px 10px;
-      border-radius: 20px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    /* Specialty Sub-columns */
+    .count-badge.tenda { background: rgba(16, 185, 129, 0.15); color: #10B981; }
+    .count-badge.porta { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
+    .count-badge.sala { background: rgba(59, 130, 246, 0.15); color: #3B82F6; }
+
+    .expand-chevron {
+      font-size: 13px;
+      color: var(--text-muted);
+      transition: transform 0.25s ease;
+      margin-left: 6px;
+    }
+
+    .specialty-row-card.expanded .expand-chevron {
+      transform: rotate(180deg);
+    }
+
+    .specialty-row-body {
+      display: none;
+      border-top: 1px solid var(--border-light);
+      background: var(--bg-card);
+      padding: 16px;
+    }
+
+    .specialty-row-card.expanded .specialty-row-body {
+      display: block;
+    }
+
+    /* Sub-columns Grid */
     .queues-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 14px;
-      padding: 16px;
       background: var(--bg-card);
     }
 
@@ -527,6 +567,7 @@
       border-radius: 5px;
       white-space: nowrap;
       border: 1px solid var(--border-light);
+      cursor: pointer;
     }
 
     /* Timers & Badges */
@@ -603,6 +644,12 @@
       border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
+    .status-alert.warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #D97706;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
     .card-actions {
       display: flex;
       gap: 6px;
@@ -663,7 +710,7 @@
     }
 
     /* ===================================================
-       TAB 2: TEMPORIZADOR VER MAGIA (ESTILOS ESPECÍFICOS)
+       TAB 2: TEMPORIZADOR VER MAGIA
        =================================================== */
     .timer-app-container {
       max-width: 650px;
@@ -709,6 +756,7 @@
       transition: all 0.2s ease;
       color: #ffffff;
       min-height: 88px;
+      position: relative;
     }
 
     .timer-main-btn:active {
@@ -745,6 +793,13 @@
       font-size: 0.9rem;
       opacity: 0.95;
       font-weight: 600;
+    }
+
+    .timer-next-action {
+      font-size: 0.8rem;
+      opacity: 0.85;
+      margin-top: 4px;
+      font-weight: 500;
     }
 
     .timer-badge-clock {
@@ -784,10 +839,7 @@
     /* Modal Sheet */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.7);
       backdrop-filter: blur(4px);
       z-index: 1000;
@@ -1004,9 +1056,7 @@
     /* Floating Search Bar Bottom */
     .bottom-bar {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       background: var(--bg-bottom-bar);
       border-top: 1px solid var(--border-light);
       padding: 11px 16px;
@@ -1056,162 +1106,6 @@
       font-size: 12.5px;
       font-weight: 500;
     }
-    /* Premium console overrides */
-    :root,
-    :root[data-theme="light"] {
-      --design-system: sas-premium-neutral;
-      --sas-navy: #1B1B1D;
-      --sas-navy-dark: #111113;
-      --sas-orange: #9B694B;
-      --sas-orange-hover: #7D5036;
-      --bg-app: #F7F7F5;
-      --bg-card: #FFFFFF;
-      --bg-card-sub: #FBFBFA;
-      --bg-header: linear-gradient(135deg, #151516 0%, #27272A 100%);
-      --bg-stats: rgba(255,255,255,0.88);
-      --bg-col-tenda: #FCFCFB;
-      --bg-col-porta: #FDFBF8;
-      --bg-col-sala: #FAFAFA;
-      --bg-modal: #FFFFFF;
-      --bg-input: #F4F4F2;
-      --bg-bottom-bar: rgba(255,255,255,0.9);
-      --bg-grid: rgba(23,23,23,0.035);
-      --text-main: #1B1B1D;
-      --text-muted: #6B6B70;
-      --border-main: #D6D6D8;
-      --border-light: #E9E9EA;
-      --badge-bg: #F2F2F3;
-      --timer-bar-bg: #F8F8F8;
-      --radius-sm: 7px;
-      --radius-md: 12px;
-      --radius-lg: 18px;
-      --shadow-sm: 0 0 0 1px rgba(23,23,23,0.07), 0 2px 2px rgba(23,23,23,0.025), inset 0 0 0 1px rgba(255,255,255,0.5);
-      --shadow-md: 0 0 0 1px rgba(23,23,23,0.08), 0 3px 4px rgba(23,23,23,0.035), 0 12px 22px -16px rgba(23,23,23,0.22), inset 0 0 0 1px rgba(255,255,255,0.62);
-      --shadow-lg: 0 0 0 1px rgba(23,23,23,0.1), 0 18px 34px -22px rgba(23,23,23,0.25), inset 0 0 0 1px rgba(255,255,255,0.68);
-    }
-
-    body {
-      background-image: radial-gradient(var(--bg-grid) 1px, transparent 1px);
-      background-size: 18px 18px;
-      font-feature-settings: "liga", "cv01", "ss01";
-      letter-spacing: -0.012em;
-    }
-
-    header {
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-      padding: 14px 20px 0;
-    }
-
-    .brand-badge {
-      background: var(--sas-orange);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 6px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.17);
-      font-size: 11px;
-      letter-spacing: 0.13em;
-      padding: 6px 9px 6px 11px;
-    }
-
-    .brand-sub, .app-tab-btn { color: #A1A1AA; }
-    .icon-btn {
-      background: rgba(255,255,255,0.075);
-      border-color: rgba(255,255,255,0.14);
-      border-radius: 9px;
-      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
-    }
-    .icon-btn:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.24); transform: translateY(-1px); }
-
-    .app-nav-tabs { gap: 8px; margin-top: 12px; border-bottom-color: rgba(255,255,255,0.1); }
-    .app-tab-btn { border-bottom-width: 2px; font-size: 12.5px; padding: 11px 12px; transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease; }
-    .app-tab-btn.active { background: rgba(255,255,255,0.055); border-top-left-radius: 7px; border-top-right-radius: 7px; }
-    .spec-pill.active { background: var(--bg-card); color: var(--text-main); border-color: rgba(255,255,255,0.18); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-
-    .stats-bar, .bottom-bar { backdrop-filter: blur(16px); }
-    .stats-bar { padding: 12px 20px; }
-    .bottom-bar { padding: 12px 20px; box-shadow: 0 -10px 28px rgba(0,0,0,0.1); }
-    .stat-label { letter-spacing: 0.06em; }
-
-    main { max-width: 1320px; padding: 24px 20px 30px; }
-    .specialty-section { box-shadow: var(--shadow-md); border: none; margin-bottom: 22px; transition: box-shadow 0.18s ease, transform 0.18s ease; }
-    .specialty-section:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
-    .queues-grid { gap: 18px; padding: 18px; }
-    .queue-col { border-radius: 10px; border: none; box-shadow: var(--shadow-sm); padding: 15px; }
-    .patient-card { border: none; border-radius: 9px; box-shadow: var(--shadow-sm); padding: 14px; transition: box-shadow 0.18s ease, transform 0.18s ease; }
-    .patient-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-
-    .btn { border-radius: 7px; font-weight: 700; transition: transform 0.16s ease, filter 0.16s ease, box-shadow 0.16s ease; }
-    .btn-primary { box-shadow: 0 3px 10px rgba(155,105,75,0.26); }
-    .btn:hover { filter: brightness(1.04); transform: translateY(-1px); }
-    .btn:active { transform: translateY(0) scale(0.98); }
-    .form-input, .search-input { border: none; box-shadow: 0 0 0 1px var(--border-main), inset 0 1px 0 rgba(255,255,255,0.58); }
-    .form-input:focus, .search-input:focus { box-shadow: 0 0 0 2px rgba(155,105,75,0.28), inset 0 1px 0 rgba(255,255,255,0.58); }
-
-    .timer-app-container { max-width: 760px; gap: 18px; }
-    .form-add-timer { padding: 16px; box-shadow: var(--shadow-md); border: none; }
-    .timer-person-item { border: none; border-radius: 10px; box-shadow: var(--shadow-md); transition: box-shadow 0.18s ease, transform 0.18s ease; }
-    .timer-person-item:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
-    .timer-main-btn { min-height: 112px; padding: 16px 54px 16px 16px; }
-
-    .queue-toolbar,
-    .timer-intro {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 14px 20px;
-      align-items: center;
-      margin-bottom: 20px;
-      padding: 16px 2px;
-    }
-    .timer-intro {
-      background: var(--bg-card);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-md);
-      padding: 20px;
-    }
-    .timer-intro h1 {
-      color: var(--text-main);
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.045em;
-      line-height: 1.1;
-      margin: 3px 0 6px;
-    }
-    .queue-toolbar p,
-    .timer-intro p { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; max-width: 620px; }
-    .section-kicker { color: var(--sas-orange-hover); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
-    .new-patient-cta { flex: 0 0 auto; min-height: 42px; padding: 0 15px; white-space: nowrap; }
-    .specialty-overview-list { display: grid; gap: 9px; }
-    .specialty-overview-row { background: var(--bg-card); border-radius: 10px; box-shadow: var(--shadow-md); overflow: hidden; }
-    .specialty-overview-toggle { align-items: center; background: transparent; border: none; color: var(--text-main); cursor: pointer; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) auto auto; padding: 14px 16px; text-align: left; width: 100%; }
-    .specialty-overview-toggle:hover { background: var(--bg-card-sub); }
-    .specialty-overview-name { font-size: 13px; font-weight: 800; letter-spacing: -0.02em; }
-    .specialty-overview-total { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; white-space: nowrap; }
-    .specialty-overview-chevron { color: var(--text-muted); font-size: 16px; line-height: 1; transition: transform 0.18s ease; }
-    .specialty-overview-row.expanded .specialty-overview-chevron { transform: rotate(180deg); }
-    .specialty-overview-details { border-top: 1px solid var(--border-light); display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) auto; padding: 12px 16px 14px; }
-    .specialty-overview-breakdown { display: grid; gap: 6px; grid-template-columns: repeat(3, 1fr); }
-    .specialty-overview-breakdown span { color: var(--text-muted); font-size: 9.5px; font-weight: 700; text-align: center; }
-    .specialty-overview-breakdown b { color: var(--text-main); display: block; font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-bottom: 2px; }
-    .specialty-open-queue { align-self: center; min-height: 34px; padding: 0 12px; white-space: nowrap; }
-    .timer-next-action { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.16); border-radius: 5px; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; margin-top: 9px; padding: 5px 7px; text-transform: uppercase; }
-
-    :root[data-theme="dark"] .specialty-section,
-    :root[data-theme="dark"] .queue-col,
-    :root[data-theme="dark"] .patient-card,
-    :root[data-theme="dark"] .form-add-timer,
-    :root[data-theme="dark"] .timer-person-item { box-shadow: 0 0 0 1px rgba(255,255,255,0.07), 0 12px 28px -20px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.025); }
-
-    @media (max-width: 640px) {
-      header { padding-left: 14px; padding-right: 14px; }
-      main { padding: 16px 12px 24px; }
-      .stats-bar, .bottom-bar { padding-left: 14px; padding-right: 14px; }
-      .queues-grid { padding: 12px; gap: 12px; }
-      .queue-toolbar, .timer-intro { grid-template-columns: 1fr; padding: 16px 0; }
-      .timer-intro { padding: 16px; }
-      .new-patient-cta { width: 100%; }
-      .specialty-overview-details { grid-template-columns: 1fr; }
-      .specialty-open-queue { justify-self: stretch; }
-    }
   </style>
 </head>
 <body>
@@ -1222,13 +1116,15 @@
       <div class="brand">
         <span class="brand-badge">SAS</span>
         <div>
-          <div class="brand-title">SAS Brasil • Suite Clínica</div>
+          <div class="brand-title">SAS Brasil • Suíte Clínica</div>
           <div class="brand-sub">Volantes, Filas & Ver Magia</div>
         </div>
       </div>
       <div class="header-actions">
         <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Tema">🌓</button>
-        <button class="icon-btn" onclick="openSettingsModal()" title="Configurações">⚙️</button>
+        <button class="icon-btn" id="headerColorsBtn" onclick="openColorsModal()" title="Cores das Pulseiras">🎨</button>
+        <button class="icon-btn" id="headerAddBtn" onclick="openAddModal()" title="Adicionar Paciente">➕</button>
+        <button class="icon-btn" onclick="openSettingsModal()" title="Configurações & Planilha">⚙️</button>
       </div>
     </div>
 
@@ -1292,28 +1188,14 @@
   <main>
     <!-- ABA 1: VOLANTES & GESTÃO DE FILAS -->
     <div class="app-view active" id="viewVolantes">
-      <div class="queue-toolbar">
-        <div>
-          <span class="section-kicker">Filas por especialidade</span>
-          <p>Selecione uma especialidade para abrir e operar a fila.</p>
-        </div>
-        <button class="btn btn-primary new-patient-cta" onclick="openAddModal()">
-          <span aria-hidden="true">＋</span> Novo paciente
-        </button>
-      </div>
       <div id="queuesContainer">
         <!-- Populated by JS -->
       </div>
     </div>
 
-    <!-- ABA 2: TEMPORIZADOR VER MAGIA (DILATAÇÃO / PROCEDIMENTOS) -->
+    <!-- ABA 2: TEMPORIZADOR VER MAGIA -->
     <div class="app-view" id="viewTimer">
       <div class="timer-app-container">
-        <section class="timer-intro" aria-label="Orientação do temporizador">
-          <span class="section-kicker">Ver Magia</span>
-          <h1>Controle de dilatação</h1>
-          <p>Adicione uma pessoa e siga sempre a próxima ação exibida no cartão.</p>
-        </section>
         <form class="form-add-timer" onsubmit="handleTimerAddPerson(event)">
           <input type="text" class="form-input" id="timerInputName" placeholder="Nome do paciente / criança...">
           <button type="submit" class="btn btn-primary" style="flex:0 0 auto; padding:10px 18px;">
@@ -1341,8 +1223,11 @@
   <div class="bottom-bar" id="volantesBottomBar">
     <div class="search-input-wrapper">
       <span class="search-icon">🔍</span>
-      <input type="text" class="search-input" id="globalSearchInput" placeholder="Buscar paciente por nome ou ID..." oninput="handleSearch(this.value)">
+      <input type="text" class="search-input" id="globalSearchInput" placeholder="Buscar paciente por nome ou pulseira..." oninput="handleSearch(this.value)">
     </div>
+    <button class="btn btn-primary" style="flex:0 0 auto; border-radius: 30px; padding: 10px 16px;" onclick="loadDemoData()">
+      🔄 Demo
+    </button>
   </div>
 
   <!-- Search Results Modal -->
@@ -1433,8 +1318,8 @@
       <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
         <button class="btn btn-primary" onclick="openColorsModal(); closeModal('settingsModal');">🎨 Alterar Cores das Pulseiras</button>
         <div style="display: flex; gap: 8px;">
-          <button class="btn btn-door" style="flex:1;" onclick="if (loadDemoData(true)) closeModal('settingsModal');">Recarregar Dados Demo</button>
-          <button class="btn btn-undo" style="flex:1;" onclick="if (clearAllData()) closeModal('settingsModal');">Limpar Tudo</button>
+          <button class="btn btn-door" style="flex:1;" onclick="loadDemoData(true)">Recarregar Dados Demo</button>
+          <button class="btn btn-undo" style="flex:1;" onclick="clearAllData(true)">Limpar Tudo</button>
         </div>
       </div>
     </div>
@@ -1453,7 +1338,7 @@
       const usesDarkSurface = currentTheme === 'dark'
         || (currentTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-      if (themeMeta) themeMeta.content = usesDarkSurface ? '#0B0B0C' : '#171718';
+      if (themeMeta) themeMeta.content = usesDarkSurface ? '#0B0B0C' : '#1A2B4C';
 
       if (currentTheme === 'dark') {
         root.setAttribute('data-theme', 'dark');
@@ -1499,7 +1384,6 @@
     function switchAppTab(tab) {
       activeAppTab = tab;
       localStorage.setItem('sas_active_app_tab', tab);
-      saveUiState();
 
       const btnVolantes = document.getElementById('tabBtnVolantes');
       const btnTimer = document.getElementById('tabBtnTimer');
@@ -1509,6 +1393,8 @@
       const volantesStats = document.getElementById('volantesStatsBar');
       const timerStats = document.getElementById('timerStatsBar');
       const volantesBottom = document.getElementById('volantesBottomBar');
+      const headerColorsBtn = document.getElementById('headerColorsBtn');
+      const headerAddBtn = document.getElementById('headerAddBtn');
 
       if (tab === 'volantes') {
         btnVolantes.classList.add('active');
@@ -1519,6 +1405,8 @@
         volantesStats.style.display = 'grid';
         timerStats.style.display = 'none';
         volantesBottom.style.display = 'flex';
+        headerColorsBtn.style.display = 'flex';
+        headerAddBtn.style.display = 'flex';
         render();
       } else {
         btnVolantes.classList.remove('active');
@@ -1529,13 +1417,15 @@
         volantesStats.style.display = 'none';
         timerStats.style.display = 'grid';
         volantesBottom.style.display = 'none';
+        headerColorsBtn.style.display = 'none';
+        headerAddBtn.style.display = 'none';
         renderTimerList();
       }
       vibrate();
     }
 
     // ==========================================
-    // 3. ABA 1: VOLANTES & FILAS (LÓGICA)
+    // 3. ABA 1: VOLANTES & FILAS (LÓGICA + MULTISELEÇÃO E MINIMIZAÇÃO)
     // ==========================================
     const DEFAULT_SPECIALTIES = [
       { id: 'oftalmo', name: 'Oftalmologia (Ver Magia)', color: '#2563EB', icon: '👁️' },
@@ -1552,34 +1442,11 @@
 
     let SPECIALTIES = JSON.parse(localStorage.getItem('sas_volantes_specialties')) || DEFAULT_SPECIALTIES;
     let patients = JSON.parse(localStorage.getItem('sas_volantes_patients')) || [];
-    const UI_STATE_KEY = 'sas_volantes_ui_state';
-    let selectedSpecialtyFilters = ['all'];
-    let expandedOverviewSpecialties = [];
-
-    function saveUiState() {
-      localStorage.setItem(UI_STATE_KEY, JSON.stringify({
-        activeAppTab,
-        selectedSpecialtyFilters,
-        expandedOverviewSpecialties
-      }));
-    }
-
-    function restoreUiState() {
-      try {
-        const saved = JSON.parse(localStorage.getItem(UI_STATE_KEY) || '{}');
-        const validIds = new Set(SPECIALTIES.map(spec => spec.id));
-        if (saved.activeAppTab === 'volantes' || saved.activeAppTab === 'timer') activeAppTab = saved.activeAppTab;
-        if (Array.isArray(saved.selectedSpecialtyFilters)) {
-          const validFilters = saved.selectedSpecialtyFilters.filter(id => validIds.has(id));
-          selectedSpecialtyFilters = validFilters.length ? validFilters : ['all'];
-        }
-        if (Array.isArray(saved.expandedOverviewSpecialties)) {
-          expandedOverviewSpecialties = saved.expandedOverviewSpecialties.filter(id => validIds.has(id));
-        }
-      } catch (error) {
-        console.warn('Não foi possível restaurar preferências locais:', error);
-      }
-    }
+    
+    // Seleção múltipla de especialidades (Array)
+    let selectedSpecialties = JSON.parse(localStorage.getItem('sas_selected_specs_v2')) || ['all'];
+    // Estado de cards expandidos na visão geral
+    let expandedSpecialties = JSON.parse(localStorage.getItem('sas_expanded_specs')) || {};
 
     const now = Date.now();
     const DEMO_PATIENTS = [
@@ -1669,19 +1536,20 @@
     }
 
     function loadDemoData(confirmReplace = false) {
-      if (confirmReplace && !confirm('Substituir os dados locais atuais pelos dados de demonstração?')) return false;
+      if (confirmReplace && !confirm('Substituir os dados locais atuais pelos dados de demonstração?')) {
+        return;
+      }
       patients = JSON.parse(JSON.stringify(DEMO_PATIENTS));
       saveState();
       vibrate();
-      return true;
     }
 
-    function clearAllData() {
-      if (!confirm('Limpar todos os pacientes armazenados neste aparelho?')) return false;
+    function clearAllData(confirmClear = false) {
+      if (confirmClear && !confirm('Limpar todos os pacientes armazenados neste aparelho?')) {
+        return;
+      }
       patients = [];
       saveState();
-      vibrate();
-      return true;
     }
 
     function vibrate() {
@@ -1775,77 +1643,22 @@
       renderStats();
     }
 
-    function getSpecialtyCounts(spec) {
-      const specPatients = patients.filter(p => p.specialties.includes(spec.id));
-      return {
-        total: specPatients.filter(p => p.statusBySpec[spec.id] !== 'done').length,
-        waiting: specPatients.filter(p => p.statusBySpec[spec.id] === 'waiting').length,
-        door: specPatients.filter(p => p.statusBySpec[spec.id] === 'door').length,
-        inRoom: specPatients.filter(p => p.statusBySpec[spec.id] === 'in_room').length
-      };
-    }
-
-    function renderOverviewCards() {
-      return `<div class="specialty-overview-list">${SPECIALTIES.map(spec => {
-        const counts = getSpecialtyCounts(spec);
-        const expanded = expandedOverviewSpecialties.includes(spec.id);
-        return `
-          <article class="specialty-overview-row ${expanded ? 'expanded' : ''}">
-            <button class="specialty-overview-toggle" onclick="toggleOverviewSpecialty('${spec.id}')" aria-expanded="${expanded}" aria-label="${expanded ? 'Minimizar' : 'Expandir'} ${spec.name}">
-              <span class="specialty-overview-name"><span style="color:${spec.color};">${spec.icon}</span> ${spec.name}</span>
-              <span class="specialty-overview-total">${counts.total} ativos</span>
-              <span class="specialty-overview-chevron" aria-hidden="true">⌄</span>
-            </button>
-            ${expanded ? `
-              <div class="specialty-overview-details">
-                <div class="specialty-overview-breakdown">
-                  <span><b>${counts.waiting}</b>Tenda</span>
-                  <span><b>${counts.door}</b>Porta</span>
-                  <span><b>${counts.inRoom}</b>Consulta</span>
-                </div>
-                <button class="btn btn-primary specialty-open-queue" onclick="selectOnlySpecialty('${spec.id}')">Abrir fila</button>
-              </div>
-            ` : ''}
-          </article>
-        `;
-      }).join('')}</div>`;
-    }
-
-    function toggleOverviewSpecialty(specId) {
-      expandedOverviewSpecialties = expandedOverviewSpecialties.includes(specId)
-        ? expandedOverviewSpecialties.filter(id => id !== specId)
-        : [...expandedOverviewSpecialties, specId];
-      saveUiState();
-      renderQueues();
-      vibrate();
-    }
-
-    function resetSpecialtyFilters() {
-      selectedSpecialtyFilters = ['all'];
-      saveUiState();
-      render();
-      vibrate();
-    }
-
-    function selectOnlySpecialty(specId) {
-      selectedSpecialtyFilters = [specId];
-      saveUiState();
-      render();
-      vibrate();
-    }
-
     function renderSpecialtyFilters() {
       const container = document.getElementById('specialtyFilterBar');
+      const isAllSelected = selectedSpecialties.includes('all') || selectedSpecialties.length === 0;
+
       let html = `
-        <button class="spec-pill ${selectedSpecialtyFilters.includes('all') ? 'active' : ''}" onclick="resetSpecialtyFilters()">
+        <button class="spec-pill ${isAllSelected ? 'active' : ''}" onclick="toggleSpecialtyFilter('all')">
           🌐 Visão Geral (Todas)
         </button>
       `;
 
       SPECIALTIES.forEach(spec => {
         const count = patients.filter(p => p.specialties.includes(spec.id) && p.statusBySpec[spec.id] !== 'done').length;
+        const isSelected = !isAllSelected && selectedSpecialties.includes(spec.id);
+
         html += `
-          <button class="spec-pill ${selectedSpecialtyFilters.includes(spec.id) ? 'active' : ''}" onclick="toggleSpecialtyFilter('${spec.id}')" aria-pressed="${selectedSpecialtyFilters.includes(spec.id)}">
+          <button class="spec-pill ${isSelected ? 'active' : ''}" onclick="toggleSpecialtyFilter('${spec.id}')">
             <span class="dot" style="background: ${spec.color};"></span>
             ${spec.name} (${count})
           </button>
@@ -1856,24 +1669,43 @@
     }
 
     function toggleSpecialtyFilter(specId) {
-      const current = selectedSpecialtyFilters.includes('all') ? [] : selectedSpecialtyFilters;
-      selectedSpecialtyFilters = current.includes(specId)
-        ? current.filter(id => id !== specId)
-        : [...current, specId];
-      if (selectedSpecialtyFilters.length === 0) selectedSpecialtyFilters = ['all'];
-      saveUiState();
+      if (specId === 'all') {
+        selectedSpecialties = ['all'];
+      } else {
+        if (selectedSpecialties.includes('all')) {
+          selectedSpecialties = [specId];
+        } else {
+          const idx = selectedSpecialties.indexOf(specId);
+          if (idx > -1) {
+            selectedSpecialties.splice(idx, 1);
+            if (selectedSpecialties.length === 0) {
+              selectedSpecialties = ['all'];
+            }
+          } else {
+            selectedSpecialties.push(specId);
+          }
+        }
+      }
+
+      localStorage.setItem('sas_selected_specs_v2', JSON.stringify(selectedSpecialties));
+      render();
+      vibrate();
+    }
+
+    function toggleExpandSpecialty(specId) {
+      expandedSpecialties[specId] = !expandedSpecialties[specId];
+      localStorage.setItem('sas_expanded_specs', JSON.stringify(expandedSpecialties));
       render();
       vibrate();
     }
 
     function renderQueues() {
       const container = document.getElementById('queuesContainer');
-      if (selectedSpecialtyFilters.includes('all')) {
-        container.innerHTML = renderOverviewCards();
-        return;
-      }
+      const isAll = selectedSpecialties.includes('all') || selectedSpecialties.length === 0;
 
-      const specsToRender = SPECIALTIES.filter(spec => selectedSpecialtyFilters.includes(spec.id));
+      const specsToRender = isAll 
+        ? SPECIALTIES 
+        : SPECIALTIES.filter(s => selectedSpecialties.includes(s.id));
 
       let html = '';
 
@@ -1883,52 +1715,64 @@
         const doorList = specPatients.filter(p => p.statusBySpec[spec.id] === 'door');
         const inRoomList = specPatients.filter(p => p.statusBySpec[spec.id] === 'in_room');
 
+        const isExpanded = !!expandedSpecialties[spec.id];
+
+        // Layout Minimizável (1 por linha) na Visão Geral
         html += `
-          <div class="specialty-section">
-            <div class="spec-header" style="background: ${spec.color};">
-              <div class="spec-header-title">
-                <span style="font-size:18px;">${spec.icon}</span>
-                <span>${spec.name}</span>
+          <div class="specialty-row-card ${isExpanded ? 'expanded' : ''}">
+            <div class="specialty-row-header" onclick="toggleExpandSpecialty('${spec.id}')" style="border-left: 6px solid ${spec.color};">
+              <div class="specialty-row-info">
+                <span class="specialty-row-title">
+                  <span style="font-size:18px;">${spec.icon}</span>
+                  <span>${spec.name}</span>
+                </span>
               </div>
-              <div class="spec-header-badge">
-                ${waitingList.length + doorList.length + inRoomList.length} Ativos
+              <div class="specialty-row-info">
+                <div class="specialty-row-counts">
+                  <span class="count-badge tenda" title="Na Tenda">⏱️ ${waitingList.length}</span>
+                  <span class="count-badge porta" title="Na Porta">🚪 ${doorList.length}</span>
+                  <span class="count-badge sala" title="Em Consulta">🩺 ${inRoomList.length}</span>
+                </div>
+                <span class="expand-chevron">▼</span>
               </div>
             </div>
 
-            <div class="queues-grid">
-              <!-- Coluna 1: Tenda / Espera -->
-              <div class="queue-col col-tenda">
-                <div class="queue-title">
-                  <span>1. Aguardando na Tenda</span>
-                  <span class="queue-count">${waitingList.length}</span>
+            <div class="specialty-row-body">
+              <div class="queues-grid">
+                <!-- Coluna 1: Tenda / Espera -->
+                <div class="queue-col col-tenda">
+                  <div class="queue-title">
+                    <span>1. Aguardando na Tenda</span>
+                    <span class="queue-count">${waitingList.length}</span>
+                  </div>
+                  <div class="patient-list">
+                    ${waitingList.length === 0 ? '<div class="empty-state">Nenhum paciente aguardando</div>' : ''}
+                    ${waitingList.map(p => renderPatientCard(p, spec, 'waiting')).join('')}
+                  </div>
                 </div>
-                <div class="patient-list">
-                  ${waitingList.length === 0 ? '<div class="empty-state">Nenhum paciente aguardando</div>' : ''}
-                  ${waitingList.map(p => renderPatientCard(p, spec, 'waiting')).join('')}
-                </div>
-              </div>
 
-              <!-- Coluna 2: Na Porta do Consultório -->
-              <div class="queue-col col-porta">
-                <div class="queue-title" style="color: #F59E0B;">
-                  <span>2. Na Porta (Buffer 2-3)</span>
-                  <span class="queue-count" style="background: rgba(245,158,11,0.2); color: #F59E0B;">${doorList.length}</span>
+                <!-- Coluna 2: Na Porta do Consultório -->
+                <div class="queue-col col-porta">
+                  <div class="queue-title" style="color: #F59E0B;">
+                    <span>2. Na Porta (Buffer 2-3)</span>
+                    <span class="queue-count" style="background: rgba(245,158,11,0.2); color: #F59E0B;">${doorList.length}</span>
+                  </div>
+                  <div class="patient-list">
+                    ${doorList.length === 0 ? '<div class="empty-state">Porta vazia (chame 2 a 3)</div>' : ''}
+                    ${doorList.map(p => renderPatientCard(p, spec, 'door')).join('')}
+                  </div>
                 </div>
-                <div class="patient-list">
-                  ${doorList.length === 0 ? '<div class="empty-state">Porta vazia (chame 2 a 3)</div>' : ''}
-                  ${doorList.map(p => renderPatientCard(p, spec, 'door')).join('')}
-                </div>
-              </div>
 
-              <!-- Coluna 3: Em Atendimento -->
-              <div class="queue-col col-sala">
-                <div class="queue-title" style="color: #3B82F6;">
-                  <span>3. Em Consulta com Médico</span>
-                  <span class="queue-count" style="background: rgba(59,130,246,0.2); color: #3B82F6;">${inRoomList.length}</span>
-                </div>
-                <div class="patient-list">
-                  ${inRoomList.length === 0 ? '<div class="empty-state">Consultório livre</div>' : ''}
-                  ${inRoomList.map(p => renderPatientCard(p, spec, 'in_room')).join('')}
+                <!-- Coluna 3: Em Atendimento -->
+                <div class="queue-col col-sala">
+                  <div class="queue-title" style="color: #3B82F6;">
+                    <span>3. Em Consulta com Médico</span>
+                    <span class="queue-count" style="background: rgba(59,130,246,0.2); color: #3B82F6;">${inRoomList.length}</span>
+                  </div>
+                  <div class="patient-list">
+                    ${inRoomList.length === 0 ? '<div class="empty-state">Consultório livre</div>' : ''}
+                    ${inRoomList.map(p => renderPatientCard(p, spec, 'in_room')).join('')}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1952,6 +1796,10 @@
       const stageTimerText = getCurrentStageTimeText(patient, currentSpec.id, currentStage);
       const totalTimerText = getTotalTimeText(patient);
 
+      // Warning se tempo de espera na tenda > 30min
+      const st = patient.stages && patient.stages[currentSpec.id];
+      const isLongWait = currentStage === 'waiting' && st && (Date.now() - (st.waitingStart || patient.registeredAt) > 30 * 60000);
+
       return `
         <div class="patient-card ${cardClass}">
           <div class="patient-top">
@@ -1965,7 +1813,7 @@
                 }).join('')}
               </div>
             </div>
-            <span class="patient-id">${patient.id}</span>
+            <span class="patient-id" title="Toque para ver ficha" onclick="handleSearch('${patient.id}')">${patient.id}</span>
           </div>
 
           <!-- Barra de Cronômetro da Etapa e Total -->
@@ -1973,6 +1821,13 @@
             <span class="timer-stage stage-${currentStage}">${stageTimerText}</span>
             <span class="timer-total">${totalTimerText}</span>
           </div>
+
+          ${isLongWait ? `
+            <div class="status-alert warning">
+              <span>⚠️</span>
+              <span>Aguardando há mais de 30 min na tenda</span>
+            </div>
+          ` : ''}
 
           ${isBusyElsewhere ? `
             <div class="status-alert busy" style="border-left: 4px solid ${busySpecObj ? busySpecObj.color : '#EF4444'};">
@@ -2386,44 +2241,49 @@
         }
 
         let cssClass = 'timer-state-green';
-        let statusText = 'Etapa 1 • colírio';
+        let statusText = 'Verde • Toque p/ iniciar 5 min';
         let badgeText = '05:00';
-        let nextAction = 'Próxima ação: iniciar contagem de 5 min';
+        let nextActionText = 'Próxima ação: iniciar contagem de 5 min';
 
         if (person.state === 'green') {
           if (running) {
             cssClass = 'timer-state-green';
-            statusText = 'Etapa 1 em andamento • colírio';
+            statusText = 'Verde (5 min rodando...)';
             badgeText = formatSeconds(remaining);
-            nextAction = 'Próxima ação: aguardar o término dos 5 min';
+            nextActionText = 'Próxima ação: aguardar o término dos 5 min';
           } else if (person.isFinished) {
             cssClass = 'timer-state-yellow';
-            statusText = 'Etapa 1 concluída';
+            statusText = 'Amarelo • 5m concluídos! Toque p/ 30m';
             badgeText = '00:00';
-            nextAction = 'Próxima ação: iniciar espera de 30 min';
+            nextActionText = 'Próxima ação: iniciar espera de 30 min';
+          } else {
+            cssClass = 'timer-state-green';
+            statusText = 'Verde • Toque p/ iniciar 5 min';
+            badgeText = '05:00';
+            nextActionText = 'Próxima ação: iniciar contagem de 5 min';
           }
         } else if (person.state === 'yellow') {
           if (running) {
             cssClass = 'timer-state-yellow';
-            statusText = 'Etapa 2 em andamento • espera';
+            statusText = 'Amarelo (30 min rodando...)';
             badgeText = formatSeconds(remaining);
-            nextAction = 'Próxima ação: aguardar o término dos 30 min';
+            nextActionText = 'Próxima ação: aguardar o término dos 30 min';
           } else if (person.isFinished) {
             cssClass = 'timer-state-red';
-            statusText = 'Etapa 2 concluída';
+            statusText = 'Vermelho • 30m concluídos! Toque p/ reiniciar';
             badgeText = '00:00';
-            nextAction = 'Próxima ação: confirmar ciclo concluído';
+            nextActionText = 'Próxima ação: confirmar ciclo concluído';
           } else {
             cssClass = 'timer-state-yellow';
-            statusText = 'Etapa 2 • espera';
+            statusText = 'Amarelo • Toque p/ iniciar 30 min';
             badgeText = '30:00';
-            nextAction = 'Próxima ação: iniciar espera de 30 min';
+            nextActionText = 'Próxima ação: iniciar espera de 30 min';
           }
         } else if (person.state === 'red') {
           cssClass = 'timer-state-red';
-          statusText = 'Ciclo concluído';
+          statusText = 'Vermelho • Ciclo finalizado (Toque p/ reiniciar)';
           badgeText = 'Concluído';
-          nextAction = 'Próxima ação: reiniciar ciclo, se necessário';
+          nextActionText = 'Próxima ação: reiniciar ciclo, se necessário';
         }
 
         html += `
@@ -2434,7 +2294,7 @@
                 <span class="timer-badge-clock">${badgeText}</span>
                 <span>${statusText}</span>
               </div>
-              <div class="timer-next-action">${nextAction}</div>
+              <div class="timer-next-action">${nextActionText}</div>
             </button>
             <button class="timer-btn-delete" title="Excluir" onclick="deleteTimerPerson('${person.id}', event)">
               ✕
@@ -2499,7 +2359,6 @@
     // 5. INICIALIZAÇÃO GERAL E LOOP CONTÍNUO
     // ==========================================
     applyTheme();
-    restoreUiState();
 
     if (patients.length === 0) {
       loadDemoData();
