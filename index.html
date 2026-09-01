@@ -12,16 +12,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --sas-navy: #1A2B4C;
-      --sas-navy-dark: #0F1B30;
-      --sas-orange: #F37021;
-      --sas-orange-hover: #D95C10;
-      
+      /* Brand oficial SAS Brasil (extraído do site e do logo oficial) */
+      --sas-navy: #231F20;
+      --sas-navy-dark: #1C191A;
+      --sas-orange: #F25822;
+      --sas-orange-hover: #CE4B1D;
+
       /* Light Theme (Clean / Ivory & Slate) */
       --bg-app: #F8FAFC;
       --bg-card: #FFFFFF;
       --bg-card-sub: #F8FAFC;
-      --bg-header: linear-gradient(135deg, #0F1B30 0%, #1A2B4C 100%);
+      --bg-header: linear-gradient(135deg, #1C191A 0%, #231F20 100%);
       --bg-stats: #FFFFFF;
       --bg-col-tenda: #F8FAFC;
       --bg-col-porta: #FFFDF8;
@@ -59,7 +60,7 @@
     /* Dark Theme Automático */
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --sas-navy: #F4F4F5;
+        --sas-navy: #231F20;
         --sas-navy-dark: #0B0B0C;
         --sas-orange: #D68A58;
         --sas-orange-hover: #E7A679;
@@ -89,7 +90,7 @@
 
     /* Dark Theme Manual */
     :root[data-theme="dark"] {
-      --sas-navy: #F4F4F5;
+      --sas-navy: #231F20;
       --sas-navy-dark: #0B0B0C;
       --sas-orange: #D68A58;
       --sas-orange-hover: #E7A679;
@@ -121,7 +122,7 @@
       --bg-app: #F8FAFC;
       --bg-card: #FFFFFF;
       --bg-card-sub: #F8FAFC;
-      --bg-header: linear-gradient(135deg, #0F1B30 0%, #1A2B4C 100%);
+      --bg-header: linear-gradient(135deg, #1C191A 0%, #231F20 100%);
       --bg-stats: #FFFFFF;
       --bg-col-tenda: #F8FAFC;
       --bg-col-porta: #FFFDF8;
@@ -164,7 +165,7 @@
     header {
       background: var(--bg-header);
       color: #fff;
-      padding: 12px 18px 0 18px;
+      padding: 9px 14px 0 14px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -188,24 +189,24 @@
       background-color: var(--sas-orange);
       color: #fff;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 11.5px;
       letter-spacing: 0.5px;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: var(--radius-sm);
       display: inline-flex;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(243,112,33,0.4);
+      box-shadow: 0 2px 8px rgba(242,88,34,0.4);
     }
 
     .brand-title {
-      font-size: 15.5px;
+      font-size: 13.5px;
       font-weight: 800;
       line-height: 1.2;
       letter-spacing: -0.01em;
     }
 
     .brand-sub {
-      font-size: 11px;
+      font-size: 10px;
       color: #94A3B8;
       font-weight: 500;
     }
@@ -213,21 +214,21 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .icon-btn {
       background: rgba(255,255,255,0.12);
       border: 1px solid rgba(255,255,255,0.18);
       color: #fff;
-      width: 38px;
-      height: 38px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 15px;
+      font-size: 13px;
       transition: all 0.2s ease;
     }
 
@@ -239,25 +240,25 @@
     /* Main App Switcher Tabs (Volantes vs Temporizador) */
     .app-nav-tabs {
       display: flex;
-      gap: 6px;
-      margin-top: 12px;
+      gap: 4px;
+      margin-top: 9px;
       border-bottom: 1px solid rgba(255,255,255,0.14);
     }
 
     .app-tab-btn {
       flex: 1;
-      padding: 10px 14px;
+      padding: 8px 10px;
       background: transparent;
       border: none;
       border-bottom: 3px solid transparent;
       color: #94A3B8;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 11.5px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
+      gap: 5px;
       transition: all 0.2s ease;
     }
 
@@ -271,9 +272,9 @@
 
     /* Multi-select Specialty Selector Pill Bar */
     .specialty-nav {
-      padding: 10px 0;
+      padding: 8px 0;
       display: flex;
-      gap: 8px;
+      gap: 6px;
       overflow-x: auto;
       scrollbar-width: none;
     }
@@ -286,22 +287,22 @@
       background: rgba(255,255,255,0.12);
       border: 1.5px solid transparent;
       color: #E2E8F0;
-      padding: 7px 14px;
+      padding: 6px 11px;
       border-radius: 30px;
-      font-size: 12.5px;
+      font-size: 11px;
       font-weight: 600;
       white-space: nowrap;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       transition: all 0.2s ease;
       user-select: none;
     }
 
     .spec-pill .dot {
-      width: 9px;
-      height: 9px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       flex-shrink: 0;
     }
@@ -318,10 +319,10 @@
     .stats-bar {
       background: var(--bg-stats);
       border-bottom: 1px solid var(--border-light);
-      padding: 11px 18px;
+      padding: 8px 14px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      gap: 6px;
       text-align: center;
       box-shadow: var(--shadow-sm);
       transition: background-color 0.25s ease;
@@ -335,18 +336,18 @@
 
     .stat-num {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 18px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--text-main);
       letter-spacing: -0.02em;
     }
 
     .stat-label {
-      font-size: 9.5px;
+      font-size: 8px;
       font-weight: 800;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.3px;
       margin-top: 1px;
     }
 
@@ -356,7 +357,7 @@
       max-width: 1200px;
       margin: 0 auto;
       width: 100%;
-      padding: 16px;
+      padding: 12px;
     }
 
     .app-view {
@@ -367,19 +368,39 @@
       display: block;
     }
 
+    .queue-toolbar {
+      margin-bottom: 10px;
+    }
+
+    .section-kicker {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-main);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: block;
+    }
+
+    .queue-toolbar p {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 3px;
+    }
+
     /* Specialty Row Card (1 per line in Overview) */
     .specialty-row-card {
       background: var(--bg-card);
       border-radius: var(--radius-md);
       border: 1px solid var(--border-light);
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       overflow: hidden;
       box-shadow: var(--shadow-sm);
       transition: all 0.25s ease;
     }
 
     .specialty-row-header {
-      padding: 14px 18px;
+      padding: 11px 14px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -395,30 +416,30 @@
     .specialty-row-info {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 9px;
     }
 
     .specialty-row-title {
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 800;
       color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }
 
     .specialty-row-counts {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 12px;
+      gap: 5px;
+      font-size: 11px;
       font-weight: 700;
     }
 
     .count-badge {
-      padding: 4px 9px;
-      border-radius: 12px;
-      font-size: 11.5px;
+      padding: 3px 6px;
+      border-radius: 10px;
+      font-size: 10px;
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
     }
@@ -428,10 +449,10 @@
     .count-badge.sala { background: rgba(59, 130, 246, 0.15); color: #3B82F6; }
 
     .expand-chevron {
-      font-size: 13px;
+      font-size: 11px;
       color: var(--text-muted);
       transition: transform 0.25s ease;
-      margin-left: 6px;
+      margin-left: 4px;
     }
 
     .specialty-row-card.expanded .expand-chevron {
@@ -442,7 +463,7 @@
       display: none;
       border-top: 1px solid var(--border-light);
       background: var(--bg-card);
-      padding: 16px;
+      padding: 12px;
     }
 
     .specialty-row-card.expanded .specialty-row-body {
@@ -453,7 +474,7 @@
     .queues-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 14px;
+      gap: 10px;
       background: var(--bg-card);
     }
 
@@ -467,10 +488,10 @@
       background: var(--bg-card-sub);
       border-radius: var(--radius-md);
       border: 1px solid var(--border-light);
-      padding: 14px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
       transition: background-color 0.25s ease;
     }
 
@@ -479,24 +500,24 @@
     .queue-col.col-sala { background: var(--bg-col-sala); }
 
     .queue-title {
-      font-size: 12px;
+      font-size: 10.5px;
       font-weight: 800;
       color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border-light);
-      padding-bottom: 8px;
+      padding-bottom: 6px;
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.2px;
     }
 
     .queue-count {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+      font-size: 10px;
       background: var(--badge-bg);
       color: var(--text-main);
-      padding: 2px 7px;
+      padding: 2px 6px;
       border-radius: 8px;
       font-weight: 800;
       border: 1px solid var(--border-light);
@@ -505,7 +526,7 @@
     .patient-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 7px;
       min-height: 60px;
     }
 
@@ -514,12 +535,12 @@
       background: var(--bg-card);
       border: 1.5px solid var(--border-light);
       border-radius: var(--radius-sm);
-      padding: 13px 14px;
+      padding: 10px 11px;
       box-shadow: var(--shadow-sm);
       transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .patient-card:hover {
@@ -551,7 +572,7 @@
     }
 
     .patient-name {
-      font-size: 13.5px;
+      font-size: 12.5px;
       font-weight: 700;
       color: var(--text-main);
       line-height: 1.3;
@@ -559,11 +580,11 @@
 
     .patient-id {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
+      font-size: 9.5px;
       color: var(--text-main);
       font-weight: 700;
       background: var(--badge-bg);
-      padding: 3px 6px;
+      padding: 2px 5px;
       border-radius: 5px;
       white-space: nowrap;
       border: 1px solid var(--border-light);
@@ -577,19 +598,19 @@
       justify-content: space-between;
       background: var(--timer-bar-bg);
       border: 1px solid var(--border-light);
-      padding: 5px 9px;
+      padding: 4px 7px;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
     }
 
     .timer-stage {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       color: var(--text-main);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
+      font-size: 9.5px;
     }
 
     .timer-stage.stage-waiting { color: #10B981; }
@@ -598,7 +619,7 @@
 
     .timer-total {
       color: var(--text-muted);
-      font-size: 10px;
+      font-size: 9px;
       font-family: 'JetBrains Mono', monospace;
     }
 
@@ -606,18 +627,19 @@
     .wristband-tags {
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       gap: 5px;
     }
 
     .wristband-tag {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
-      padding: 2px 7px;
+      padding: 2px 6px;
       border-radius: 4px;
       color: #fff;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     }
 
@@ -627,15 +649,34 @@
       opacity: 0.65;
     }
 
+    /* Bolinha de especialidade (sem texto) usada nos cards de paciente da fila */
+    .wristband-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      color: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .wristband-dot.done {
+      background: #64748B !important;
+      opacity: 0.5;
+    }
+
     /* Status Warnings */
     .status-alert {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
-      padding: 5px 9px;
+      padding: 4px 7px;
       border-radius: 6px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .status-alert.busy {
@@ -652,22 +693,22 @@
 
     .card-actions {
       display: flex;
-      gap: 6px;
-      margin-top: 4px;
+      gap: 5px;
+      margin-top: 2px;
     }
 
     .btn {
       flex: 1;
-      padding: 9px 13px;
+      padding: 8px 11px;
       border-radius: var(--radius-sm);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 4px;
       transition: all 0.15s ease;
       text-align: center;
     }
@@ -679,7 +720,7 @@
     .btn-primary {
       background: var(--sas-orange);
       color: #fff;
-      box-shadow: 0 2px 6px rgba(243,112,33,0.35);
+      box-shadow: 0 2px 6px rgba(242,88,34,0.35);
     }
 
     .btn-primary:disabled {
@@ -706,7 +747,7 @@
       color: var(--text-main);
       border: 1px solid var(--border-light);
       flex: 0 0 auto;
-      padding: 9px 11px;
+      padding: 8px 10px;
     }
 
     /* ===================================================
@@ -717,14 +758,14 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
 
     .form-add-timer {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       background: var(--bg-card);
-      padding: 13px;
+      padding: 10px;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-light);
       box-shadow: var(--shadow-sm);
@@ -739,7 +780,7 @@
       overflow: hidden;
       border: 1px solid var(--border-light);
       box-shadow: var(--shadow-sm);
-      margin-bottom: 12px;
+      margin-bottom: 9px;
       transition: all 0.2s ease;
     }
 
@@ -749,13 +790,13 @@
       flex-direction: column;
       align-items: flex-start;
       justify-content: center;
-      padding: 16px 50px 16px 16px;
+      padding: 13px 44px 13px 13px;
       border: none;
       cursor: pointer;
       text-align: left;
       transition: all 0.2s ease;
       color: #ffffff;
-      min-height: 88px;
+      min-height: 76px;
       position: relative;
     }
 
@@ -779,9 +820,9 @@
     }
 
     .timer-person-name {
-      font-size: 1.1rem;
+      font-size: 0.98rem;
       font-weight: 800;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       word-break: break-word;
       letter-spacing: -0.01em;
     }
@@ -789,45 +830,45 @@
     .timer-status-info {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
+      gap: 6px;
+      font-size: 0.8rem;
       opacity: 0.95;
       font-weight: 600;
     }
 
     .timer-next-action {
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       opacity: 0.85;
-      margin-top: 4px;
+      margin-top: 3px;
       font-weight: 500;
     }
 
     .timer-badge-clock {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.05rem;
+      font-size: 0.92rem;
       font-weight: 800;
       background: rgba(0, 0, 0, 0.45);
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 6px;
       border: 1px solid rgba(255,255,255,0.2);
     }
 
     .timer-btn-delete {
       position: absolute;
-      right: 12px;
+      right: 10px;
       top: 50%;
       transform: translateY(-50%);
       background: rgba(0, 0, 0, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
-      width: 36px;
-      height: 36px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.9rem;
       transition: all 0.2s;
     }
 
@@ -863,7 +904,7 @@
       max-width: 600px;
       border-top-left-radius: var(--radius-lg);
       border-top-right-radius: var(--radius-lg);
-      padding: 22px;
+      padding: 16px;
       max-height: 90vh;
       overflow-y: auto;
       transform: translateY(100%);
@@ -879,27 +920,27 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       border-bottom: 1px solid var(--border-light);
-      padding-bottom: 12px;
+      padding-bottom: 10px;
     }
 
     .modal-title {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 800;
       color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }
 
     .close-btn {
       background: var(--badge-bg);
       border: 1px solid var(--border-light);
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      font-size: 15px;
+      font-size: 13px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
@@ -909,25 +950,25 @@
     }
 
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .form-label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       display: block;
     }
 
     .form-input {
       width: 100%;
-      padding: 10px 14px;
+      padding: 9px 12px;
       border-radius: var(--radius-sm);
       border: 1.5px solid var(--border-main);
       background: var(--bg-input);
       color: var(--text-main);
-      font-size: 13.5px;
+      font-size: 12.5px;
       outline: none;
       transition: border-color 0.2s;
     }
@@ -944,14 +985,14 @@
 
     .checkbox-pill {
       border: 1.5px solid var(--border-light);
-      padding: 10px 12px;
+      padding: 8px 10px;
       border-radius: var(--radius-sm);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.2s;
       background: var(--bg-card-sub);
       color: var(--text-main);
@@ -959,7 +1000,7 @@
 
     .checkbox-pill.selected {
       border-color: var(--sas-orange);
-      background: rgba(243,112,33,0.12);
+      background: rgba(242,88,34,0.12);
       color: var(--sas-orange-hover);
     }
 
@@ -968,18 +1009,18 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 11px 14px;
+      padding: 9px 11px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-light);
-      margin-bottom: 9px;
+      margin-bottom: 7px;
       background: var(--bg-card-sub);
     }
 
     .color-spec-info {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 13px;
+      gap: 8px;
+      font-size: 11.5px;
       font-weight: 700;
       color: var(--text-main);
     }
@@ -1059,10 +1100,10 @@
       bottom: 0; left: 0; right: 0;
       background: var(--bg-bottom-bar);
       border-top: 1px solid var(--border-light);
-      padding: 11px 16px;
+      padding: 9px 14px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
       z-index: 90;
       transition: background-color 0.25s ease;
@@ -1079,8 +1120,8 @@
       color: var(--text-main);
       border: 1.5px solid var(--border-light);
       border-radius: 30px;
-      padding: 9px 16px 9px 36px;
-      font-size: 13px;
+      padding: 8px 14px 8px 32px;
+      font-size: 12px;
       font-weight: 500;
       outline: none;
     }
@@ -1092,18 +1133,18 @@
 
     .search-icon {
       position: absolute;
-      left: 14px;
+      left: 12px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
-      font-size: 13px;
+      font-size: 11px;
     }
 
     .empty-state {
       text-align: center;
-      padding: 24px 10px;
+      padding: 18px 10px;
       color: var(--text-muted);
-      font-size: 12.5px;
+      font-size: 11px;
       font-weight: 500;
     }
   </style>
@@ -1287,10 +1328,15 @@
 
       <div class="form-group" style="background: var(--bg-card-sub); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 12px;">
         <div style="font-weight: 600; font-size: 12.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-          <span>📊</span> Integração com Google Sheets
+          <span>📊</span> Sincronização com a Fila Operacional (Google Sheets)
         </div>
-        <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.4;">
-          Nesta versão Alfa, as filas operam com dados fictícios. A integração futura enviará e receberá atualizações via Google Apps Script em uma aba dedicada da Planilha Master, mantendo o acesso seguro sem expor credenciais públicas.
+        <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px;">
+          Cole aqui a URL do Apps Script implantado na planilha "Fila Operacional" (nunca a Planilha Master de cadastro — o app só lê/escreve na Fila Operacional). Deixe em branco pra continuar só no armazenamento local deste aparelho.
+        </div>
+        <input type="text" class="form-input" id="apiUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom: 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <span id="syncStatusLabel" style="font-size: 11px; font-weight: 700;"></span>
+          <button class="btn btn-primary" style="flex: 0 0 auto; padding: 8px 14px;" onclick="saveApiUrl()">Salvar e Sincronizar</button>
         </div>
       </div>
 
@@ -1326,7 +1372,7 @@
       const usesDarkSurface = currentTheme === 'dark'
         || (currentTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-      if (themeMeta) themeMeta.content = usesDarkSurface ? '#0B0B0C' : '#1A2B4C';
+      if (themeMeta) themeMeta.content = usesDarkSurface ? '#0B0B0C' : '#231F20';
 
       if (currentTheme === 'dark') {
         root.setAttribute('data-theme', 'dark');
@@ -1427,7 +1473,11 @@
 
     let SPECIALTIES = JSON.parse(localStorage.getItem('sas_volantes_specialties')) || DEFAULT_SPECIALTIES;
     let patients = JSON.parse(localStorage.getItem('sas_volantes_patients')) || [];
-    
+
+    // Sincronização com a Fila Operacional (Google Apps Script) — ver google-apps-script/README.md
+    let sasApiUrl = localStorage.getItem('sas_api_url') || '';
+    let syncStatus = 'idle'; // 'idle' | 'ok' | 'error'
+
     // Seleção múltipla de especialidades (Array)
     let selectedSpecialties = JSON.parse(localStorage.getItem('sas_selected_specs_v2')) || ['all'];
     // Estado de cards expandidos na visão geral
@@ -1518,6 +1568,122 @@
     function saveSpecialties() {
       localStorage.setItem('sas_volantes_specialties', JSON.stringify(SPECIALTIES));
       render();
+    }
+
+    // ==========================================
+    // 3B. SINCRONIZAÇÃO COM A FILA OPERACIONAL (Google Apps Script)
+    // ==========================================
+    function setSyncStatus(status) {
+      syncStatus = status;
+      const label = document.getElementById('syncStatusLabel');
+      if (!label) return;
+      if (!sasApiUrl) {
+        label.textContent = '⚪ Somente local (offline)';
+        label.style.color = 'var(--text-muted)';
+      } else if (status === 'ok') {
+        label.textContent = '🟢 Sincronizado';
+        label.style.color = '#10B981';
+      } else if (status === 'error') {
+        label.textContent = '🔴 Falha ao sincronizar';
+        label.style.color = '#EF4444';
+      } else {
+        label.textContent = '🟡 Sincronizando...';
+        label.style.color = '#F59E0B';
+      }
+    }
+
+    // Agrupa as linhas (1 por paciente+especialidade) da Fila Operacional
+    // no formato interno de paciente que o app já usa.
+    function mapRemoteRowsToPatients(rows) {
+      const byId = {};
+      rows.forEach(row => {
+        const id = row.ID_Pulseira;
+        if (!id) return;
+        if (!byId[id]) {
+          byId[id] = {
+            id,
+            name: row.Nome_Paciente,
+            specialties: [],
+            statusBySpec: {},
+            currentLocation: null,
+            registeredAt: Date.now(),
+            stages: {}
+          };
+        }
+        const p = byId[id];
+        const specId = row.Especialidade_ID;
+        if (!specId || p.specialties.includes(specId)) return;
+        p.specialties.push(specId);
+        p.statusBySpec[specId] = row.Status || 'waiting';
+
+        // Entrou_Tenda / Entrou_Porta / Entrou_Consulta / Concluido_Em chegam como
+        // timestamp numérico (ms) da Fila Operacional — sem conversão necessária.
+        const waitingStart = row.Entrou_Tenda || null;
+        const doorStart = row.Entrou_Porta || null;
+        const roomStart = row.Entrou_Consulta || null;
+        const roomEnd = row.Concluido_Em || null;
+        p.stages[specId] = { waitingStart, doorStart, roomStart, roomEnd };
+        if (waitingStart && waitingStart < p.registeredAt) p.registeredAt = waitingStart;
+
+        if (row.Status === 'door' || row.Status === 'in_room') {
+          p.currentLocation = { spec: specId, stage: row.Status };
+        }
+        if (row.Status === 'done' && roomEnd) {
+          p.completedAt = roomEnd;
+        }
+      });
+
+      return Object.values(byId).map(p => {
+        p.isComplete = p.specialties.length > 0 && p.specialties.every(s => p.statusBySpec[s] === 'done');
+        return p;
+      });
+    }
+
+    async function fetchRemoteState(showErrors) {
+      if (!sasApiUrl) return;
+      setSyncStatus('syncing');
+      try {
+        const res = await fetch(sasApiUrl);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        patients = mapRemoteRowsToPatients(data.patients || []);
+        localStorage.setItem('sas_volantes_patients', JSON.stringify(patients));
+        render();
+        setSyncStatus('ok');
+      } catch (err) {
+        console.log('Falha ao sincronizar com a Fila Operacional:', err);
+        setSyncStatus('error');
+        if (showErrors) alert('Não foi possível sincronizar com a planilha. Confira a URL do Apps Script nas Configurações.');
+      }
+    }
+
+    // Envia uma movimentação (chamar p/ porta, entrar consulta, concluir, devolver p/ tenda)
+    // pra Fila Operacional. Não bloqueia a UI — a mudança local já aconteceu antes desta chamada.
+    async function pushRemoteAction(idPulseira, especialidadeId, action) {
+      if (!sasApiUrl) return;
+      try {
+        await fetch(sasApiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS no Apps Script
+          body: JSON.stringify({ idPulseira, especialidadeId, action })
+        });
+        setSyncStatus('ok');
+      } catch (err) {
+        console.log('Falha ao enviar movimentação para a Fila Operacional:', err);
+        setSyncStatus('error');
+      }
+    }
+
+    function saveApiUrl() {
+      const input = document.getElementById('apiUrlInput');
+      sasApiUrl = input.value.trim();
+      localStorage.setItem('sas_api_url', sasApiUrl);
+      vibrate();
+      if (sasApiUrl) {
+        fetchRemoteState(true);
+      } else {
+        setSyncStatus('idle');
+      }
     }
 
     function loadDemoData(confirmReplace = true) {
@@ -1802,7 +1968,7 @@
                 ${patient.specialties.map(sId => {
                   const spec = SPECIALTIES.find(s => s.id === sId) || { color: '#94A3B8', name: sId };
                   const isDone = patient.statusBySpec[sId] === 'done';
-                  return `<span class="wristband-tag ${isDone ? 'done' : ''}" style="background: ${spec.color};">${spec.name}</span>`;
+                  return `<span class="wristband-dot ${isDone ? 'done' : ''}" style="background: ${spec.color};" title="${spec.name}${isDone ? ' (Concluído)' : ''}">${isDone ? '✓' : ''}</span>`;
                 }).join('')}
               </div>
             </div>
@@ -1889,6 +2055,7 @@
       p.statusBySpec[specId] = 'door';
       p.currentLocation = { spec: specId, stage: 'door' };
       saveState();
+      pushRemoteAction(patientId, specId, 'door');
       vibrate();
     }
 
@@ -1904,6 +2071,7 @@
       p.statusBySpec[specId] = 'waiting';
       p.currentLocation = null;
       saveState();
+      pushRemoteAction(patientId, specId, 'waiting');
       vibrate();
     }
 
@@ -1919,6 +2087,7 @@
       p.statusBySpec[specId] = 'in_room';
       p.currentLocation = { spec: specId, stage: 'in_room' };
       saveState();
+      pushRemoteAction(patientId, specId, 'in_room');
       vibrate();
     }
 
@@ -1948,6 +2117,7 @@
       }
 
       saveState();
+      pushRemoteAction(patientId, specId, 'done');
       vibrate();
     }
 
@@ -2035,6 +2205,9 @@
     }
 
     function openSettingsModal() {
+      const input = document.getElementById('apiUrlInput');
+      if (input) input.value = sasApiUrl;
+      setSyncStatus(syncStatus);
       openModal('settingsModal');
     }
 
@@ -2287,7 +2460,9 @@
     // ==========================================
     applyTheme();
 
-    if (patients.length === 0) {
+    if (sasApiUrl) {
+      fetchRemoteState();
+    } else if (patients.length === 0) {
       loadDemoData();
     }
 
@@ -2299,11 +2474,16 @@
       }
     }, 1000);
 
+    // Com sincronização ativa, busca o estado da Fila Operacional periodicamente;
+    // sem sincronização, apenas re-renderiza pra atualizar os cronômetros na tela.
     setInterval(() => {
-      if (activeAppTab === 'volantes') {
+      if (activeAppTab !== 'volantes') return;
+      if (sasApiUrl) {
+        fetchRemoteState();
+      } else {
         render();
       }
-    }, 15000);
+    }, sasApiUrl ? 12000 : 15000);
   </script>
 </body>
 </html>
