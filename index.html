@@ -1328,10 +1328,15 @@
 
       <div class="form-group" style="background: var(--bg-card-sub); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 12px;">
         <div style="font-weight: 600; font-size: 12.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-          <span>📊</span> Integração com Google Sheets
+          <span>📊</span> Sincronização com a Fila Operacional (Google Sheets)
         </div>
-        <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.4;">
-          Nesta versão Alfa, as filas operam com dados fictícios. A integração futura enviará e receberá atualizações via Google Apps Script em uma aba dedicada da Planilha Master, mantendo o acesso seguro sem expor credenciais públicas.
+        <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px;">
+          Cole aqui a URL do Apps Script implantado na planilha "Fila Operacional" (nunca a Planilha Master de cadastro — o app só lê/escreve na Fila Operacional). Deixe em branco pra continuar só no armazenamento local deste aparelho.
+        </div>
+        <input type="text" class="form-input" id="apiUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom: 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <span id="syncStatusLabel" style="font-size: 11px; font-weight: 700;"></span>
+          <button class="btn btn-primary" style="flex: 0 0 auto; padding: 8px 14px;" onclick="saveApiUrl()">Salvar e Sincronizar</button>
         </div>
       </div>
 
@@ -1468,7 +1473,11 @@
 
     let SPECIALTIES = JSON.parse(localStorage.getItem('sas_volantes_specialties')) || DEFAULT_SPECIALTIES;
     let patients = JSON.parse(localStorage.getItem('sas_volantes_patients')) || [];
-    
+
+    // Sincronização com a Fila Operacional (Google Apps Script) — ver google-apps-script/README.md
+    let sasApiUrl = localStorage.getItem('sas_api_url') || '';
+    let syncStatus = 'idle'; // 'idle' | 'ok' | 'error'
+
     // Seleção múltipla de especialidades (Array)
     let selectedSpecialties = JSON.parse(localStorage.getItem('sas_selected_specs_v2')) || ['all'];
     // Estado de cards expandidos na visão geral
@@ -1559,6 +1568,133 @@
     function saveSpecialties() {
       localStorage.setItem('sas_volantes_specialties', JSON.stringify(SPECIALTIES));
       render();
+    }
+
+    // ==========================================
+    // 3B. SINCRONIZAÇÃO COM A FILA OPERACIONAL (Google Apps Script)
+    // ==========================================
+    function setSyncStatus(status) {
+      syncStatus = status;
+      const label = document.getElementById('syncStatusLabel');
+      if (!label) return;
+      if (!sasApiUrl) {
+        label.textContent = '⚪ Somente local (offline)';
+        label.style.color = 'var(--text-muted)';
+      } else if (status === 'ok') {
+        label.textContent = '🟢 Sincronizado';
+        label.style.color = '#10B981';
+      } else if (status === 'error') {
+        label.textContent = '🔴 Falha ao sincronizar';
+        label.style.color = '#EF4444';
+      } else {
+        label.textContent = '🟡 Sincronizando...';
+        label.style.color = '#F59E0B';
+      }
+    }
+
+    // Converte "HH:MM" (formato usado na Fila Operacional) num timestamp de hoje.
+    // Assume que a triagem/atendimento acontece no mesmo dia (cenário de expedição de 1 dia).
+    function timeStrToMs(hhmm) {
+      if (!hhmm) return null;
+      const parts = String(hhmm).split(':');
+      const h = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10);
+      if (Number.isNaN(h) || Number.isNaN(m)) return null;
+      const d = new Date();
+      d.setHours(h, m, 0, 0);
+      return d.getTime();
+    }
+
+    // Agrupa as linhas (1 por paciente+especialidade) da Fila Operacional
+    // no formato interno de paciente que o app já usa.
+    function mapRemoteRowsToPatients(rows) {
+      const byId = {};
+      rows.forEach(row => {
+        const id = row.ID_Pulseira;
+        if (!id) return;
+        if (!byId[id]) {
+          byId[id] = {
+            id,
+            name: row.Nome_Paciente,
+            specialties: [],
+            statusBySpec: {},
+            currentLocation: null,
+            registeredAt: Date.now(),
+            stages: {}
+          };
+        }
+        const p = byId[id];
+        const specId = row.Especialidade_ID;
+        if (!specId || p.specialties.includes(specId)) return;
+        p.specialties.push(specId);
+        p.statusBySpec[specId] = row.Status || 'waiting';
+
+        const waitingStart = timeStrToMs(row.Entrou_Tenda);
+        const doorStart = timeStrToMs(row.Entrou_Porta);
+        const roomStart = timeStrToMs(row.Entrou_Consulta);
+        const roomEnd = timeStrToMs(row.Concluido_Em);
+        p.stages[specId] = { waitingStart, doorStart, roomStart, roomEnd };
+        if (waitingStart && waitingStart < p.registeredAt) p.registeredAt = waitingStart;
+
+        if (row.Status === 'door' || row.Status === 'in_room') {
+          p.currentLocation = { spec: specId, stage: row.Status };
+        }
+        if (row.Status === 'done' && roomEnd) {
+          p.completedAt = roomEnd;
+        }
+      });
+
+      return Object.values(byId).map(p => {
+        p.isComplete = p.specialties.length > 0 && p.specialties.every(s => p.statusBySpec[s] === 'done');
+        return p;
+      });
+    }
+
+    async function fetchRemoteState(showErrors) {
+      if (!sasApiUrl) return;
+      setSyncStatus('syncing');
+      try {
+        const res = await fetch(sasApiUrl);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        patients = mapRemoteRowsToPatients(data.patients || []);
+        localStorage.setItem('sas_volantes_patients', JSON.stringify(patients));
+        render();
+        setSyncStatus('ok');
+      } catch (err) {
+        console.log('Falha ao sincronizar com a Fila Operacional:', err);
+        setSyncStatus('error');
+        if (showErrors) alert('Não foi possível sincronizar com a planilha. Confira a URL do Apps Script nas Configurações.');
+      }
+    }
+
+    // Envia uma movimentação (chamar p/ porta, entrar consulta, concluir, devolver p/ tenda)
+    // pra Fila Operacional. Não bloqueia a UI — a mudança local já aconteceu antes desta chamada.
+    async function pushRemoteAction(idPulseira, especialidadeId, action) {
+      if (!sasApiUrl) return;
+      try {
+        await fetch(sasApiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS no Apps Script
+          body: JSON.stringify({ idPulseira, especialidadeId, action })
+        });
+        setSyncStatus('ok');
+      } catch (err) {
+        console.log('Falha ao enviar movimentação para a Fila Operacional:', err);
+        setSyncStatus('error');
+      }
+    }
+
+    function saveApiUrl() {
+      const input = document.getElementById('apiUrlInput');
+      sasApiUrl = input.value.trim();
+      localStorage.setItem('sas_api_url', sasApiUrl);
+      vibrate();
+      if (sasApiUrl) {
+        fetchRemoteState(true);
+      } else {
+        setSyncStatus('idle');
+      }
     }
 
     function loadDemoData(confirmReplace = true) {
@@ -1930,6 +2066,7 @@
       p.statusBySpec[specId] = 'door';
       p.currentLocation = { spec: specId, stage: 'door' };
       saveState();
+      pushRemoteAction(patientId, specId, 'door');
       vibrate();
     }
 
@@ -1945,6 +2082,7 @@
       p.statusBySpec[specId] = 'waiting';
       p.currentLocation = null;
       saveState();
+      pushRemoteAction(patientId, specId, 'waiting');
       vibrate();
     }
 
@@ -1960,6 +2098,7 @@
       p.statusBySpec[specId] = 'in_room';
       p.currentLocation = { spec: specId, stage: 'in_room' };
       saveState();
+      pushRemoteAction(patientId, specId, 'in_room');
       vibrate();
     }
 
@@ -1989,6 +2128,7 @@
       }
 
       saveState();
+      pushRemoteAction(patientId, specId, 'done');
       vibrate();
     }
 
@@ -2076,6 +2216,9 @@
     }
 
     function openSettingsModal() {
+      const input = document.getElementById('apiUrlInput');
+      if (input) input.value = sasApiUrl;
+      setSyncStatus(syncStatus);
       openModal('settingsModal');
     }
 
@@ -2328,7 +2471,9 @@
     // ==========================================
     applyTheme();
 
-    if (patients.length === 0) {
+    if (sasApiUrl) {
+      fetchRemoteState();
+    } else if (patients.length === 0) {
       loadDemoData();
     }
 
@@ -2340,11 +2485,16 @@
       }
     }, 1000);
 
+    // Com sincronização ativa, busca o estado da Fila Operacional periodicamente;
+    // sem sincronização, apenas re-renderiza pra atualizar os cronômetros na tela.
     setInterval(() => {
-      if (activeAppTab === 'volantes') {
+      if (activeAppTab !== 'volantes') return;
+      if (sasApiUrl) {
+        fetchRemoteState();
+      } else {
         render();
       }
-    }, 15000);
+    }, sasApiUrl ? 12000 : 15000);
   </script>
 </body>
 </html>
