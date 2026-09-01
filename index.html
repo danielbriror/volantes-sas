@@ -16,11 +16,12 @@
       --sas-navy-dark: #0F1B30;
       --sas-orange: #F37021;
       --sas-orange-hover: #D95C10;
-      --sas-bg: #F4F6F9;
+      --sas-bg: #F8FAFC;
       --sas-card-bg: #FFFFFF;
-      --sas-text: #1E293B;
+      --sas-text: #0F172A;
       --sas-text-muted: #64748B;
-      --sas-border: #E2E8F0;
+      --sas-border: #CBD5E1;
+      --sas-border-light: #E2E8F0;
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
@@ -43,7 +44,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 80px;
+      padding-bottom: 90px;
     }
 
     /* Header */
@@ -127,7 +128,7 @@
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding-bottom: 4px;
+      padding-bottom: 6px;
       scrollbar-width: none;
     }
 
@@ -136,10 +137,10 @@
     }
 
     .spec-pill {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.12);
       border: 1.5px solid transparent;
-      color: #CBD5E1;
-      padding: 6px 14px;
+      color: #E2E8F0;
+      padding: 7px 14px;
       border-radius: 30px;
       font-size: 13px;
       font-weight: 600;
@@ -147,7 +148,7 @@
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       transition: all 0.2s ease;
     }
 
@@ -155,19 +156,21 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
+      flex-shrink: 0;
     }
 
     .spec-pill.active {
       background: #FFFFFF;
       color: var(--sas-navy);
       border-color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.18);
     }
 
     /* Top Stats Quick Bar */
     .stats-bar {
       background: #FFFFFF;
-      border-bottom: 1px solid var(--sas-border);
+      border-bottom: 1px solid var(--sas-border-light);
       padding: 10px 16px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -190,7 +193,7 @@
 
     .stat-label {
       font-size: 10px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--sas-text-muted);
       text-transform: uppercase;
       letter-spacing: 0.3px;
@@ -209,14 +212,14 @@
     .specialty-section {
       background: var(--sas-card-bg);
       border-radius: var(--radius-md);
-      border: 1px solid var(--sas-border);
-      margin-bottom: 20px;
+      border: 1px solid var(--sas-border-light);
+      margin-bottom: 24px;
       overflow: hidden;
       box-shadow: var(--shadow-sm);
     }
 
     .spec-header {
-      padding: 12px 16px;
+      padding: 14px 18px;
       color: #fff;
       display: flex;
       align-items: center;
@@ -227,18 +230,20 @@
 
     .spec-header-title {
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 800;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      letter-spacing: 0.2px;
     }
 
     .spec-header-badge {
-      background: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.28);
       font-size: 12px;
-      font-weight: 700;
-      padding: 3px 9px;
+      font-weight: 800;
+      padding: 4px 12px;
       border-radius: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
 
     /* Specialty Sub-columns (Tenda, Porta, Consultório) */
@@ -246,7 +251,8 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
-      padding: 14px;
+      padding: 16px;
+      background: #FFFFFF;
     }
 
     @media (min-width: 768px) {
@@ -257,127 +263,129 @@
 
     .queue-col {
       background: #F8FAFC;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--sas-border);
-      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--sas-border-light);
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .queue-title {
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--sas-navy);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--sas-border);
-      padding-bottom: 6px;
+      border-bottom: 1px solid var(--sas-border-light);
+      padding-bottom: 8px;
     }
 
     .queue-count {
       font-size: 11px;
-      background: var(--sas-border);
-      color: var(--sas-text);
-      padding: 2px 7px;
+      background: var(--sas-border-light);
+      color: var(--sas-navy);
+      padding: 2px 8px;
       border-radius: 12px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .patient-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      min-height: 50px;
+      gap: 10px;
+      min-height: 60px;
     }
 
     /* Patient Cards */
     .patient-card {
       background: #FFFFFF;
-      border: 1.5px solid var(--sas-border);
+      border: 1.5px solid var(--sas-border-light);
       border-radius: var(--radius-sm);
-      padding: 12px;
+      padding: 14px;
       box-shadow: var(--shadow-sm);
       transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .patient-card.status-free {
-      border-left: 5px solid #10B981;
+      border-left: 6px solid #10B981;
     }
 
     .patient-card.status-door {
-      border-left: 5px solid #F59E0B;
+      border-left: 6px solid #F59E0B;
       background: #FFFDF8;
     }
 
     .patient-card.status-in_room {
-      border-left: 5px solid #3B82F6;
+      border-left: 6px solid #3B82F6;
       background: #F4F8FF;
     }
 
     .patient-card.status-busy-elsewhere {
-      border-left: 5px solid #EF4444;
+      border-left: 6px solid #EF4444;
       background: #FFF7F7;
-      opacity: 0.9;
+      opacity: 0.92;
     }
 
     .patient-top {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 6px;
+      gap: 8px;
     }
 
     .patient-name {
       font-size: 14px;
       font-weight: 700;
       color: var(--sas-navy);
-      line-height: 1.25;
+      line-height: 1.3;
     }
 
     .patient-id {
       font-size: 11px;
-      color: var(--sas-text-muted);
-      font-weight: 600;
+      color: var(--sas-navy);
+      font-weight: 700;
       background: #F1F5F9;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 3px 7px;
+      border-radius: 6px;
       white-space: nowrap;
+      border: 1px solid var(--sas-border-light);
     }
 
     /* Pulseiras & Tags */
     .wristband-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 5px;
     }
 
     .wristband-tag {
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 3px 8px;
+      border-radius: 5px;
       color: #fff;
       display: inline-flex;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .wristband-tag.done {
       background: #94A3B8 !important;
       text-decoration: line-through;
-      opacity: 0.7;
+      opacity: 0.65;
     }
 
     /* Status Warnings */
     .status-alert {
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 700;
-      padding: 5px 8px;
+      padding: 6px 10px;
       border-radius: 6px;
       display: flex;
       align-items: center;
@@ -403,16 +411,16 @@
 
     .btn {
       flex: 1;
-      padding: 8px 12px;
+      padding: 10px 14px;
       border-radius: var(--radius-sm);
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 700;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 6px;
       transition: all 0.15s ease;
       text-align: center;
     }
@@ -424,7 +432,7 @@
     .btn-primary {
       background: var(--sas-orange);
       color: #fff;
-      box-shadow: 0 2px 4px rgba(243,112,33,0.3);
+      box-shadow: 0 2px 5px rgba(243,112,33,0.35);
     }
 
     .btn-primary:disabled {
@@ -437,18 +445,20 @@
     .btn-door {
       background: #F59E0B;
       color: #fff;
+      box-shadow: 0 2px 5px rgba(245,158,11,0.35);
     }
 
     .btn-success {
       background: #10B981;
       color: #fff;
+      box-shadow: 0 2px 5px rgba(16,185,129,0.35);
     }
 
     .btn-undo {
       background: #E2E8F0;
-      color: #475569;
+      color: #334155;
       flex: 0 0 auto;
-      padding: 8px 10px;
+      padding: 10px 12px;
     }
 
     /* Modal Sheet / Popups */
@@ -459,7 +469,7 @@
       right: 0;
       bottom: 0;
       background: rgba(15,27,48,0.7);
-      backdrop-filter: blur(3px);
+      backdrop-filter: blur(4px);
       z-index: 1000;
       display: flex;
       align-items: flex-end;
@@ -480,7 +490,7 @@
       max-width: 600px;
       border-top-left-radius: var(--radius-lg);
       border-top-right-radius: var(--radius-lg);
-      padding: 20px;
+      padding: 22px;
       max-height: 90vh;
       overflow-y: auto;
       transform: translateY(100%);
@@ -496,8 +506,8 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 16px;
-      border-bottom: 1px solid var(--sas-border);
-      padding-bottom: 10px;
+      border-bottom: 1px solid var(--sas-border-light);
+      padding-bottom: 12px;
     }
 
     .modal-title {
@@ -506,7 +516,7 @@
       color: var(--sas-navy);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .close-btn {
@@ -525,7 +535,7 @@
     }
 
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .form-label {
@@ -538,7 +548,7 @@
 
     .form-input {
       width: 100%;
-      padding: 10px 12px;
+      padding: 11px 14px;
       border-radius: var(--radius-sm);
       border: 1.5px solid var(--sas-border);
       font-size: 14px;
@@ -557,8 +567,8 @@
     }
 
     .checkbox-pill {
-      border: 1.5px solid var(--sas-border);
-      padding: 8px 10px;
+      border: 1.5px solid var(--sas-border-light);
+      padding: 10px 12px;
       border-radius: var(--radius-sm);
       font-size: 12px;
       font-weight: 600;
@@ -567,6 +577,7 @@
       align-items: center;
       gap: 6px;
       transition: all 0.2s;
+      background: #F8FAFC;
     }
 
     .checkbox-pill.selected {
@@ -580,17 +591,17 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 12px;
+      padding: 12px 14px;
       border-radius: var(--radius-sm);
-      border: 1px solid var(--sas-border);
-      margin-bottom: 8px;
+      border: 1px solid var(--sas-border-light);
+      margin-bottom: 10px;
       background: #F8FAFC;
     }
 
     .color-spec-info {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       font-size: 13px;
       font-weight: 700;
       color: var(--sas-navy);
@@ -606,8 +617,8 @@
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       border: 2px solid #FFFFFF;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
@@ -627,12 +638,12 @@
 
     .color-presets {
       display: flex;
-      gap: 4px;
+      gap: 5px;
     }
 
     .color-preset-dot {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       cursor: pointer;
       border: 1px solid rgba(0,0,0,0.15);
@@ -640,7 +651,7 @@
     }
 
     .color-preset-dot:hover {
-      transform: scale(1.2);
+      transform: scale(1.25);
     }
 
     /* Floating Search Bar Bottom */
@@ -650,8 +661,8 @@
       left: 0;
       right: 0;
       background: #FFFFFF;
-      border-top: 1px solid var(--sas-border);
-      padding: 10px 16px;
+      border-top: 1px solid var(--sas-border-light);
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -667,7 +678,7 @@
     .search-input {
       width: 100%;
       background: #F1F5F9;
-      border: 1px solid var(--sas-border);
+      border: 1.5px solid var(--sas-border-light);
       border-radius: 30px;
       padding: 10px 16px 10px 38px;
       font-size: 13px;
@@ -691,9 +702,9 @@
 
     .empty-state {
       text-align: center;
-      padding: 20px 10px;
+      padding: 24px 10px;
       color: var(--sas-text-muted);
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 500;
     }
   </style>
@@ -717,7 +728,7 @@
       </div>
     </div>
 
-    <!-- Specialty Quick Filter -->
+    <!-- Specialty Quick Filter (Nomes Completos) -->
     <div class="specialty-nav" id="specialtyFilterBar">
       <!-- Populated by JS -->
     </div>
@@ -963,7 +974,7 @@
       container.innerHTML = SPECIALTIES.map(spec => `
         <div class="color-spec-row">
           <div class="color-spec-info">
-            <span>${spec.icon}</span>
+            <span style="font-size:16px;">${spec.icon}</span>
             <span>${spec.name}</span>
           </div>
           <div class="color-spec-controls">
@@ -1015,7 +1026,7 @@
         html += `
           <button class="spec-pill ${selectedSpecialtyFilter === spec.id ? 'active' : ''}" onclick="setFilter('${spec.id}')">
             <span class="dot" style="background: ${spec.color};"></span>
-            ${spec.name.split(' ')[0]} (${count})
+            ${spec.name} (${count})
           </button>
         `;
       });
@@ -1047,7 +1058,7 @@
           <div class="specialty-section">
             <div class="spec-header" style="background: ${spec.color};">
               <div class="spec-header-title">
-                <span>${spec.icon}</span>
+                <span style="font-size:18px;">${spec.icon}</span>
                 <span>${spec.name}</span>
               </div>
               <div class="spec-header-badge">
@@ -1115,11 +1126,11 @@
           <div class="patient-top">
             <div>
               <div class="patient-name">${patient.name}</div>
-              <div class="wristband-tags" style="margin-top: 4px;">
+              <div class="wristband-tags" style="margin-top: 5px;">
                 ${patient.specialties.map(sId => {
                   const spec = SPECIALTIES.find(s => s.id === sId) || { color: '#94A3B8', name: sId };
                   const isDone = patient.statusBySpec[sId] === 'done';
-                  return `<span class="wristband-tag ${isDone ? 'done' : ''}" style="background: ${spec.color};">${spec.name.split(' ')[0]}</span>`;
+                  return `<span class="wristband-tag ${isDone ? 'done' : ''}" style="background: ${spec.color};">${spec.name}</span>`;
                 }).join('')}
               </div>
             </div>
@@ -1129,7 +1140,7 @@
           ${isBusyElsewhere ? `
             <div class="status-alert busy" style="border-left: 4px solid ${busySpecObj ? busySpecObj.color : '#EF4444'};">
               <span>⛔</span>
-              <span>Ocupado em <b style="color: ${busySpecObj ? busySpecObj.color : '#000'};">${busySpecObj ? busySpecObj.name.split(' ')[0] : ''}</b> (${busyStageLabel})</span>
+              <span>Ocupado em <b style="color: ${busySpecObj ? busySpecObj.color : '#000'};">${busySpecObj ? busySpecObj.name : ''}</b> (${busyStageLabel})</span>
             </div>
           ` : ''}
 
@@ -1273,7 +1284,7 @@
                   if (st === 'in_room') badgeLabel = 'Em Consulta';
                   if (st === 'done') badgeLabel = 'Concluído';
 
-                  return `<span class="wristband-tag ${st === 'done' ? 'done' : ''}" style="background: ${spec.color};">${spec.name.split(' ')[0]}: ${badgeLabel}</span>`;
+                  return `<span class="wristband-tag ${st === 'done' ? 'done' : ''}" style="background: ${spec.color};">${spec.name}: ${badgeLabel}</span>`;
                 }).join('')}
               </div>
             </div>
@@ -1299,7 +1310,7 @@
         <label class="checkbox-pill" id="pill_${spec.id}" onclick="toggleSpecSelection('${spec.id}')">
           <input type="checkbox" value="${spec.id}" id="check_${spec.id}" style="display:none;">
           <span style="color:${spec.color}; font-weight:800;">●</span>
-          <span>${spec.name.split(' ')[0]}</span>
+          <span>${spec.name}</span>
         </label>
       `).join('');
 
