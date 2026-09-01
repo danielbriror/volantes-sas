@@ -1116,14 +1116,16 @@
       <div class="brand">
         <span class="brand-badge">SAS</span>
         <div>
-          <div class="brand-title">SAS Brasil • Suíte Clínica</div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="brand-title">SAS Brasil • Suíte Clínica</div>
+            <span style="font-size: 10px; font-weight: 600; background: rgba(245, 158, 11, 0.2); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.3); padding: 2px 7px; border-radius: 10px; letter-spacing: 0.3px;">Alfa · Dados Fictícios</span>
+          </div>
           <div class="brand-sub">Volantes, Filas & Ver Magia</div>
         </div>
       </div>
       <div class="header-actions">
         <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Tema">🌓</button>
         <button class="icon-btn" id="headerColorsBtn" onclick="openColorsModal()" title="Cores das Pulseiras">🎨</button>
-        
         <button class="icon-btn" onclick="openSettingsModal()" title="Configurações & Planilha">⚙️</button>
       </div>
     </div>
@@ -1231,9 +1233,6 @@
       <span class="search-icon">🔍</span>
       <input type="text" class="search-input" id="globalSearchInput" placeholder="Buscar paciente por nome ou pulseira..." oninput="handleSearch(this.value)">
     </div>
-    <button class="btn btn-primary" style="flex:0 0 auto; border-radius: 30px; padding: 10px 16px;" onclick="loadDemoData()">
-      🔄 Demo
-    </button>
   </div>
 
   <!-- Search Results Modal -->
@@ -1286,19 +1285,29 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">URL da Planilha do Google (CSV ou WebApp)</label>
-        <input type="text" class="form-input" id="sheetUrlInput" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv">
-        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
-          Na versão Alfa, o sistema simula os dados localmente. Você pode conectar a planilha real a qualquer momento.
+      <div class="form-group" style="background: var(--bg-card-sub); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 12px;">
+        <div style="font-weight: 600; font-size: 12.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+          <span>📊</span> Integração com Google Sheets
+        </div>
+        <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.4;">
+          Nesta versão Alfa, as filas operam com dados fictícios. A integração futura enviará e receberá atualizações via Google Apps Script em uma aba dedicada da Planilha Master, mantendo o acesso seguro sem expor credenciais públicas.
+        </div>
+      </div>
+
+      <div class="form-group" style="background: var(--bg-card-sub); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 12px;">
+        <div style="font-weight: 600; font-size: 12.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+          <span>📱</span> Armazenamento Local
+        </div>
+        <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.4;">
+          Todas as movimentações de fila e temporizadores Ver Magia ficam salvos no armazenamento interno deste navegador (<code style="font-size: 11px;">localStorage</code>).
         </div>
       </div>
       
       <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
         <button class="btn btn-primary" onclick="openColorsModal(); closeModal('settingsModal');">🎨 Alterar Cores das Pulseiras</button>
         <div style="display: flex; gap: 8px;">
-          <button class="btn btn-door" style="flex:1;" onclick="loadDemoData(true)">Recarregar Dados Demo</button>
-          <button class="btn btn-undo" style="flex:1;" onclick="clearAllData(true)">Limpar Tudo</button>
+          <button class="btn btn-door" style="flex:1;" onclick="loadDemoData(true); closeModal('settingsModal');">Recarregar Dados Demo</button>
+          <button class="btn btn-undo" style="flex:1;" onclick="clearAllData(true); closeModal('settingsModal');">Limpar Tudo</button>
         </div>
       </div>
     </div>
@@ -1373,7 +1382,6 @@
       const timerStats = document.getElementById('timerStatsBar');
       const volantesBottom = document.getElementById('volantesBottomBar');
       const headerColorsBtn = document.getElementById('headerColorsBtn');
-      
 
       if (tab === 'volantes') {
         btnVolantes.classList.add('active');
@@ -1384,8 +1392,7 @@
         volantesStats.style.display = 'grid';
         timerStats.style.display = 'none';
         volantesBottom.style.display = 'flex';
-        headerColorsBtn.style.display = 'flex';
-        
+        if (headerColorsBtn) headerColorsBtn.style.display = 'flex';
         render();
       } else {
         btnVolantes.classList.remove('active');
@@ -1396,8 +1403,7 @@
         volantesStats.style.display = 'none';
         timerStats.style.display = 'grid';
         volantesBottom.style.display = 'none';
-        headerColorsBtn.style.display = 'none';
-        
+        if (headerColorsBtn) headerColorsBtn.style.display = 'none';
         renderTimerList();
       }
       vibrate();
@@ -1514,21 +1520,24 @@
       render();
     }
 
-    function loadDemoData(confirmReplace = false) {
+    function loadDemoData(confirmReplace = true) {
       if (confirmReplace && !confirm('Substituir os dados locais atuais pelos dados de demonstração?')) {
         return;
       }
       patients = JSON.parse(JSON.stringify(DEMO_PATIENTS));
       saveState();
+      render();
       vibrate();
     }
 
-    function clearAllData(confirmClear = false) {
+    function clearAllData(confirmClear = true) {
       if (confirmClear && !confirm('Limpar todos os pacientes armazenados neste aparelho?')) {
         return;
       }
       patients = [];
       saveState();
+      render();
+      vibrate();
     }
 
     function vibrate() {
