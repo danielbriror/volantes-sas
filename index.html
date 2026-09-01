@@ -1703,6 +1703,14 @@
       }
     }
 
+    function hexToRgba(hex, alpha) {
+      const h = hex.replace('#', '');
+      const r = parseInt(h.substring(0, 2), 16);
+      const g = parseInt(h.substring(2, 4), 16);
+      const b = parseInt(h.substring(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
     function formatDuration(ms) {
       if (!ms || ms < 0) return '0 min';
       const totalSeconds = Math.floor(ms / 1000);
@@ -1865,7 +1873,7 @@
         // Layout Minimizável (1 por linha) na Visão Geral
         html += `
           <div class="specialty-row-card ${isExpanded ? 'expanded' : ''}">
-            <div class="specialty-row-header" onclick="toggleExpandSpecialty('${spec.id}')" style="border-left: 6px solid ${spec.color};">
+            <div class="specialty-row-header" onclick="toggleExpandSpecialty('${spec.id}')" style="border-left: 4px solid ${spec.color}; background: ${hexToRgba(spec.color, 0.14)};">
               <div class="specialty-row-info">
                 <span class="specialty-row-title">
                   <span style="font-size:18px;">${spec.icon}</span>
