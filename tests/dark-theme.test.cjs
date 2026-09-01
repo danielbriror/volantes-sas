@@ -28,3 +28,24 @@ test('console operacional aplica passe visual premium neutro', () => {
   assert.match(source, /--design-system: sas-premium-neutral/);
   assert.match(source, /\/\* Premium console overrides \*\//);
 });
+
+test('UI operacional mostra prioridades e uma visão geral navegável por especialidade', () => {
+  assert.match(source, /class="operational-brief"/);
+  assert.match(source, /id="priorityList"/);
+  assert.match(source, /function renderOperationalBrief\(\)/);
+  assert.match(source, /function renderOverviewCards\(\)/);
+  assert.match(source, /class="specialty-overview-card"/);
+  assert.match(source, /Novo paciente/);
+});
+
+test('ações de demonstração e limpeza não ficam na barra operacional', () => {
+  assert.match(source, /function loadDemoData\(confirmReplace = false\)/);
+  assert.match(source, /confirm\('Substituir os dados locais atuais pelos dados de demonstração\?'/);
+  assert.match(source, /confirm\('Limpar todos os pacientes armazenados neste aparelho\?'/);
+  assert.doesNotMatch(source, /id="volantesBottomBar"[\s\S]{0,700}>[\s\S]{0,700}Demo/);
+});
+
+test('temporizador apresenta a próxima ação antes do toque', () => {
+  assert.match(source, /class="timer-next-action"/);
+  assert.match(source, /Próxima ação:/);
+});

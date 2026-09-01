@@ -1151,6 +1151,51 @@
     .form-add-timer { padding: 16px; box-shadow: var(--shadow-md); border: none; }
     .timer-person-item { border: none; border-radius: 10px; box-shadow: var(--shadow-md); transition: box-shadow 0.18s ease, transform 0.18s ease; }
     .timer-person-item:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .timer-main-btn { min-height: 112px; padding: 16px 54px 16px 16px; }
+
+    .operational-brief,
+    .timer-intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px 20px;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 20px;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-md);
+      border-radius: var(--radius-md);
+    }
+    .operational-brief h1,
+    .timer-intro h1 {
+      color: var(--text-main);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      line-height: 1.1;
+      margin: 3px 0 6px;
+    }
+    .operational-brief p,
+    .timer-intro p { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; max-width: 620px; }
+    .section-kicker { color: var(--sas-orange-hover); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+    .new-patient-cta { flex: 0 0 auto; min-height: 42px; padding: 0 15px; white-space: nowrap; }
+    .priority-list { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .priority-item { display: flex; gap: 9px; align-items: flex-start; background: var(--bg-card-sub); box-shadow: 0 0 0 1px var(--border-light); border-radius: 8px; padding: 10px; }
+    .priority-marker { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex: 0 0 auto; background: var(--sas-orange); }
+    .priority-marker.warning { background: #F59E0B; }
+    .priority-marker.critical { background: #EF4444; }
+    .priority-item strong { display: block; color: var(--text-main); font-size: 11.5px; line-height: 1.25; }
+    .priority-item span { color: var(--text-muted); display: block; font-size: 10.5px; line-height: 1.35; margin-top: 2px; }
+
+    .specialty-overview-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .specialty-overview-card { appearance: none; background: var(--bg-card); border: none; border-radius: 10px; box-shadow: var(--shadow-md); color: var(--text-main); cursor: pointer; padding: 16px; text-align: left; transition: box-shadow 0.18s ease, transform 0.18s ease; }
+    .specialty-overview-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .specialty-overview-top { align-items: center; display: flex; gap: 9px; justify-content: space-between; }
+    .specialty-overview-name { font-size: 13px; font-weight: 800; letter-spacing: -0.02em; }
+    .specialty-overview-total { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+    .specialty-overview-breakdown { border-top: 1px solid var(--border-light); display: grid; gap: 6px; grid-template-columns: repeat(3, 1fr); margin-top: 14px; padding-top: 12px; }
+    .specialty-overview-breakdown span { color: var(--text-muted); font-size: 9.5px; font-weight: 700; text-align: center; }
+    .specialty-overview-breakdown b { color: var(--text-main); display: block; font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-bottom: 2px; }
+    .timer-next-action { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.16); border-radius: 5px; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; margin-top: 9px; padding: 5px 7px; text-transform: uppercase; }
 
     :root[data-theme="dark"] .specialty-section,
     :root[data-theme="dark"] .queue-col,
@@ -1163,6 +1208,10 @@
       main { padding: 16px 12px 24px; }
       .stats-bar, .bottom-bar { padding-left: 14px; padding-right: 14px; }
       .queues-grid { padding: 12px; gap: 12px; }
+      .operational-brief, .timer-intro { grid-template-columns: 1fr; padding: 16px; }
+      .new-patient-cta { width: 100%; }
+      .priority-list, .specialty-overview-grid { grid-template-columns: 1fr; }
+      .specialty-overview-card { padding: 14px; }
     }
   </style>
 </head>
@@ -1180,9 +1229,7 @@
       </div>
       <div class="header-actions">
         <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Tema">🌓</button>
-        <button class="icon-btn" id="headerColorsBtn" onclick="openColorsModal()" title="Cores das Pulseiras">🎨</button>
-        <button class="icon-btn" id="headerAddBtn" onclick="openAddModal()" title="Adicionar Paciente">➕</button>
-        <button class="icon-btn" onclick="openSettingsModal()" title="Configurações & Planilha">⚙️</button>
+        <button class="icon-btn" onclick="openSettingsModal()" title="Configurações">⚙️</button>
       </div>
     </div>
 
@@ -1246,6 +1293,17 @@
   <main>
     <!-- ABA 1: VOLANTES & GESTÃO DE FILAS -->
     <div class="app-view active" id="viewVolantes">
+      <section class="operational-brief" aria-labelledby="operationalBriefTitle">
+        <div class="operational-brief-copy">
+          <span class="section-kicker">Operação agora</span>
+          <h1 id="operationalBriefTitle">Prioridades da equipe</h1>
+          <p>Use a visão geral para decidir onde atuar; abra uma especialidade para operar a fila.</p>
+        </div>
+        <button class="btn btn-primary new-patient-cta" onclick="openAddModal()">
+          <span aria-hidden="true">＋</span> Novo paciente
+        </button>
+        <div class="priority-list" id="priorityList" aria-live="polite"></div>
+      </section>
       <div id="queuesContainer">
         <!-- Populated by JS -->
       </div>
@@ -1254,6 +1312,11 @@
     <!-- ABA 2: TEMPORIZADOR VER MAGIA (DILATAÇÃO / PROCEDIMENTOS) -->
     <div class="app-view" id="viewTimer">
       <div class="timer-app-container">
+        <section class="timer-intro" aria-label="Orientação do temporizador">
+          <span class="section-kicker">Ver Magia</span>
+          <h1>Controle de dilatação</h1>
+          <p>Adicione uma pessoa e siga sempre a próxima ação exibida no cartão.</p>
+        </section>
         <form class="form-add-timer" onsubmit="handleTimerAddPerson(event)">
           <input type="text" class="form-input" id="timerInputName" placeholder="Nome do paciente / criança...">
           <button type="submit" class="btn btn-primary" style="flex:0 0 auto; padding:10px 18px;">
@@ -1281,11 +1344,8 @@
   <div class="bottom-bar" id="volantesBottomBar">
     <div class="search-input-wrapper">
       <span class="search-icon">🔍</span>
-      <input type="text" class="search-input" id="globalSearchInput" placeholder="Buscar paciente por nome ou pulseira..." oninput="handleSearch(this.value)">
+      <input type="text" class="search-input" id="globalSearchInput" placeholder="Buscar paciente por nome ou ID..." oninput="handleSearch(this.value)">
     </div>
-    <button class="btn btn-primary" style="flex:0 0 auto; border-radius: 30px; padding: 10px 16px;" onclick="loadDemoData()">
-      🔄 Demo
-    </button>
   </div>
 
   <!-- Search Results Modal -->
@@ -1376,8 +1436,8 @@
       <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
         <button class="btn btn-primary" onclick="openColorsModal(); closeModal('settingsModal');">🎨 Alterar Cores das Pulseiras</button>
         <div style="display: flex; gap: 8px;">
-          <button class="btn btn-door" style="flex:1;" onclick="loadDemoData(); closeModal('settingsModal');">Recarregar Dados Demo</button>
-          <button class="btn btn-undo" style="flex:1;" onclick="clearAllData(); closeModal('settingsModal');">Limpar Tudo</button>
+          <button class="btn btn-door" style="flex:1;" onclick="if (loadDemoData(true)) closeModal('settingsModal');">Recarregar Dados Demo</button>
+          <button class="btn btn-undo" style="flex:1;" onclick="if (clearAllData()) closeModal('settingsModal');">Limpar Tudo</button>
         </div>
       </div>
     </div>
@@ -1451,8 +1511,6 @@
       const volantesStats = document.getElementById('volantesStatsBar');
       const timerStats = document.getElementById('timerStatsBar');
       const volantesBottom = document.getElementById('volantesBottomBar');
-      const headerColorsBtn = document.getElementById('headerColorsBtn');
-      const headerAddBtn = document.getElementById('headerAddBtn');
 
       if (tab === 'volantes') {
         btnVolantes.classList.add('active');
@@ -1463,8 +1521,6 @@
         volantesStats.style.display = 'grid';
         timerStats.style.display = 'none';
         volantesBottom.style.display = 'flex';
-        headerColorsBtn.style.display = 'flex';
-        headerAddBtn.style.display = 'flex';
         render();
       } else {
         btnVolantes.classList.remove('active');
@@ -1475,8 +1531,6 @@
         volantesStats.style.display = 'none';
         timerStats.style.display = 'grid';
         volantesBottom.style.display = 'none';
-        headerColorsBtn.style.display = 'none';
-        headerAddBtn.style.display = 'none';
         renderTimerList();
       }
       vibrate();
@@ -1589,15 +1643,20 @@
       render();
     }
 
-    function loadDemoData() {
+    function loadDemoData(confirmReplace = false) {
+      if (confirmReplace && !confirm('Substituir os dados locais atuais pelos dados de demonstração?')) return false;
       patients = JSON.parse(JSON.stringify(DEMO_PATIENTS));
       saveState();
       vibrate();
+      return true;
     }
 
     function clearAllData() {
+      if (!confirm('Limpar todos os pacientes armazenados neste aparelho?')) return false;
       patients = [];
       saveState();
+      vibrate();
+      return true;
     }
 
     function vibrate() {
@@ -1687,8 +1746,78 @@
 
     function render() {
       renderSpecialtyFilters();
+      renderOperationalBrief();
       renderQueues();
       renderStats();
+    }
+
+    function getSpecialtyCounts(spec) {
+      const specPatients = patients.filter(p => p.specialties.includes(spec.id));
+      return {
+        total: specPatients.filter(p => p.statusBySpec[spec.id] !== 'done').length,
+        waiting: specPatients.filter(p => p.statusBySpec[spec.id] === 'waiting').length,
+        door: specPatients.filter(p => p.statusBySpec[spec.id] === 'door').length,
+        inRoom: specPatients.filter(p => p.statusBySpec[spec.id] === 'in_room').length
+      };
+    }
+
+    function renderOperationalBrief() {
+      const container = document.getElementById('priorityList');
+      if (!container) return;
+
+      const waitingEntries = patients.flatMap(patient => patient.specialties
+        .filter(specId => patient.statusBySpec[specId] === 'waiting')
+        .map(specId => ({ patient, specId })));
+      const lowBufferSpecs = SPECIALTIES
+        .map(spec => ({ spec, counts: getSpecialtyCounts(spec) }))
+        .filter(({ counts }) => counts.total > 0 && counts.door < 2);
+      const longestWaiting = waitingEntries
+        .map(({ patient, specId }) => ({ patient, specId, start: patient.stages?.[specId]?.waitingStart || patient.registeredAt || Date.now() }))
+        .sort((a, b) => a.start - b.start)[0];
+
+      const priorities = [
+        {
+          level: lowBufferSpecs.length ? 'warning' : '',
+          title: lowBufferSpecs.length ? `${lowBufferSpecs.length} fila(s) com buffer baixo` : 'Buffers das portas equilibrados',
+          description: lowBufferSpecs.length ? lowBufferSpecs.map(({ spec }) => spec.name).join(' • ') : 'Nenhuma fila ativa abaixo de 2 pessoas na porta.'
+        },
+        {
+          level: waitingEntries.length ? '' : '',
+          title: `${waitingEntries.length} atendimento(s) aguardando chamada`,
+          description: waitingEntries.length ? 'Abra uma especialidade para chamar o próximo paciente.' : 'Nenhum paciente aguardando na tenda agora.'
+        },
+        {
+          level: longestWaiting ? 'critical' : '',
+          title: longestWaiting ? `${longestWaiting.patient.name} aguarda há ${formatDuration(Date.now() - longestWaiting.start)}` : 'Sem espera pendente',
+          description: longestWaiting ? `Priorize na fila de ${(SPECIALTIES.find(spec => spec.id === longestWaiting.specId) || {}).name || 'especialidade'}.` : 'A operação está sem pacientes pendentes.'
+        }
+      ];
+
+      container.innerHTML = priorities.map(priority => `
+        <div class="priority-item">
+          <span class="priority-marker ${priority.level}"></span>
+          <div><strong>${priority.title}</strong><span>${priority.description}</span></div>
+        </div>
+      `).join('');
+    }
+
+    function renderOverviewCards() {
+      return `<div class="specialty-overview-grid">${SPECIALTIES.map(spec => {
+        const counts = getSpecialtyCounts(spec);
+        return `
+          <button class="specialty-overview-card" onclick="setFilter('${spec.id}')" aria-label="Abrir fila de ${spec.name}">
+            <div class="specialty-overview-top">
+              <span class="specialty-overview-name"><span style="color:${spec.color};">${spec.icon}</span> ${spec.name}</span>
+              <span class="specialty-overview-total">${counts.total} ativos</span>
+            </div>
+            <div class="specialty-overview-breakdown">
+              <span><b>${counts.waiting}</b>Tenda</span>
+              <span><b>${counts.door}</b>Porta</span>
+              <span><b>${counts.inRoom}</b>Consulta</span>
+            </div>
+          </button>
+        `;
+      }).join('')}</div>`;
     }
 
     function renderSpecialtyFilters() {
@@ -1720,9 +1849,12 @@
 
     function renderQueues() {
       const container = document.getElementById('queuesContainer');
-      const specsToRender = selectedSpecialtyFilter === 'all' 
-        ? SPECIALTIES 
-        : SPECIALTIES.filter(s => s.id === selectedSpecialtyFilter);
+      if (selectedSpecialtyFilter === 'all') {
+        container.innerHTML = renderOverviewCards();
+        return;
+      }
+
+      const specsToRender = SPECIALTIES.filter(s => s.id === selectedSpecialtyFilter);
 
       let html = '';
 
@@ -2235,41 +2367,44 @@
         }
 
         let cssClass = 'timer-state-green';
-        let statusText = 'Verde • Toque p/ iniciar 5 min';
+        let statusText = 'Etapa 1 • colírio';
         let badgeText = '05:00';
+        let nextAction = 'Próxima ação: iniciar contagem de 5 min';
 
         if (person.state === 'green') {
           if (running) {
             cssClass = 'timer-state-green';
-            statusText = 'Verde (5 min rodando...)';
+            statusText = 'Etapa 1 em andamento • colírio';
             badgeText = formatSeconds(remaining);
+            nextAction = 'Próxima ação: aguardar o término dos 5 min';
           } else if (person.isFinished) {
             cssClass = 'timer-state-yellow';
-            statusText = 'Amarelo • 5m concluídos! Toque p/ 30m';
+            statusText = 'Etapa 1 concluída';
             badgeText = '00:00';
-          } else {
-            cssClass = 'timer-state-green';
-            statusText = 'Verde • Toque p/ iniciar 5 min';
-            badgeText = '05:00';
+            nextAction = 'Próxima ação: iniciar espera de 30 min';
           }
         } else if (person.state === 'yellow') {
           if (running) {
             cssClass = 'timer-state-yellow';
-            statusText = 'Amarelo (30 min rodando...)';
+            statusText = 'Etapa 2 em andamento • espera';
             badgeText = formatSeconds(remaining);
+            nextAction = 'Próxima ação: aguardar o término dos 30 min';
           } else if (person.isFinished) {
             cssClass = 'timer-state-red';
-            statusText = 'Vermelho • 30m concluídos! Toque p/ reiniciar';
+            statusText = 'Etapa 2 concluída';
             badgeText = '00:00';
+            nextAction = 'Próxima ação: confirmar ciclo concluído';
           } else {
             cssClass = 'timer-state-yellow';
-            statusText = 'Amarelo • Toque p/ iniciar 30 min';
+            statusText = 'Etapa 2 • espera';
             badgeText = '30:00';
+            nextAction = 'Próxima ação: iniciar espera de 30 min';
           }
         } else if (person.state === 'red') {
           cssClass = 'timer-state-red';
-          statusText = 'Vermelho • Ciclo finalizado (Toque p/ reiniciar)';
+          statusText = 'Ciclo concluído';
           badgeText = 'Concluído';
+          nextAction = 'Próxima ação: reiniciar ciclo, se necessário';
         }
 
         html += `
@@ -2280,6 +2415,7 @@
                 <span class="timer-badge-clock">${badgeText}</span>
                 <span>${statusText}</span>
               </div>
+              <div class="timer-next-action">${nextAction}</div>
             </button>
             <button class="timer-btn-delete" title="Excluir" onclick="deleteTimerPerson('${person.id}', event)">
               ✕
