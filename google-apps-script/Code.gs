@@ -46,13 +46,23 @@ function getOperationalSheet_() {
   return SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
 }
 
+const TIME_COLUMNS = ['Entrou_Tenda', 'Entrou_Porta', 'Entrou_Consulta', 'Concluido_Em', 'Atualizado_Em'];
+
 function readOperationalRows_() {
   const sheet = getOperationalSheet_();
   const values = sheet.getDataRange().getValues();
   const rows = values.slice(1); // pula cabeçalho
   return rows.map((r, i) => {
     const obj = {};
-    COLUMNS.forEach((c, idx) => obj[c] = r[idx]);
+    COLUMNS.forEach((c, idx) => {
+      let v = r[idx];
+      // O Sheets às vezes guarda "HH:MM" como valor de Hora internamente
+      // (Date com a data-base 1899-12-30); normaliza de volta pra "HH:MM".
+      if (TIME_COLUMNS.includes(c) && v instanceof Date) {
+        v = Utilities.formatDate(v, Session.getScriptTimeZone(), 'HH:mm');
+      }
+      obj[c] = v;
+    });
     obj._row = i + 2; // linha real na planilha (1-based + cabeçalho)
     return obj;
   });
