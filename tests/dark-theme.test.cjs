@@ -87,6 +87,79 @@ test('dados demo reduzem a proporção conforme cresce o número de especialidad
   assert.ok(distribution[3] > distribution[4]);
 });
 
+function getPostConsultationPlanForTest(patient, allPatients, specialties) {
+  const start = source.indexOf('function getPostConsultationPlan(');
+  const end = source.indexOf('function openPostConsultationModal(', start);
+  assert.notEqual(start, -1, 'getPostConsultationPlan deve existir');
+  assert.notEqual(end, -1, 'openPostConsultationModal deve seguir getPostConsultationPlan');
+
+  const sandbox = { patients: allPatients, SPECIALTIES: specialties, patient };
+  vm.runInNewContext(`${source.slice(start, end)}\nresult = getPostConsultationPlan(patient);`, sandbox);
+  return sandbox.result;
+}
+
+test('encerramento da consulta libera paciente sem especialidades pendentes', () => {
+  const specialties = [{ id: 'oftalmo', name: 'Oftalmologia' }];
+  const patient = { id: 'P-1', specialties: ['oftalmo'], statusBySpec: { oftalmo: 'in_room' } };
+
+  const plan = getPostConsultationPlanForTest(patient, [patient], specialties);
+  assert.equal(plan.kind, 'complete');
+  assert.deepEqual(Array.from(plan.pendingSpecs), []);
+});
+
+test('encerramento sugere porta direta apenas sem outro paciente aguardando', () => {
+  const specialties = [
+    { id: 'oftalmo', name: 'Oftalmologia' },
+    { id: 'dermato', name: 'Dermatologia' }
+  ];
+  const patient = {
+    id: 'P-2',
+    specialties: ['oftalmo', 'dermato'],
+    statusBySpec: { oftalmo: 'in_room', dermato: 'waiting' }
+  };
+  const planWithoutQueue = getPostConsultationPlanForTest(patient, [patient], specialties);
+  assert.equal(planWithoutQueue.kind, 'pending');
+  assert.deepEqual(Array.from(planWithoutQueue.directDoorSpecs), ['dermato']);
+  assert.deepEqual(Array.from(planWithoutQueue.returnToWaitingSpecs), []);
+
+  const anotherWaitingPatient = {
+    id: 'P-3', specialties: ['dermato'], statusBySpec: { dermato: 'waiting' }
+  };
+  const planWithQueue = getPostConsultationPlanForTest(patient, [patient, anotherWaitingPatient], specialties);
+  assert.deepEqual(Array.from(planWithQueue.directDoorSpecs), []);
+  assert.deepEqual(Array.from(planWithQueue.returnToWaitingSpecs), ['dermato']);
+});
+
+test('confirmação de porta direta conclui a consulta e move apenas o próximo destino escolhido', () => {
+  const start = source.indexOf('function confirmPostConsultation(');
+  const end = source.indexOf('function finishConsultation(', start);
+  assert.notEqual(start, -1, 'confirmPostConsultation deve existir');
+  assert.notEqual(end, -1, 'finishConsultation deve seguir confirmPostConsultation');
+
+  const patient = {
+    id: 'P-4', specialties: ['oftalmo', 'dermato'],
+    statusBySpec: { oftalmo: 'in_room', dermato: 'waiting' },
+    currentLocation: { spec: 'oftalmo', stage: 'in_room' }, stages: { oftalmo: {}, dermato: {} }
+  };
+  const remoteActions = [];
+  const sandbox = {
+    patients: [patient],
+    Date: { now: () => 1700000000000 },
+    saveState: () => { sandbox.saved = (sandbox.saved || 0) + 1; },
+    closeModal: id => { sandbox.closedModal = id; },
+    pushRemoteAction: (...args) => remoteActions.push(args),
+    vibrate: () => { sandbox.vibrated = true; }
+  };
+  vm.runInNewContext(`${source.slice(start, end)}\nconfirmPostConsultation('P-4', 'oftalmo', 'dermato');`, sandbox);
+
+  assert.equal(patient.statusBySpec.oftalmo, 'done');
+  assert.equal(patient.statusBySpec.dermato, 'door');
+  assert.deepEqual({ ...patient.currentLocation }, { spec: 'dermato', stage: 'door' });
+  assert.equal(sandbox.saved, 1);
+  assert.equal(sandbox.closedModal, 'postConsultationModal');
+  assert.deepEqual(remoteActions, [['P-4', 'oftalmo', 'done'], ['P-4', 'dermato', 'door']]);
+});
+
 test('sincronização não confirma sucesso quando o POST remoto falha', () => {
   const start = source.indexOf('async function pushRemoteAction');
   const end = source.indexOf('function saveApiUrl()', start);
