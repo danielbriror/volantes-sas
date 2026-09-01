@@ -59,53 +59,53 @@
     /* Dark Theme Automático */
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --bg-app: #0A0F1D;
-        --bg-card: #131E34;
-        --bg-card-sub: #1A2846;
-        --bg-header: linear-gradient(135deg, #060A14 0%, #0F172A 100%);
-        --bg-stats: #10192C;
-        --bg-col-tenda: #0D1527;
-        --bg-col-porta: #1C1914;
-        --bg-col-sala: #0E1A33;
-        --bg-modal: #131E34;
-        --bg-input: #1A2846;
-        --bg-bottom-bar: #10192C;
+        --bg-app: #111111;
+        --bg-card: #1A1A1A;
+        --bg-card-sub: #202020;
+        --bg-header: linear-gradient(135deg, #101010 0%, #242424 100%);
+        --bg-stats: #181818;
+        --bg-col-tenda: #1B1B1B;
+        --bg-col-porta: #22201B;
+        --bg-col-sala: #1D1D1D;
+        --bg-modal: #1A1A1A;
+        --bg-input: #242424;
+        --bg-bottom-bar: #181818;
         
-        --text-main: #F8FAFC;
-        --text-muted: #94A3B8;
+        --text-main: #F5F5F5;
+        --text-muted: #A3A3A3;
         --text-header: #FFFFFF;
         
-        --border-main: #2A3B5C;
-        --border-light: #1E2D4A;
+        --border-main: #3A3A3A;
+        --border-light: #2A2A2A;
         
-        --badge-bg: #1A2846;
-        --timer-bar-bg: #17243E;
+        --badge-bg: #252525;
+        --timer-bar-bg: #242424;
       }
     }
 
     /* Dark Theme Manual */
     :root[data-theme="dark"] {
-      --bg-app: #0A0F1D;
-      --bg-card: #131E34;
-      --bg-card-sub: #1A2846;
-      --bg-header: linear-gradient(135deg, #060A14 0%, #0F172A 100%);
-      --bg-stats: #10192C;
-      --bg-col-tenda: #0D1527;
-      --bg-col-porta: #1C1914;
-      --bg-col-sala: #0E1A33;
-      --bg-modal: #131E34;
-      --bg-input: #1A2846;
-      --bg-bottom-bar: #10192C;
+      --bg-app: #111111;
+      --bg-card: #1A1A1A;
+      --bg-card-sub: #202020;
+      --bg-header: linear-gradient(135deg, #101010 0%, #242424 100%);
+      --bg-stats: #181818;
+      --bg-col-tenda: #1B1B1B;
+      --bg-col-porta: #22201B;
+      --bg-col-sala: #1D1D1D;
+      --bg-modal: #1A1A1A;
+      --bg-input: #242424;
+      --bg-bottom-bar: #181818;
       
-      --text-main: #F8FAFC;
-      --text-muted: #94A3B8;
+      --text-main: #F5F5F5;
+      --text-muted: #A3A3A3;
       --text-header: #FFFFFF;
       
-      --border-main: #2A3B5C;
-      --border-light: #1E2D4A;
+      --border-main: #3A3A3A;
+      --border-light: #2A2A2A;
       
-      --badge-bg: #1A2846;
-      --timer-bar-bg: #17243E;
+      --badge-bg: #252525;
+      --timer-bar-bg: #242424;
     }
 
     /* Light Theme Manual */
@@ -1255,6 +1255,11 @@
     function applyTheme() {
       const root = document.documentElement;
       const btn = document.getElementById('themeToggleBtn');
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      const usesDarkSurface = currentTheme === 'dark'
+        || (currentTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+      if (themeMeta) themeMeta.content = usesDarkSurface ? '#1A1A1A' : '#1A2B4C';
 
       if (currentTheme === 'dark') {
         root.setAttribute('data-theme', 'dark');
@@ -1287,6 +1292,10 @@
       applyTheme();
       vibrate();
     }
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (currentTheme === 'auto') applyTheme();
+    });
 
     // ==========================================
     // 2. NAVEGAÇÃO ENTRE ABAS DO APP
