@@ -18,7 +18,7 @@
  */
 
 const MASTER_SHEET_ID = 'COLOQUE_AQUI_O_ID_DA_PLANILHA_MASTER'; // nunca escrita, só lida
-const OPERATIONAL_SHEET_NAME = 'Página1'; // aba da própria planilha (Fila Operacional)
+const OPERATIONAL_SHEET_NAME = 'Página1'; // não usado mais — mantido só de referência
 
 const COLUMNS = [
   'ID_Pulseira', 'Nome_Paciente', 'Especialidade_ID', 'Especialidade_Nome',
@@ -41,7 +41,9 @@ function matchSpecialty_(rawName) {
 }
 
 function getOperationalSheet_() {
-  return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(OPERATIONAL_SHEET_NAME);
+  // Pega a primeira aba da planilha ativa — evita depender do nome exato da
+  // aba (varia por idioma/edição: "Página1", "Sheet1" etc).
+  return SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
 }
 
 function readOperationalRows_() {
