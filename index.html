@@ -1475,82 +1475,65 @@
     // Estado de cards expandidos na visão geral
     let expandedSpecialties = JSON.parse(localStorage.getItem('sas_expanded_specs')) || {};
 
-    const now = Date.now();
-    const DEMO_PATIENTS = [
-      {
-        id: 'SAS-101',
-        name: 'Maria Francisca dos Santos',
-        specialties: ['oftalmo', 'odonto'],
-        statusBySpec: { oftalmo: 'door', odonto: 'waiting' },
-        currentLocation: { spec: 'oftalmo', stage: 'door' },
-        registeredAt: now - 38 * 60000,
-        stages: {
-          oftalmo: { waitingStart: now - 38 * 60000, doorStart: now - 6 * 60000 },
-          odonto: { waitingStart: now - 38 * 60000 }
-        }
-      },
-      {
-        id: 'SAS-102',
-        name: 'Antônio Carlos Silva',
-        specialties: ['dermato', 'oftalmo'],
-        statusBySpec: { dermato: 'in_room', oftalmo: 'waiting' },
-        currentLocation: { spec: 'dermato', stage: 'in_room' },
-        registeredAt: now - 45 * 60000,
-        stages: {
-          dermato: { waitingStart: now - 45 * 60000, doorStart: now - 22 * 60000, roomStart: now - 14 * 60000 },
-          oftalmo: { waitingStart: now - 45 * 60000 }
-        }
-      },
-      {
-        id: 'SAS-103',
-        name: 'João Pedro de Oliveira (Criança)',
-        specialties: ['pediatria', 'oftalmo', 'odonto'],
-        statusBySpec: { pediatria: 'waiting', oftalmo: 'waiting', odonto: 'waiting' },
-        currentLocation: null,
-        registeredAt: now - 20 * 60000,
-        stages: {
-          pediatria: { waitingStart: now - 20 * 60000 },
-          oftalmo: { waitingStart: now - 20 * 60000 },
-          odonto: { waitingStart: now - 20 * 60000 }
-        }
-      },
-      {
-        id: 'SAS-104',
-        name: 'Raimunda Nonata Lima',
-        specialties: ['gineco', 'dermato'],
-        statusBySpec: { gineco: 'waiting', dermato: 'waiting' },
-        currentLocation: null,
-        registeredAt: now - 15 * 60000,
-        stages: {
-          gineco: { waitingStart: now - 15 * 60000 },
-          dermato: { waitingStart: now - 15 * 60000 }
-        }
-      },
-      {
-        id: 'SAS-105',
-        name: 'Sebastião Gomes Pereira',
-        specialties: ['oftalmo', 'clinica'],
-        statusBySpec: { oftalmo: 'door', clinica: 'waiting' },
-        currentLocation: { spec: 'oftalmo', stage: 'door' },
-        registeredAt: now - 28 * 60000,
-        stages: {
-          oftalmo: { waitingStart: now - 28 * 60000, doorStart: now - 4 * 60000 },
-          clinica: { waitingStart: now - 28 * 60000 }
-        }
-      },
-      {
-        id: 'SAS-106',
-        name: 'Ana Lúcia Barbosa',
-        specialties: ['odonto', 'gineco'],
-        statusBySpec: { odonto: 'in_room', gineco: 'waiting' },
-        currentLocation: { spec: 'odonto', stage: 'in_room' },
-        registeredAt: now - 50 * 60000,
-        stages: {
-          odonto: { waitingStart: now - 50 * 60000, doorStart: now - 28 * 60000, roomStart: now - 18 * 60000 },
-          gineco: { waitingStart: now - 50 * 60000 }
-        }
-      }
+    // Dados inteiramente fictícios para ensaiar volume operacional no celular.
+    // 60 pacientes × 2 especialidades = 20 pacientes por especialidade.
+    // Exatos 9/60 (15%) já estão na porta ou em consulta e bloqueiam a outra fila.
+    const DEMO_PATIENT_NAMES = [
+      'Maria Francisca dos Santos', 'Antônio Carlos Silva', 'João Pedro de Oliveira', 'Raimunda Nonata Lima',
+      'Sebastião Gomes Pereira', 'Ana Lúcia Barbosa', 'José Roberto Almeida', 'Francisca das Chagas Costa',
+      'Carlos Henrique Souza', 'Marta Regina Ferreira', 'Paulo Sérgio Rodrigues', 'Lúcia Helena Martins',
+      'Marcos Vinícius Araújo', 'Tereza Cristina Barros', 'Ricardo Augusto Nunes', 'Valéria de Fátima Lopes',
+      'Pedro Lucas Mendes', 'Cláudia Aparecida Ramos', 'Ronaldo Batista Lima', 'Eliane Moreira Santos',
+      'André Luiz Cardoso', 'Beatriz Helena Freitas', 'Gilberto Pereira da Silva', 'Sônia Maria Andrade',
+      'Fábio Junior Alves', 'Patrícia Gomes Rocha', 'Eduardo César Monteiro', 'Rosângela Vieira Campos',
+      'Mateus Gabriel Ribeiro', 'Adriana Cristina Teixeira', 'Luiz Fernando Castro', 'Denise Moura Farias',
+      'Bruno Henrique Oliveira', 'Camila Alves de Souza', 'Roberto Carlos Moreira', 'Janete Pereira Lima',
+      'Diego Rafael Martins', 'Luciana da Silva Costa', 'Vinícius Lopes Barros', 'Márcia Regina Nascimento',
+      'Felipe Augusto Dias', 'Tatiane Freire Alves', 'Gustavo Henrique Melo', 'Renata Cristina Silva',
+      'Alexandre Santos Rocha', 'Simone de Fátima Souza', 'Leandro Ribeiro Costa', 'Carolina Martins Lima',
+      'Rafael Gomes Pereira', 'Cristiane Alves Rocha', 'Daniel Ferreira Santos', 'Fernanda Costa Nunes',
+      'Wellington Souza Lima', 'Priscila Andrade Melo', 'Thiago Martins Rocha', 'Aline Cristina Santos',
+      'Marcelo Pereira Alves', 'Juliana Moreira Lima', 'Caio Henrique Souza', 'Vanessa da Silva Ramos'
     ];
+
+    const DEMO_SPECIALTY_IDS = ['oftalmo', 'odonto', 'dermato', 'gineco', 'pediatria', 'clinica'];
+    const DEMO_BUSY_PATIENT_COUNT = 9;
+
+    function buildDemoPatients(referenceTime = Date.now()) {
+      return DEMO_PATIENT_NAMES.map((name, index) => {
+        const primarySpec = DEMO_SPECIALTY_IDS[index % DEMO_SPECIALTY_IDS.length];
+        const secondarySpec = DEMO_SPECIALTY_IDS[(index + 2) % DEMO_SPECIALTY_IDS.length];
+        const isBusy = index < DEMO_BUSY_PATIENT_COUNT;
+        const busyStage = index % 2 === 0 ? 'door' : 'in_room';
+        const waitedMinutes = 8 + ((index * 7) % 83);
+        const registeredAt = referenceTime - waitedMinutes * 60000;
+        const stages = {
+          [primarySpec]: { waitingStart: registeredAt },
+          [secondarySpec]: { waitingStart: registeredAt }
+        };
+        const statusBySpec = { [primarySpec]: 'waiting', [secondarySpec]: 'waiting' };
+        let currentLocation = null;
+
+        if (isBusy) {
+          statusBySpec[primarySpec] = busyStage;
+          stages[primarySpec].doorStart = referenceTime - (3 + ((index * 2) % 11)) * 60000;
+          if (busyStage === 'in_room') {
+            stages[primarySpec].roomStart = referenceTime - (2 + ((index * 3) % 9)) * 60000;
+          }
+          currentLocation = { spec: primarySpec, stage: busyStage };
+        }
+
+        return {
+          id: `SAS-${String(101 + index).padStart(3, '0')}`,
+          name,
+          specialties: [primarySpec, secondarySpec],
+          statusBySpec,
+          currentLocation,
+          registeredAt,
+          stages
+        };
+      });
+    }
 
     function saveState() {
       localStorage.setItem('sas_volantes_patients', JSON.stringify(patients));
@@ -1682,7 +1665,7 @@
       if (confirmReplace && !confirm('Substituir os dados locais atuais pelos dados de demonstração?')) {
         return;
       }
-      patients = JSON.parse(JSON.stringify(DEMO_PATIENTS));
+      patients = buildDemoPatients(Date.now());
       saveState();
       render();
       vibrate();
