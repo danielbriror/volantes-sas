@@ -28,6 +28,11 @@ test('UI de volantes possui visão geral minimizável por linha', () => {
   assert.match(source, /toggleSpecialtyFilter/);
 });
 
+test('resumo operacional mantém os cinco indicadores na mesma linha', () => {
+  assert.match(source, /grid-template-columns: repeat\(5, 1fr\)/);
+  assert.match(source, /id="statDone"/);
+});
+
 test('temporizador apresenta acionamentos e a próxima ação clara', () => {
   assert.match(source, /handleTimerButtonClick/);
   assert.match(source, /class="timer-next-action"/);
