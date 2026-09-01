@@ -1,56 +1,54 @@
-# Integração com Google Sheets (protótipo)
+# Integração com Google Sheets — protótipo técnico
 
-Arquitetura de duas planilhas, pra nunca arriscar os dados de cadastro/triagem:
+> [!warning] Status atual
+> O `index.html` **já possui** a integração no front-end: ele lê a URL configurada em **Configurações → Sincronização**, busca a fila remota e envia movimentações. Essa integração fica **desligada por padrão** enquanto o campo da URL estiver vazio.
+>
+> Não há URL oficial configurada neste repositório e o protótipo abaixo **não está aprovado para dados reais de pacientes**. Até existir controle de acesso validado, o app deve operar apenas com `localStorage` e dados fictícios.
 
-- **Planilha Master** (cadastro/triagem) — continua exatamente como está hoje,
-  usada por quem faz o cadastro. O app e o script **nunca escrevem nela**,
-  só leem.
-- **Planilha Fila Operacional** — nova, criada como mockup em:
-  https://docs.google.com/spreadsheets/d/1IGYuc9u9k5Hl-vVS1k9x7dzDvk5siLoSLKVF_HiElxs/edit
-  É nela que o `Code.gs` escreve as movimentações de fila (tenda / porta /
-  consulta / concluído), e é ela que o app vai ler e atualizar em tempo real.
+## Arquitetura prevista
 
-O script (`Code.gs`) faz duas coisas:
+A arquitetura usa duas planilhas para preservar o cadastro e a triagem:
 
-1. `syncFromMaster()` — lê a Master (só leitura) e adiciona na Fila
-   Operacional qualquer combinação paciente+especialidade que ainda não
-   existe lá. Não sobrescreve o progresso de quem já está na fila.
-2. `doGet` / `doPost` — expõe a Fila Operacional como uma API HTTP simples
-   pro app consumir (buscar o estado atual, e mandar "mover pra porta",
-   "entrou na consulta", "concluiu").
+- **Planilha Master** — cadastro/triagem. O app e o `Code.gs` devem somente **ler** essa planilha; nunca escrever nela.
+- **Fila Operacional** — planilha separada, privada e administrada pela operação. É nela que o script registra o fluxo `waiting` → `door` → `in_room` → `done`.
 
-As colunas `Entrou_Tenda`, `Entrou_Porta`, `Entrou_Consulta`, `Concluido_Em`
-e `Atualizado_Em` guardam **timestamp numérico (ms, tipo `Date.now()`)**, não
-texto "HH:MM" — evita o Google Sheets reinterpretar o valor como hora com
-fuso horário errado ao ler/escrever.
+O repositório não publica links de planilhas. IDs, URLs e permissões da operação real devem ficar fora do código público.
 
-## Como implantar (passo manual, precisa ser feito por vocês)
+## O que o `Code.gs` já faz
 
-1. Abra a planilha **Fila Operacional** (link acima) → `Extensões` →
-   `Apps Script`.
-2. Apague o conteúdo padrão e cole o conteúdo de `Code.gs`.
-3. No topo do arquivo, troque `MASTER_SHEET_ID` pelo ID real da Planilha
-   Master (a parte da URL entre `/d/` e `/edit`).
-4. No editor, selecione a função `setupTrigger` no menu de funções e clique
-   em ▶ Executar uma vez — isso pede autorização (é a tela de permissão do
-   Google, só vocês podem aprovar) e já liga a sincronização automática a
-   cada 5 minutos.
-5. `Implantar` → `Nova implantação` → tipo **Aplicativo da Web** →
-   Executar como *Eu*, Quem pode acessar *Qualquer pessoa*. Copie a URL
-   gerada.
-6. Essa URL é o que entra no app (isso ainda não foi conectado ao
-   `index.html` — é o próximo passo, depois que a Master real da SAS
-   estiver definida).
+1. `syncFromMaster()` lê a Master e cria, na Fila Operacional, somente as combinações novas de paciente + especialidade. Não sobrescreve o progresso já registrado.
+2. `doGet` devolve o estado da Fila Operacional em JSON.
+3. `doPost` atualiza uma movimentação de uma combinação paciente + especialidade.
+4. `setupTrigger()` cria um gatilho de sincronização a cada 5 minutos e executa a primeira sincronização.
 
-## Pendências conhecidas (mockup → real)
+Os campos `Entrou_Tenda`, `Entrou_Porta`, `Entrou_Consulta`, `Concluido_Em` e `Atualizado_Em` usam timestamp numérico em milissegundos, em vez de texto de hora, para evitar ambiguidade de fuso horário.
 
-- A Master mockup tem inconsistência nos nomes de especialidade (ex:
-  "Saúde da Mulher" vs "Saúde da Mulher (Colo Útero)"). O `matchSpecialty_`
-  já usa correspondência parcial pra tolerar isso, mas vale padronizar na
-  planilha real.
-- `Status_Geral` da Master é um status único por paciente (não por
-  especialidade), por isso `syncFromMaster` sempre insere as novas linhas
-  como `waiting` — ele nunca tenta adivinhar em qual etapa cada
-  especialidade está a partir da Master.
-- O `index.html` já sabe consumir essa API (Configurações > Sincronização):
-  basta colar a URL do Apps Script implantado.
+## Limite de segurança do protótipo
+
+O `Code.gs` atual expõe `GET` e `POST` sem autenticação própria. Uma implantação de Apps Script acessível por “qualquer pessoa” permite que qualquer pessoa com a URL leia e tente alterar a Fila Operacional.
+
+**Portanto, não implante este script com acesso anônimo para dados reais ou identificáveis.** A Planilha Master fica protegida contra escrita, mas a Fila Operacional pode conter informação de saúde e exige controle de acesso compatível com a operação e a LGPD.
+
+## Pré-requisitos antes de ativar em campo
+
+- [ ] Definir o responsável operacional pela Fila Operacional e pela Planilha Master.
+- [ ] Criar a Fila Operacional privada e manter seus links/IDs fora do repositório público.
+- [ ] Padronizar os nomes das especialidades na Master.
+- [ ] Definir e testar o modelo de autenticação/autorização da API antes de disponibilizar dados reais.
+- [ ] Validar leitura, movimentações, reconciliação de erros e acesso offline em Android e iPhone.
+- [ ] Registrar quem pode configurar a URL do endpoint nos celulares de campo.
+
+## Fluxo de ativação, quando os pré-requisitos forem cumpridos
+
+1. Na Fila Operacional privada, abra `Extensões` → `Apps Script` e copie `Code.gs`.
+2. Preencha `MASTER_SHEET_ID` com o ID da Master real. O script deve permanecer vinculado à **Fila Operacional**, nunca à Master.
+3. Execute `setupTrigger()` uma vez para autorizar o acesso e criar o gatilho de sincronização.
+4. Implante a API somente com o modelo de acesso aprovado para a operação. Não use uma implantação anônima como atalho para produção.
+5. No app, abra **Configurações → Sincronização**, cole a URL do endpoint oficialmente aprovado e use **Salvar e Testar**.
+6. Confirme que a tela mostra `Sincronizado` e que uma movimentação de teste aparece na Fila Operacional antes de iniciar a ação.
+
+## Limitações conhecidas
+
+- `Status_Geral` da Master é único por paciente, não por especialidade. Por isso, `syncFromMaster()` inicia novas linhas como `waiting`; ele não tenta inferir uma etapa por especialidade.
+- A correspondência de especialidades no protótipo aceita nomes parciais, mas a padronização na planilha real continua necessária.
+- O app mantém a atualização local imediatamente e só então envia o `POST`. Falhas de rede são sinalizadas como erro de sincronização e precisam de uma estratégia operacional de reconciliação antes da produção.

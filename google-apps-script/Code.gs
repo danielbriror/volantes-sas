@@ -12,9 +12,9 @@
  *   2. Preencha MASTER_SHEET_ID abaixo com o ID da Planilha Master real.
  *   3. Rode `setupTrigger` uma vez (menu Executar) para autorizar o script
  *      e criar o gatilho automático de sincronização.
- *   4. Implantar > Nova implantação > Aplicativo da Web
- *      (Executar como: Eu; Quem pode acessar: Qualquer pessoa) e copie a
- *      URL gerada — é ela que vai no app (Configurações > Integração).
+ *   4. Defina e valide o modelo de acesso antes de implantar a API.
+ *      Não publique um endpoint anônimo com dados reais ou identificáveis.
+ *      A URL aprovada entra no app em Configurações > Sincronização.
  */
 
 const MASTER_SHEET_ID = 'COLOQUE_AQUI_O_ID_DA_PLANILHA_MASTER'; // nunca escrita, só lida
@@ -143,11 +143,9 @@ function doPost(e) {
 
 /** Roda uma vez manualmente: autoriza o script e liga a sincronização automática. */
 function setupTrigger() {
-  ScriptTriggers: {
-    ScriptApp.getProjectTriggers()
-      .filter(t => t.getHandlerFunction() === 'syncFromMaster')
-      .forEach(t => ScriptApp.deleteTrigger(t));
-  }
+  ScriptApp.getProjectTriggers()
+    .filter(t => t.getHandlerFunction() === 'syncFromMaster')
+    .forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('syncFromMaster')
     .timeBased()
     .everyMinutes(5)
