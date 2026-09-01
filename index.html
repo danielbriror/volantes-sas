@@ -12,16 +12,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --sas-navy: #1A2B4C;
-      --sas-navy-dark: #0F1B30;
-      --sas-orange: #F37021;
-      --sas-orange-hover: #D95C10;
-      
+      /* Brand oficial SAS Brasil (extraído do site e do logo oficial) */
+      --sas-navy: #231F20;
+      --sas-navy-dark: #1C191A;
+      --sas-orange: #F25822;
+      --sas-orange-hover: #CE4B1D;
+
       /* Light Theme (Clean / Ivory & Slate) */
       --bg-app: #F8FAFC;
       --bg-card: #FFFFFF;
       --bg-card-sub: #F8FAFC;
-      --bg-header: linear-gradient(135deg, #0F1B30 0%, #1A2B4C 100%);
+      --bg-header: linear-gradient(135deg, #1C191A 0%, #231F20 100%);
       --bg-stats: #FFFFFF;
       --bg-col-tenda: #F8FAFC;
       --bg-col-porta: #FFFDF8;
@@ -59,7 +60,7 @@
     /* Dark Theme Automático */
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --sas-navy: #F4F4F5;
+        --sas-navy: #231F20;
         --sas-navy-dark: #0B0B0C;
         --sas-orange: #D68A58;
         --sas-orange-hover: #E7A679;
@@ -89,7 +90,7 @@
 
     /* Dark Theme Manual */
     :root[data-theme="dark"] {
-      --sas-navy: #F4F4F5;
+      --sas-navy: #231F20;
       --sas-navy-dark: #0B0B0C;
       --sas-orange: #D68A58;
       --sas-orange-hover: #E7A679;
@@ -121,7 +122,7 @@
       --bg-app: #F8FAFC;
       --bg-card: #FFFFFF;
       --bg-card-sub: #F8FAFC;
-      --bg-header: linear-gradient(135deg, #0F1B30 0%, #1A2B4C 100%);
+      --bg-header: linear-gradient(135deg, #1C191A 0%, #231F20 100%);
       --bg-stats: #FFFFFF;
       --bg-col-tenda: #F8FAFC;
       --bg-col-porta: #FFFDF8;
@@ -1326,7 +1327,7 @@
       const usesDarkSurface = currentTheme === 'dark'
         || (currentTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-      if (themeMeta) themeMeta.content = usesDarkSurface ? '#0B0B0C' : '#1A2B4C';
+      if (themeMeta) themeMeta.content = usesDarkSurface ? '#0B0B0C' : '#231F20';
 
       if (currentTheme === 'dark') {
         root.setAttribute('data-theme', 'dark');
