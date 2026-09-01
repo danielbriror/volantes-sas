@@ -1188,6 +1188,12 @@
   <main>
     <!-- ABA 1: VOLANTES & GESTÃO DE FILAS -->
     <div class="app-view active" id="viewVolantes">
+      <div class="queue-toolbar">
+        <div>
+          <span class="section-kicker">Filas por especialidade</span>
+          <p>Cadastros são realizados na Planilha Master da SAS. Aqui, os volantes apenas acompanham e movimentam as filas.</p>
+        </div>
+      </div>
       <div id="queuesContainer">
         <!-- Populated by JS -->
       </div>
@@ -1260,33 +1266,6 @@
         <button class="btn btn-primary" onclick="closeModal('colorsModal')">Salvar e Voltar</button>
         <button class="btn btn-undo" onclick="resetDefaultColors()">Restaurar Cores Padrão</button>
       </div>
-    </div>
-  </div>
-
-  <!-- Add Patient Modal (Volantes) -->
-  <div class="modal-overlay" id="addPatientModal">
-    <div class="modal-sheet">
-      <div class="modal-header">
-        <div class="modal-title">Novo Paciente na Triagem</div>
-        <button class="close-btn" onclick="closeModal('addPatientModal')">✕</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Nome Completo do Paciente</label>
-        <input type="text" class="form-input" id="newPatientName" placeholder="Ex: Maria José da Silva">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Número da Pulseira / ID</label>
-        <input type="text" class="form-input" id="newPatientId" placeholder="Ex: SAS-104">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Especialidades (Pulseiras Recebidas):</label>
-        <div class="checkbox-grid" id="specCheckboxGrid">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-      <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 14px; margin-top: 10px;" onclick="saveNewPatient()">
-        Cadastrar e Entrar nas Filas
-      </button>
     </div>
   </div>
 
@@ -2039,72 +2018,6 @@
 
     function closeModal(id) {
       document.getElementById(id).classList.remove('active');
-    }
-
-    function openAddModal() {
-      const grid = document.getElementById('specCheckboxGrid');
-      grid.innerHTML = SPECIALTIES.map(spec => `
-        <label class="checkbox-pill" id="pill_${spec.id}" onclick="toggleSpecSelection('${spec.id}')">
-          <input type="checkbox" value="${spec.id}" id="check_${spec.id}" style="display:none;">
-          <span style="color:${spec.color}; font-weight:800;">●</span>
-          <span>${spec.name}</span>
-        </label>
-      `).join('');
-
-      document.getElementById('newPatientName').value = '';
-      document.getElementById('newPatientId').value = 'SAS-' + Math.floor(100 + Math.random() * 900);
-      openModal('addPatientModal');
-    }
-
-    function toggleSpecSelection(specId) {
-      const check = document.getElementById('check_' + specId);
-      const pill = document.getElementById('pill_' + specId);
-      check.checked = !check.checked;
-      pill.classList.toggle('selected', check.checked);
-      vibrate();
-    }
-
-    function saveNewPatient() {
-      const name = document.getElementById('newPatientName').value.trim();
-      const id = document.getElementById('newPatientId').value.trim();
-      
-      const selectedSpecs = [];
-      SPECIALTIES.forEach(s => {
-        const check = document.getElementById('check_' + s.id);
-        if (check && check.checked) selectedSpecs.push(s.id);
-      });
-
-      if (!name) {
-        alert('Por favor, digite o nome do paciente.');
-        return;
-      }
-      if (selectedSpecs.length === 0) {
-        alert('Selecione pelo menos uma especialidade (pulseira).');
-        return;
-      }
-
-      const tNow = Date.now();
-      const statusBySpec = {};
-      const stages = {};
-      selectedSpecs.forEach(s => {
-        statusBySpec[s] = 'waiting';
-        stages[s] = { waitingStart: tNow };
-      });
-
-      const newPatient = {
-        id: id || ('SAS-' + Math.floor(100 + Math.random() * 900)),
-        name: name,
-        specialties: selectedSpecs,
-        statusBySpec: statusBySpec,
-        stages: stages,
-        currentLocation: null,
-        registeredAt: tNow
-      };
-
-      patients.unshift(newPatient);
-      saveState();
-      closeModal('addPatientModal');
-      vibrate();
     }
 
     function openSettingsModal() {

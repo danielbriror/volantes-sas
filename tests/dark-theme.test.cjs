@@ -27,7 +27,15 @@ test('UI de volantes possui visão geral minimizável por linha', () => {
   assert.match(source, /toggleSpecialtyFilter/);
 });
 
-test('temporizador apresenta acionamentos e acoes claras', () => {
+test('temporizador apresenta acionamentos e a próxima ação clara', () => {
   assert.match(source, /handleTimerButtonClick/);
   assert.match(source, /class="timer-next-action"/);
+});
+
+test('volantes não cadastram pacientes no aplicativo', () => {
+  assert.doesNotMatch(source, /Novo paciente/);
+  assert.doesNotMatch(source, /id="addPatientModal"/);
+  assert.doesNotMatch(source, /function openAddModal\(\)/);
+  assert.doesNotMatch(source, /function saveNewPatient\(\)/);
+  assert.match(source, /Cadastros são realizados na Planilha Master/);
 });
