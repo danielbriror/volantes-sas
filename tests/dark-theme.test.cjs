@@ -160,6 +160,34 @@ test('confirmação de porta direta conclui a consulta e move apenas o próximo 
   assert.deepEqual(remoteActions, [['P-4', 'oftalmo', 'done'], ['P-4', 'dermato', 'door']]);
 });
 
+function getCompletionSummaryForTest(allPatients) {
+  const start = source.indexOf('function isCircuitComplete(');
+  const end = source.indexOf('function renderQueues()', start);
+  assert.notEqual(start, -1, 'isCircuitComplete deve existir');
+  assert.notEqual(end, -1, 'renderQueues deve seguir os helpers de finalização');
+
+  const sandbox = { patients: allPatients };
+  vm.runInNewContext(`${source.slice(start, end)}\nresult = {\n  completedInOftalmo: getCompletedPatientsBySpec('oftalmo').map(patient => patient.id),\n  completeCircuit: getCompleteCircuitPatients().map(patient => patient.id),\n  counts: getDashboardCounts()\n};`, sandbox);
+  return sandbox.result;
+}
+
+test('finalizados ficam rastreáveis por especialidade e por circuito completo', () => {
+  const allPatients = [
+    { id: 'P-1', specialties: ['oftalmo', 'dermato'], statusBySpec: { oftalmo: 'done', dermato: 'waiting' }, currentLocation: null },
+    { id: 'P-2', specialties: ['oftalmo'], statusBySpec: { oftalmo: 'done' }, currentLocation: null, isComplete: true },
+    { id: 'P-3', specialties: ['oftalmo'], statusBySpec: { oftalmo: 'waiting' }, currentLocation: null },
+    { id: 'P-4', specialties: ['oftalmo'], statusBySpec: { oftalmo: 'in_room' }, currentLocation: { spec: 'oftalmo', stage: 'in_room' } }
+  ];
+
+  const summary = getCompletionSummaryForTest(allPatients);
+  assert.deepEqual(Array.from(summary.completedInOftalmo), ['P-1', 'P-2']);
+  assert.deepEqual(Array.from(summary.completeCircuit), ['P-2']);
+  assert.equal(summary.counts.total, 4);
+  assert.equal(summary.counts.waiting, 2);
+  assert.equal(summary.counts.inRoom, 1);
+  assert.equal(summary.counts.done, 1);
+});
+
 test('sincronização não confirma sucesso quando o POST remoto falha', () => {
   const start = source.indexOf('async function pushRemoteAction');
   const end = source.indexOf('function saveApiUrl()', start);
