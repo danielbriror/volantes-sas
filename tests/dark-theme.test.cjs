@@ -85,3 +85,14 @@ test('dados demo distribuem 20 pacientes em cada especialidade', () => {
     clinica: 20
   });
 });
+
+test('sincronização não confirma sucesso quando o POST remoto falha', () => {
+  const start = source.indexOf('async function pushRemoteAction');
+  const end = source.indexOf('function saveApiUrl()', start);
+  assert.notEqual(start, -1, 'pushRemoteAction deve existir');
+  assert.notEqual(end, -1, 'saveApiUrl deve seguir pushRemoteAction');
+
+  const postBlock = source.slice(start, end);
+  assert.match(postBlock, /const res = await fetch\(sasApiUrl/);
+  assert.match(postBlock, /if \(!res\.ok\) throw new Error\('HTTP ' \+ res\.status\);/);
+});

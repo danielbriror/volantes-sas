@@ -1320,15 +1320,15 @@
 
       <div class="form-group" style="background: var(--bg-card-sub); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 12px;">
         <div style="font-weight: 600; font-size: 12.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-          <span>📊</span> Sincronização com a Fila Operacional (Google Sheets)
+          <span>📊</span> Sincronização com a Fila Operacional (experimental)
         </div>
         <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px;">
-          Cole aqui a URL do Apps Script implantado na planilha "Fila Operacional" (nunca a Planilha Master de cadastro — o app só lê/escreve na Fila Operacional). Deixe em branco pra continuar só no armazenamento local deste aparelho.
+          A integração já está implementada, mas fica desligada enquanto este campo estiver vazio. Use somente a URL oficial e autorizada da Fila Operacional — nunca a Planilha Master. Para dados reais, configure o acesso seguro antes de ativar a sincronização.
         </div>
         <input type="text" class="form-input" id="apiUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom: 8px;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
           <span id="syncStatusLabel" style="font-size: 11px; font-weight: 700;"></span>
-          <button class="btn btn-primary" style="flex: 0 0 auto; padding: 8px 14px;" onclick="saveApiUrl()">Salvar e Sincronizar</button>
+          <button class="btn btn-primary" style="flex: 0 0 auto; padding: 8px 14px;" onclick="saveApiUrl()">Salvar e Testar</button>
         </div>
       </div>
 
@@ -1637,11 +1637,12 @@
     async function pushRemoteAction(idPulseira, especialidadeId, action) {
       if (!sasApiUrl) return;
       try {
-        await fetch(sasApiUrl, {
+        const res = await fetch(sasApiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS no Apps Script
           body: JSON.stringify({ idPulseira, especialidadeId, action })
         });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         setSyncStatus('ok');
       } catch (err) {
         console.log('Falha ao enviar movimentação para a Fila Operacional:', err);
