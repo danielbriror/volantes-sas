@@ -1281,6 +1281,19 @@
     </div>
   </div>
 
+  <!-- Decisão de destino após consulta -->
+  <div class="modal-overlay" id="postConsultationModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">Próximo destino do paciente</div>
+        <button class="close-btn" onclick="closeModal('postConsultationModal')">✕</button>
+      </div>
+      <div id="postConsultationContent" style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- Colors & Wristbands Customization Modal -->
   <div class="modal-overlay" id="colorsModal">
     <div class="modal-sheet">
@@ -2069,34 +2082,122 @@
       vibrate();
     }
 
-    function finishConsultation(patientId, specId) {
-      const p = patients.find(x => x.id === patientId);
-      if (!p) return;
+    function getPostConsultationPlan(patient) {
+      const pendingSpecs = patient.specialties.filter(specId => patient.statusBySpec[specId] === 'waiting');
+      if (pendingSpecs.length === 0) {
+        return { kind: 'complete', pendingSpecs, directDoorSpecs: [], returnToWaitingSpecs: [], waitingCounts: {} };
+      }
+
+      const waitingCounts = Object.fromEntries(pendingSpecs.map(specId => [
+        specId,
+        patients.filter(other => other.id !== patient.id && other.specialties.includes(specId) && other.statusBySpec[specId] === 'waiting').length
+      ]));
+      const directDoorSpecs = pendingSpecs.filter(specId => waitingCounts[specId] === 0);
+      const returnToWaitingSpecs = pendingSpecs.filter(specId => waitingCounts[specId] > 0);
+      return { kind: 'pending', pendingSpecs, directDoorSpecs, returnToWaitingSpecs, waitingCounts };
+    }
+
+    function openPostConsultationModal(patientId, specId) {
+      const patient = patients.find(x => x.id === patientId);
+      if (!patient || patient.statusBySpec[specId] !== 'in_room') return;
+
+      const plan = getPostConsultationPlan(patient);
+      const currentSpec = SPECIALTIES.find(s => s.id === specId) || { name: specId };
+      const content = document.getElementById('postConsultationContent');
+      const pendingSpecNames = plan.pendingSpecs.map(id => (SPECIALTIES.find(s => s.id === id) || { name: id }).name).join(', ');
+
+      if (plan.kind === 'complete') {
+        content.innerHTML = `
+          <div class="status-alert" style="background: rgba(16, 185, 129, 0.13); border-color: rgba(16, 185, 129, 0.35);">
+            <span>🏁</span>
+            <span><b>Circuito concluído.</b> ${patient.name} não tem outras especialidades pendentes.</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Confirme a liberação somente após orientar o paciente sobre a saída.</p>
+          <button class="btn btn-success" onclick="confirmPostConsultation('${patient.id}', '${specId}', '')">Liberar Paciente</button>
+        `;
+      } else {
+        const directButtons = plan.directDoorSpecs.map(nextSpecId => {
+          const nextSpec = SPECIALTIES.find(s => s.id === nextSpecId) || { name: nextSpecId, color: '#F59E0B' };
+          return `
+            <button class="btn btn-door" onclick="confirmPostConsultation('${patient.id}', '${specId}', '${nextSpecId}')">
+              Encaminhar direto à porta de ${nextSpec.name}
+            </button>
+          `;
+        }).join('');
+        const queuedDetails = plan.returnToWaitingSpecs.map(nextSpecId => {
+          const nextSpec = SPECIALTIES.find(s => s.id === nextSpecId) || { name: nextSpecId };
+          const count = plan.waitingCounts[nextSpecId];
+          return `<li><b>${nextSpec.name}:</b> ${count} paciente${count === 1 ? '' : 's'} aguardando na tenda.</li>`;
+        }).join('');
+
+        content.innerHTML = `
+          <div class="status-alert" style="background: rgba(59, 130, 246, 0.12); border-color: rgba(59, 130, 246, 0.32);">
+            <span>🧭</span>
+            <span><b>${patient.name}</b> concluiu ${currentSpec.name}. Ainda falta: ${pendingSpecNames}.</span>
+          </div>
+          ${directButtons ? `
+            <div class="timeline-box" style="margin-top: 0;">
+              <div style="font-size: 12px; font-weight: 800; margin-bottom: 5px;">Sugestão de atalho</div>
+              <div style="font-size: 11.5px; color: var(--text-muted);">Não há outro paciente aguardando na tenda para esta especialidade. Confirme a porta antes de orientar o paciente diretamente.</div>
+            </div>
+            ${directButtons}
+          ` : ''}
+          ${queuedDetails ? `
+            <div class="timeline-box" style="margin-top: 0;">
+              <div style="font-size: 12px; font-weight: 800; margin-bottom: 5px;">Filas pendentes</div>
+              <ul style="margin: 0; padding-left: 18px; font-size: 11.5px; color: var(--text-muted);">${queuedDetails}</ul>
+            </div>
+          ` : ''}
+          <button class="btn btn-primary" onclick="confirmPostConsultation('${patient.id}', '${specId}', '')">Concluir e orientar retorno à Tenda</button>
+        `;
+      }
+
+      openModal('postConsultationModal');
+    }
+
+    function confirmPostConsultation(patientId, specId, destinationSpecId) {
+      const patient = patients.find(x => x.id === patientId);
+      if (!patient || patient.statusBySpec[specId] !== 'in_room') return;
 
       const tNow = Date.now();
-      if (!p.stages) p.stages = {};
-      if (!p.stages[specId]) p.stages[specId] = {};
-      
-      p.stages[specId].roomEnd = tNow;
-      p.statusBySpec[specId] = 'done';
-      p.currentLocation = null;
+      if (!patient.stages) patient.stages = {};
+      if (!patient.stages[specId]) patient.stages[specId] = {};
+      patient.stages[specId].roomEnd = tNow;
+      patient.statusBySpec[specId] = 'done';
+      patient.currentLocation = null;
 
-      p.specialties.forEach(s => {
-        if (p.statusBySpec[s] === 'waiting') {
-          if (!p.stages[s]) p.stages[s] = {};
-          p.stages[s].waitingStart = tNow;
+      patient.specialties.forEach(s => {
+        if (patient.statusBySpec[s] === 'waiting') {
+          if (!patient.stages[s]) patient.stages[s] = {};
+          patient.stages[s].waitingStart = tNow;
         }
       });
 
-      const allDone = p.specialties.every(s => p.statusBySpec[s] === 'done');
+      if (destinationSpecId && patient.specialties.includes(destinationSpecId) && patient.statusBySpec[destinationSpecId] === 'waiting') {
+        if (!patient.stages[destinationSpecId]) patient.stages[destinationSpecId] = {};
+        patient.stages[destinationSpecId].doorStart = tNow;
+        patient.statusBySpec[destinationSpecId] = 'door';
+        patient.currentLocation = { spec: destinationSpecId, stage: 'door' };
+      }
+
+      const allDone = patient.specialties.every(s => patient.statusBySpec[s] === 'done');
       if (allDone) {
-        p.isComplete = true;
-        p.completedAt = tNow;
+        patient.isComplete = true;
+        patient.completedAt = tNow;
+      } else {
+        patient.isComplete = false;
+        delete patient.completedAt;
       }
 
       saveState();
+      closeModal('postConsultationModal');
       pushRemoteAction(patientId, specId, 'done');
+      if (destinationSpecId && patient.currentLocation) pushRemoteAction(patientId, destinationSpecId, 'door');
       vibrate();
+    }
+
+    function finishConsultation(patientId, specId) {
+      openPostConsultationModal(patientId, specId);
     }
 
     function handleSearch(query) {

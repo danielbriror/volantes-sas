@@ -26,9 +26,28 @@ quem está em consulta, especialidade por especialidade.
 - Um botão por etapa move o paciente pela fila (Chamar para Porta → Entrou na
   Consulta → Concluir Atendimento), com opção de devolvê-lo à Tenda em caso de
   engano.
+- Ao **concluir atendimento**, médico ou auxiliar recebe uma decisão orientada
+  pelo restante do circuito: liberar o paciente quando não há outra
+  especialidade pendente; orientar retorno à Tenda; ou, quando não houver
+  **outro** paciente aguardando na Tenda de uma especialidade pendente, sugerir
+  encaminhamento direto para a porta dela. A sugestão exige confirmação humana;
+  ela nunca movimenta o paciente automaticamente.
 - Quando um paciente está em atendimento em outra especialidade, o card mostra
   o conflito e bloqueia a chamada concorrente.
 - Busca rápida por nome ou número de pulseira na barra inferior.
+
+### Papéis no fluxo
+
+| Papel | Ação no app |
+|---|---|
+| **Volante** | Organiza a Tenda e move o paciente de **Aguardando** para **Na Porta**. |
+| **Médico ou auxiliar da especialidade** | Confirma **Entrou na Consulta**, conclui o atendimento e decide/explica o próximo destino físico do paciente. |
+| **App** | Mostra pendências por especialidade e sugere retorno à Tenda, porta direta ou liberação, sempre para confirmação humana. |
+
+> A condição “sem outro paciente aguardando” considera a fila da Tenda da
+> especialidade pendente, sem contar o próprio paciente que acabou de concluir
+> outra consulta. Antes de encaminhar direto, a equipe ainda deve confirmar que
+> a porta está apta a recebê-lo.
 
 ### Aba "Temporizador Ver Magia"
 
