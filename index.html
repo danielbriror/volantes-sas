@@ -1693,6 +1693,10 @@
         const waitingList = specPatients.filter(p => p.statusBySpec[spec.id] === 'waiting');
         const doorList = specPatients.filter(p => p.statusBySpec[spec.id] === 'door');
         const inRoomList = specPatients.filter(p => p.statusBySpec[spec.id] === 'in_room');
+        const hasLongWait = waitingList.some(p => {
+          const st = p.stages && p.stages[spec.id];
+          return st && (Date.now() - (st.waitingStart || p.registeredAt) > 30 * 60000);
+        });
 
         const isExpanded = !!expandedSpecialties[spec.id];
 
@@ -1708,6 +1712,7 @@
               </div>
               <div class="specialty-row-info">
                 <div class="specialty-row-counts">
+                  ${hasLongWait ? '<span class="count-badge" style="background: rgba(239,68,68,0.2); color: #EF4444;" title="Paciente aguardando há mais de 30 min na tenda">⚠️ 1+ Espera Longa</span>' : ''}
                   <span class="count-badge tenda" title="Na Tenda">⏱️ ${waitingList.length}</span>
                   <span class="count-badge porta" title="Na Porta">🚪 ${doorList.length}</span>
                   <span class="count-badge sala" title="Em Consulta">🩺 ${inRoomList.length}</span>
