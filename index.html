@@ -1180,15 +1180,19 @@
     .timer-intro p { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; max-width: 620px; }
     .section-kicker { color: var(--sas-orange-hover); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
     .new-patient-cta { flex: 0 0 auto; min-height: 42px; padding: 0 15px; white-space: nowrap; }
-    .specialty-overview-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-    .specialty-overview-card { appearance: none; background: var(--bg-card); border: none; border-radius: 10px; box-shadow: var(--shadow-md); color: var(--text-main); cursor: pointer; padding: 16px; text-align: left; transition: box-shadow 0.18s ease, transform 0.18s ease; }
-    .specialty-overview-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-    .specialty-overview-top { align-items: center; display: flex; gap: 9px; justify-content: space-between; }
+    .specialty-overview-list { display: grid; gap: 9px; }
+    .specialty-overview-row { background: var(--bg-card); border-radius: 10px; box-shadow: var(--shadow-md); overflow: hidden; }
+    .specialty-overview-toggle { align-items: center; background: transparent; border: none; color: var(--text-main); cursor: pointer; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) auto auto; padding: 14px 16px; text-align: left; width: 100%; }
+    .specialty-overview-toggle:hover { background: var(--bg-card-sub); }
     .specialty-overview-name { font-size: 13px; font-weight: 800; letter-spacing: -0.02em; }
-    .specialty-overview-total { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-    .specialty-overview-breakdown { border-top: 1px solid var(--border-light); display: grid; gap: 6px; grid-template-columns: repeat(3, 1fr); margin-top: 14px; padding-top: 12px; }
+    .specialty-overview-total { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; white-space: nowrap; }
+    .specialty-overview-chevron { color: var(--text-muted); font-size: 16px; line-height: 1; transition: transform 0.18s ease; }
+    .specialty-overview-row.expanded .specialty-overview-chevron { transform: rotate(180deg); }
+    .specialty-overview-details { border-top: 1px solid var(--border-light); display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) auto; padding: 12px 16px 14px; }
+    .specialty-overview-breakdown { display: grid; gap: 6px; grid-template-columns: repeat(3, 1fr); }
     .specialty-overview-breakdown span { color: var(--text-muted); font-size: 9.5px; font-weight: 700; text-align: center; }
     .specialty-overview-breakdown b { color: var(--text-main); display: block; font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-bottom: 2px; }
+    .specialty-open-queue { align-self: center; min-height: 34px; padding: 0 12px; white-space: nowrap; }
     .timer-next-action { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.16); border-radius: 5px; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; margin-top: 9px; padding: 5px 7px; text-transform: uppercase; }
 
     :root[data-theme="dark"] .specialty-section,
@@ -1205,7 +1209,8 @@
       .queue-toolbar, .timer-intro { grid-template-columns: 1fr; padding: 16px 0; }
       .timer-intro { padding: 16px; }
       .new-patient-cta { width: 100%; }
-      .specialty-overview-grid { grid-template-columns: 1fr; }
+      .specialty-overview-details { grid-template-columns: 1fr; }
+      .specialty-open-queue { justify-self: stretch; }
     }
   </style>
 </head>
@@ -1494,6 +1499,7 @@
     function switchAppTab(tab) {
       activeAppTab = tab;
       localStorage.setItem('sas_active_app_tab', tab);
+      saveUiState();
 
       const btnVolantes = document.getElementById('tabBtnVolantes');
       const btnTimer = document.getElementById('tabBtnTimer');
@@ -1546,7 +1552,34 @@
 
     let SPECIALTIES = JSON.parse(localStorage.getItem('sas_volantes_specialties')) || DEFAULT_SPECIALTIES;
     let patients = JSON.parse(localStorage.getItem('sas_volantes_patients')) || [];
-    let selectedSpecialtyFilter = 'all';
+    const UI_STATE_KEY = 'sas_volantes_ui_state';
+    let selectedSpecialtyFilters = ['all'];
+    let expandedOverviewSpecialties = [];
+
+    function saveUiState() {
+      localStorage.setItem(UI_STATE_KEY, JSON.stringify({
+        activeAppTab,
+        selectedSpecialtyFilters,
+        expandedOverviewSpecialties
+      }));
+    }
+
+    function restoreUiState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(UI_STATE_KEY) || '{}');
+        const validIds = new Set(SPECIALTIES.map(spec => spec.id));
+        if (saved.activeAppTab === 'volantes' || saved.activeAppTab === 'timer') activeAppTab = saved.activeAppTab;
+        if (Array.isArray(saved.selectedSpecialtyFilters)) {
+          const validFilters = saved.selectedSpecialtyFilters.filter(id => validIds.has(id));
+          selectedSpecialtyFilters = validFilters.length ? validFilters : ['all'];
+        }
+        if (Array.isArray(saved.expandedOverviewSpecialties)) {
+          expandedOverviewSpecialties = saved.expandedOverviewSpecialties.filter(id => validIds.has(id));
+        }
+      } catch (error) {
+        console.warn('Não foi possível restaurar preferências locais:', error);
+      }
+    }
 
     const now = Date.now();
     const DEMO_PATIENTS = [
@@ -1753,28 +1786,58 @@
     }
 
     function renderOverviewCards() {
-      return `<div class="specialty-overview-grid">${SPECIALTIES.map(spec => {
+      return `<div class="specialty-overview-list">${SPECIALTIES.map(spec => {
         const counts = getSpecialtyCounts(spec);
+        const expanded = expandedOverviewSpecialties.includes(spec.id);
         return `
-          <button class="specialty-overview-card" onclick="setFilter('${spec.id}')" aria-label="Abrir fila de ${spec.name}">
-            <div class="specialty-overview-top">
+          <article class="specialty-overview-row ${expanded ? 'expanded' : ''}">
+            <button class="specialty-overview-toggle" onclick="toggleOverviewSpecialty('${spec.id}')" aria-expanded="${expanded}" aria-label="${expanded ? 'Minimizar' : 'Expandir'} ${spec.name}">
               <span class="specialty-overview-name"><span style="color:${spec.color};">${spec.icon}</span> ${spec.name}</span>
               <span class="specialty-overview-total">${counts.total} ativos</span>
-            </div>
-            <div class="specialty-overview-breakdown">
-              <span><b>${counts.waiting}</b>Tenda</span>
-              <span><b>${counts.door}</b>Porta</span>
-              <span><b>${counts.inRoom}</b>Consulta</span>
-            </div>
-          </button>
+              <span class="specialty-overview-chevron" aria-hidden="true">⌄</span>
+            </button>
+            ${expanded ? `
+              <div class="specialty-overview-details">
+                <div class="specialty-overview-breakdown">
+                  <span><b>${counts.waiting}</b>Tenda</span>
+                  <span><b>${counts.door}</b>Porta</span>
+                  <span><b>${counts.inRoom}</b>Consulta</span>
+                </div>
+                <button class="btn btn-primary specialty-open-queue" onclick="selectOnlySpecialty('${spec.id}')">Abrir fila</button>
+              </div>
+            ` : ''}
+          </article>
         `;
       }).join('')}</div>`;
+    }
+
+    function toggleOverviewSpecialty(specId) {
+      expandedOverviewSpecialties = expandedOverviewSpecialties.includes(specId)
+        ? expandedOverviewSpecialties.filter(id => id !== specId)
+        : [...expandedOverviewSpecialties, specId];
+      saveUiState();
+      renderQueues();
+      vibrate();
+    }
+
+    function resetSpecialtyFilters() {
+      selectedSpecialtyFilters = ['all'];
+      saveUiState();
+      render();
+      vibrate();
+    }
+
+    function selectOnlySpecialty(specId) {
+      selectedSpecialtyFilters = [specId];
+      saveUiState();
+      render();
+      vibrate();
     }
 
     function renderSpecialtyFilters() {
       const container = document.getElementById('specialtyFilterBar');
       let html = `
-        <button class="spec-pill ${selectedSpecialtyFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">
+        <button class="spec-pill ${selectedSpecialtyFilters.includes('all') ? 'active' : ''}" onclick="resetSpecialtyFilters()">
           🌐 Visão Geral (Todas)
         </button>
       `;
@@ -1782,7 +1845,7 @@
       SPECIALTIES.forEach(spec => {
         const count = patients.filter(p => p.specialties.includes(spec.id) && p.statusBySpec[spec.id] !== 'done').length;
         html += `
-          <button class="spec-pill ${selectedSpecialtyFilter === spec.id ? 'active' : ''}" onclick="setFilter('${spec.id}')">
+          <button class="spec-pill ${selectedSpecialtyFilters.includes(spec.id) ? 'active' : ''}" onclick="toggleSpecialtyFilter('${spec.id}')" aria-pressed="${selectedSpecialtyFilters.includes(spec.id)}">
             <span class="dot" style="background: ${spec.color};"></span>
             ${spec.name} (${count})
           </button>
@@ -1792,20 +1855,25 @@
       container.innerHTML = html;
     }
 
-    function setFilter(specId) {
-      selectedSpecialtyFilter = specId;
+    function toggleSpecialtyFilter(specId) {
+      const current = selectedSpecialtyFilters.includes('all') ? [] : selectedSpecialtyFilters;
+      selectedSpecialtyFilters = current.includes(specId)
+        ? current.filter(id => id !== specId)
+        : [...current, specId];
+      if (selectedSpecialtyFilters.length === 0) selectedSpecialtyFilters = ['all'];
+      saveUiState();
       render();
       vibrate();
     }
 
     function renderQueues() {
       const container = document.getElementById('queuesContainer');
-      if (selectedSpecialtyFilter === 'all') {
+      if (selectedSpecialtyFilters.includes('all')) {
         container.innerHTML = renderOverviewCards();
         return;
       }
 
-      const specsToRender = SPECIALTIES.filter(s => s.id === selectedSpecialtyFilter);
+      const specsToRender = SPECIALTIES.filter(spec => selectedSpecialtyFilters.includes(spec.id));
 
       let html = '';
 
@@ -2431,6 +2499,7 @@
     // 5. INICIALIZAÇÃO GERAL E LOOP CONTÍNUO
     // ==========================================
     applyTheme();
+    restoreUiState();
 
     if (patients.length === 0) {
       loadDemoData();

@@ -29,14 +29,24 @@ test('console operacional aplica passe visual premium neutro', () => {
   assert.match(source, /\/\* Premium console overrides \*\//);
 });
 
-test('UI operacional abre com visão geral navegável sem prioridades inferidas', () => {
+test('UI operacional abre com visão geral expansível e seleção múltipla', () => {
   assert.doesNotMatch(source, /class="operational-brief"/);
   assert.doesNotMatch(source, /id="priorityList"/);
   assert.doesNotMatch(source, /function renderOperationalBrief\(\)/);
   assert.match(source, /class="queue-toolbar"/);
-  assert.match(source, /function renderOverviewCards\(\)/);
-  assert.match(source, /class="specialty-overview-card"/);
+  assert.match(source, /class="specialty-overview-list"/);
+  assert.match(source, /specialty-overview-row/);
+  assert.match(source, /function toggleOverviewSpecialty\(specId\)/);
+  assert.match(source, /let selectedSpecialtyFilters/);
+  assert.match(source, /function toggleSpecialtyFilter\(specId\)/);
   assert.match(source, /Novo paciente/);
+});
+
+test('restaura a aba, filtros e expansões da sessão local', () => {
+  assert.match(source, /sas_volantes_ui_state/);
+  assert.match(source, /function saveUiState\(\)/);
+  assert.match(source, /function restoreUiState\(\)/);
+  assert.match(source, /expandedOverviewSpecialties/);
 });
 
 test('ações de demonstração e limpeza não ficam na barra operacional', () => {
