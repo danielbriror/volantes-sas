@@ -19,6 +19,11 @@ O script (`Code.gs`) faz duas coisas:
    pro app consumir (buscar o estado atual, e mandar "mover pra porta",
    "entrou na consulta", "concluiu").
 
+As colunas `Entrou_Tenda`, `Entrou_Porta`, `Entrou_Consulta`, `Concluido_Em`
+e `Atualizado_Em` guardam **timestamp numérico (ms, tipo `Date.now()`)**, não
+texto "HH:MM" — evita o Google Sheets reinterpretar o valor como hora com
+fuso horário errado ao ler/escrever.
+
 ## Como implantar (passo manual, precisa ser feito por vocês)
 
 1. Abra a planilha **Fila Operacional** (link acima) → `Extensões` →
@@ -47,6 +52,5 @@ O script (`Code.gs`) faz duas coisas:
   especialidade), por isso `syncFromMaster` sempre insere as novas linhas
   como `waiting` — ele nunca tenta adivinhar em qual etapa cada
   especialidade está a partir da Master.
-- O `index.html` ainda não faz `fetch`/`fila` pra essa API — hoje continua
-  100% `localStorage`. Conectar isso é o próximo passo, quando a URL do
-  Apps Script já implantado estiver disponível.
+- O `index.html` já sabe consumir essa API (Configurações > Sincronização):
+  basta colar a URL do Apps Script implantado.

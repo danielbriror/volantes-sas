@@ -46,23 +46,13 @@ function getOperationalSheet_() {
   return SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
 }
 
-const TIME_COLUMNS = ['Entrou_Tenda', 'Entrou_Porta', 'Entrou_Consulta', 'Concluido_Em', 'Atualizado_Em'];
-
 function readOperationalRows_() {
   const sheet = getOperationalSheet_();
   const values = sheet.getDataRange().getValues();
   const rows = values.slice(1); // pula cabeçalho
   return rows.map((r, i) => {
     const obj = {};
-    COLUMNS.forEach((c, idx) => {
-      let v = r[idx];
-      // O Sheets às vezes guarda "HH:MM" como valor de Hora internamente
-      // (Date com a data-base 1899-12-30); normaliza de volta pra "HH:MM".
-      if (TIME_COLUMNS.includes(c) && v instanceof Date) {
-        v = Utilities.formatDate(v, Session.getScriptTimeZone(), 'HH:mm');
-      }
-      obj[c] = v;
-    });
+    COLUMNS.forEach((c, idx) => obj[c] = r[idx]);
     obj._row = i + 2; // linha real na planilha (1-based + cabeçalho)
     return obj;
   });
@@ -82,11 +72,11 @@ function syncFromMaster() {
   const existingKeys = new Set(existing.map(r => `${r.ID_Pulseira}::${r.Especialidade_ID}`));
 
   const sheet = getOperationalSheet_();
-  const now = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'HH:mm');
+  const now = Date.now(); // timestamp numérico (ms) — evita ambiguidade de fuso horário
   const newRows = [];
 
   masterRows.forEach(row => {
-    const [idPulseira, nomePaciente, especialidadesRaw, horarioTriagem] = row;
+    const [idPulseira, nomePaciente, especialidadesRaw] = row;
     if (!idPulseira) return;
 
     String(especialidadesRaw).split(',').forEach(rawName => {
@@ -98,7 +88,7 @@ function syncFromMaster() {
 
       newRows.push([
         idPulseira, nomePaciente, spec.id, spec.name,
-        'waiting', horarioTriagem || now, '', '', '', now
+        'waiting', now, '', '', '', now
       ]);
       existingKeys.add(key);
     });
@@ -138,7 +128,7 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  const now = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'HH:mm');
+  const now = Date.now(); // timestamp numérico (ms) — evita ambiguidade de fuso horário
   const colIndex = { Status: 5, Entrou_Porta: 7, Entrou_Consulta: 8, Concluido_Em: 9, Atualizado_Em: 10 };
 
   sheet.getRange(target._row, colIndex.Status).setValue(action);

@@ -1592,19 +1592,6 @@
       }
     }
 
-    // Converte "HH:MM" (formato usado na Fila Operacional) num timestamp de hoje.
-    // Assume que a triagem/atendimento acontece no mesmo dia (cenário de expedição de 1 dia).
-    function timeStrToMs(hhmm) {
-      if (!hhmm) return null;
-      const parts = String(hhmm).split(':');
-      const h = parseInt(parts[0], 10);
-      const m = parseInt(parts[1], 10);
-      if (Number.isNaN(h) || Number.isNaN(m)) return null;
-      const d = new Date();
-      d.setHours(h, m, 0, 0);
-      return d.getTime();
-    }
-
     // Agrupa as linhas (1 por paciente+especialidade) da Fila Operacional
     // no formato interno de paciente que o app já usa.
     function mapRemoteRowsToPatients(rows) {
@@ -1629,10 +1616,12 @@
         p.specialties.push(specId);
         p.statusBySpec[specId] = row.Status || 'waiting';
 
-        const waitingStart = timeStrToMs(row.Entrou_Tenda);
-        const doorStart = timeStrToMs(row.Entrou_Porta);
-        const roomStart = timeStrToMs(row.Entrou_Consulta);
-        const roomEnd = timeStrToMs(row.Concluido_Em);
+        // Entrou_Tenda / Entrou_Porta / Entrou_Consulta / Concluido_Em chegam como
+        // timestamp numérico (ms) da Fila Operacional — sem conversão necessária.
+        const waitingStart = row.Entrou_Tenda || null;
+        const doorStart = row.Entrou_Porta || null;
+        const roomStart = row.Entrou_Consulta || null;
+        const roomEnd = row.Concluido_Em || null;
         p.stages[specId] = { waitingStart, doorStart, roomStart, roomEnd };
         if (waitingStart && waitingStart < p.registeredAt) p.registeredAt = waitingStart;
 
