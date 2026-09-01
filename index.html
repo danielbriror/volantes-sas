@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SAS Brasil • Hub de Volantes & Ver Magia</title>
+  <title>SAS Brasil • Suite Clínica & Volantes</title>
   <meta name="theme-color" content="#1A2B4C">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --sas-navy: #1A2B4C;
@@ -17,7 +17,7 @@
       --sas-orange: #F37021;
       --sas-orange-hover: #D95C10;
       
-      /* Light Theme */
+      /* Light Theme (Clean / Ivory & Slate) */
       --bg-app: #F8FAFC;
       --bg-card: #FFFFFF;
       --bg-card-sub: #F8FAFC;
@@ -147,19 +147,20 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 90px;
+      padding-bottom: 95px;
       transition: background-color 0.25s ease, color 0.25s ease;
+      letter-spacing: -0.01em;
     }
 
     /* Top Global Header */
     header {
       background: var(--bg-header);
       color: #fff;
-      padding: 12px 16px 0 16px;
+      padding: 12px 18px 0 18px;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.3);
     }
 
     .header-top {
@@ -179,19 +180,20 @@
       background-color: var(--sas-orange);
       color: #fff;
       font-weight: 800;
-      font-size: 15px;
+      font-size: 14px;
       letter-spacing: 0.5px;
       padding: 4px 10px;
       border-radius: var(--radius-sm);
       display: inline-flex;
       align-items: center;
-      box-shadow: 0 2px 6px rgba(243,112,33,0.4);
+      box-shadow: 0 2px 8px rgba(243,112,33,0.4);
     }
 
     .brand-title {
-      font-size: 16px;
-      font-weight: 700;
+      font-size: 15.5px;
+      font-weight: 800;
       line-height: 1.2;
+      letter-spacing: -0.01em;
     }
 
     .brand-sub {
@@ -217,7 +219,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 15px;
       transition: all 0.2s ease;
     }
 
@@ -230,19 +232,19 @@
     .app-nav-tabs {
       display: flex;
       gap: 6px;
-      margin-top: 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.12);
+      margin-top: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.14);
     }
 
     .app-tab-btn {
       flex: 1;
-      padding: 10px 12px;
+      padding: 10px 14px;
       background: transparent;
       border: none;
       border-bottom: 3px solid transparent;
       color: #94A3B8;
       font-weight: 700;
-      font-size: 13.5px;
+      font-size: 13px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -254,7 +256,7 @@
     .app-tab-btn.active {
       color: #FFFFFF;
       border-bottom-color: var(--sas-orange);
-      background: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.08);
       border-top-left-radius: var(--radius-sm);
       border-top-right-radius: var(--radius-sm);
     }
@@ -278,7 +280,7 @@
       color: #E2E8F0;
       padding: 7px 14px;
       border-radius: 30px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       white-space: nowrap;
       cursor: pointer;
@@ -289,8 +291,8 @@
     }
 
     .spec-pill .dot {
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       flex-shrink: 0;
     }
@@ -307,7 +309,7 @@
     .stats-bar {
       background: var(--bg-stats);
       border-bottom: 1px solid var(--border-light);
-      padding: 10px 16px;
+      padding: 11px 18px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
@@ -323,17 +325,20 @@
     }
 
     .stat-num {
+      font-family: 'JetBrains Mono', monospace;
       font-size: 18px;
       font-weight: 800;
       color: var(--text-main);
+      letter-spacing: -0.02em;
     }
 
     .stat-label {
-      font-size: 10px;
-      font-weight: 700;
+      font-size: 9.5px;
+      font-weight: 800;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.4px;
+      margin-top: 1px;
     }
 
     /* Main App Views */
@@ -365,7 +370,7 @@
     }
 
     .spec-header {
-      padding: 14px 18px;
+      padding: 13px 18px;
       color: #fff;
       display: flex;
       align-items: center;
@@ -375,19 +380,20 @@
     }
 
     .spec-header-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       display: flex;
       align-items: center;
       gap: 10px;
-      letter-spacing: 0.2px;
+      letter-spacing: -0.01em;
     }
 
     .spec-header-badge {
-      background: rgba(255,255,255,0.28);
-      font-size: 12px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255,255,255,0.2);
+      font-size: 11.5px;
       font-weight: 800;
-      padding: 4px 12px;
+      padding: 3px 10px;
       border-radius: 20px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.15);
     }
@@ -396,7 +402,7 @@
     .queues-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 14px;
       padding: 16px;
       background: var(--bg-card);
     }
@@ -423,7 +429,7 @@
     .queue-col.col-sala { background: var(--bg-col-sala); }
 
     .queue-title {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       color: var(--text-main);
       display: flex;
@@ -431,14 +437,17 @@
       justify-content: space-between;
       border-bottom: 1px solid var(--border-light);
       padding-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
 
     .queue-count {
+      font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       background: var(--badge-bg);
       color: var(--text-main);
-      padding: 2px 8px;
-      border-radius: 12px;
+      padding: 2px 7px;
+      border-radius: 8px;
       font-weight: 800;
       border: 1px solid var(--border-light);
     }
@@ -455,12 +464,16 @@
       background: var(--bg-card);
       border: 1.5px solid var(--border-light);
       border-radius: var(--radius-sm);
-      padding: 14px;
+      padding: 13px 14px;
       box-shadow: var(--shadow-sm);
       transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
       gap: 10px;
+    }
+
+    .patient-card:hover {
+      box-shadow: var(--shadow-md);
     }
 
     .patient-card.status-free {
@@ -488,19 +501,20 @@
     }
 
     .patient-name {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       color: var(--text-main);
       line-height: 1.3;
     }
 
     .patient-id {
-      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
       color: var(--text-main);
       font-weight: 700;
       background: var(--badge-bg);
-      padding: 3px 7px;
-      border-radius: 6px;
+      padding: 3px 6px;
+      border-radius: 5px;
       white-space: nowrap;
       border: 1px solid var(--border-light);
     }
@@ -512,7 +526,7 @@
       justify-content: space-between;
       background: var(--timer-bar-bg);
       border: 1px solid var(--border-light);
-      padding: 6px 10px;
+      padding: 5px 9px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 700;
@@ -523,6 +537,8 @@
       align-items: center;
       gap: 4px;
       color: var(--text-main);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
     }
 
     .timer-stage.stage-waiting { color: #10B981; }
@@ -531,7 +547,8 @@
 
     .timer-total {
       color: var(--text-muted);
-      font-size: 10.5px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     /* Pulseiras & Tags */
@@ -542,10 +559,10 @@
     }
 
     .wristband-tag {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 5px;
+      padding: 2px 7px;
+      border-radius: 4px;
       color: #fff;
       display: inline-flex;
       align-items: center;
@@ -561,9 +578,9 @@
 
     /* Status Warnings */
     .status-alert {
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 6px 10px;
+      padding: 5px 9px;
       border-radius: 6px;
       display: flex;
       align-items: center;
@@ -584,16 +601,16 @@
 
     .btn {
       flex: 1;
-      padding: 10px 14px;
+      padding: 9px 13px;
       border-radius: var(--radius-sm);
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 700;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.15s ease;
       text-align: center;
     }
@@ -605,7 +622,7 @@
     .btn-primary {
       background: var(--sas-orange);
       color: #fff;
-      box-shadow: 0 2px 5px rgba(243,112,33,0.35);
+      box-shadow: 0 2px 6px rgba(243,112,33,0.35);
     }
 
     .btn-primary:disabled {
@@ -632,7 +649,7 @@
       color: var(--text-main);
       border: 1px solid var(--border-light);
       flex: 0 0 auto;
-      padding: 10px 12px;
+      padding: 9px 11px;
     }
 
     /* ===================================================
@@ -650,7 +667,7 @@
       display: flex;
       gap: 8px;
       background: var(--bg-card);
-      padding: 14px;
+      padding: 13px;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-light);
       box-shadow: var(--shadow-sm);
@@ -666,6 +683,7 @@
       border: 1px solid var(--border-light);
       box-shadow: var(--shadow-sm);
       margin-bottom: 12px;
+      transition: all 0.2s ease;
     }
 
     .timer-main-btn {
@@ -680,7 +698,7 @@
       text-align: left;
       transition: all 0.2s ease;
       color: #ffffff;
-      min-height: 90px;
+      min-height: 88px;
     }
 
     .timer-main-btn:active {
@@ -703,27 +721,28 @@
     }
 
     .timer-person-name {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       margin-bottom: 4px;
       word-break: break-word;
+      letter-spacing: -0.01em;
     }
 
     .timer-status-info {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       opacity: 0.95;
       font-weight: 600;
     }
 
     .timer-badge-clock {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 1.1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
       font-weight: 800;
       background: rgba(0, 0, 0, 0.45);
-      padding: 3px 9px;
+      padding: 2px 8px;
       border-radius: 6px;
       border: 1px solid rgba(255,255,255,0.2);
     }
@@ -804,7 +823,7 @@
     }
 
     .modal-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 800;
       color: var(--text-main);
       display: flex;
@@ -818,7 +837,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
@@ -841,12 +860,12 @@
 
     .form-input {
       width: 100%;
-      padding: 11px 14px;
+      padding: 10px 14px;
       border-radius: var(--radius-sm);
       border: 1.5px solid var(--border-main);
       background: var(--bg-input);
       color: var(--text-main);
-      font-size: 14px;
+      font-size: 13.5px;
       outline: none;
       transition: border-color 0.2s;
     }
@@ -887,10 +906,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 14px;
+      padding: 11px 14px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-light);
-      margin-bottom: 10px;
+      margin-bottom: 9px;
       background: var(--bg-card-sub);
     }
 
@@ -913,8 +932,8 @@
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       border: 2px solid var(--bg-modal);
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
@@ -938,8 +957,8 @@
     }
 
     .color-preset-dot {
-      width: 20px;
-      height: 20px;
+      width: 19px;
+      height: 19px;
       border-radius: 50%;
       cursor: pointer;
       border: 1px solid rgba(0,0,0,0.2);
@@ -963,7 +982,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 11.5px;
       padding: 5px 0;
       border-bottom: 1px dashed var(--border-light);
     }
@@ -980,7 +999,7 @@
       right: 0;
       background: var(--bg-bottom-bar);
       border-top: 1px solid var(--border-light);
-      padding: 12px 16px;
+      padding: 11px 16px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -1000,7 +1019,7 @@
       color: var(--text-main);
       border: 1.5px solid var(--border-light);
       border-radius: 30px;
-      padding: 10px 16px 10px 38px;
+      padding: 9px 16px 9px 36px;
       font-size: 13px;
       font-weight: 500;
       outline: none;
@@ -1017,7 +1036,7 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .empty-state {
@@ -2032,12 +2051,10 @@
 
       if (person.state === 'green') {
         if (!person.targetTime) {
-          // Inicia contagem de 5 min (continua verde)
           person.targetTime = cur + (TIMER_5_MIN * 1000);
           person.totalDuration = TIMER_5_MIN;
           person.isFinished = false;
         } else if (person.isFinished) {
-          // Já finalizou 5 min -> vai para amarelo (inicia 30 min)
           person.state = 'yellow';
           person.targetTime = cur + (TIMER_30_MIN * 1000);
           person.totalDuration = TIMER_30_MIN;
@@ -2045,19 +2062,16 @@
         }
       } else if (person.state === 'yellow') {
         if (!person.targetTime) {
-          // Inicia contagem de 30 min
           person.targetTime = cur + (TIMER_30_MIN * 1000);
           person.totalDuration = TIMER_30_MIN;
           person.isFinished = false;
         } else if (person.isFinished) {
-          // Já finalizou 30 min -> vai para vermelho
           person.state = 'red';
           person.targetTime = null;
           person.totalDuration = null;
           person.isFinished = true;
         }
       } else if (person.state === 'red') {
-        // Reinicia o ciclo para verde
         person.state = 'green';
         person.targetTime = null;
         person.totalDuration = null;
@@ -2217,17 +2231,14 @@
       loadDemoData();
     }
 
-    // Inicializa na aba ativa
     switchAppTab(activeAppTab);
 
-    // Loop rápido (a cada 1 segundo) para atualização suave dos cronômetros do Ver Magia
     setInterval(() => {
       if (activeAppTab === 'timer') {
         renderTimerList();
       }
     }, 1000);
 
-    // Loop de 15 segundos para os cronômetros da aba Volantes
     setInterval(() => {
       if (activeAppTab === 'volantes') {
         render();
