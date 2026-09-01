@@ -53,37 +53,38 @@ function buildDemoPatientsForTest() {
   return sandbox.result;
 }
 
-test('dados demo simulam 60 pacientes com 9 conflitos concorrentes', () => {
+test('dados demo simulam 60 pacientes com 9 conflitos concorrentes dispersos', () => {
   const patients = buildDemoPatientsForTest();
   const busyPatients = patients.filter(patient => patient.currentLocation);
 
   assert.equal(patients.length, 60);
   assert.equal(busyPatients.length, 9);
   assert.equal(new Set(patients.map(patient => patient.id)).size, 60);
+  assert.deepEqual(Array.from(busyPatients, patient => patient.id), [
+    'SAS-102', 'SAS-109', 'SAS-115', 'SAS-124', 'SAS-131',
+    'SAS-138', 'SAS-144', 'SAS-149', 'SAS-160'
+  ]);
 
   for (const patient of busyPatients) {
-    assert.equal(patient.specialties.length, 2);
+    assert.ok(patient.specialties.length >= 2);
     assert.equal(patient.statusBySpec[patient.currentLocation.spec], patient.currentLocation.stage);
     assert.ok(patient.specialties.some(spec => spec !== patient.currentLocation.spec && patient.statusBySpec[spec] === 'waiting'));
   }
 });
 
-test('dados demo distribuem 20 pacientes em cada especialidade', () => {
+test('dados demo reduzem a proporção conforme cresce o número de especialidades', () => {
   const patients = buildDemoPatientsForTest();
-  const distribution = Object.fromEntries(['oftalmo', 'odonto', 'dermato', 'gineco', 'pediatria', 'clinica'].map(id => [id, 0]));
+  const distribution = { 1: 0, 2: 0, 3: 0, 4: 0 };
 
   for (const patient of patients) {
-    for (const specialty of patient.specialties) distribution[specialty] += 1;
+    distribution[patient.specialties.length] += 1;
+    assert.equal(new Set(patient.specialties).size, patient.specialties.length);
   }
 
-  assert.deepEqual(distribution, {
-    oftalmo: 20,
-    odonto: 20,
-    dermato: 20,
-    gineco: 20,
-    pediatria: 20,
-    clinica: 20
-  });
+  assert.deepEqual(distribution, { 1: 30, 2: 18, 3: 9, 4: 3 });
+  assert.ok(distribution[1] > distribution[2]);
+  assert.ok(distribution[2] > distribution[3]);
+  assert.ok(distribution[3] > distribution[4]);
 });
 
 test('sincronização não confirma sucesso quando o POST remoto falha', () => {
