@@ -1151,18 +1151,24 @@
     .form-add-timer { padding: 16px; box-shadow: var(--shadow-md); border: none; }
     .timer-person-item { border: none; border-radius: 10px; box-shadow: var(--shadow-md); transition: box-shadow 0.18s ease, transform 0.18s ease; }
     .timer-person-item:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
-    .timer-main-btn { min-height: 112px; padding: 16px 54px 16px 16px; }    .timer-intro {
+    .timer-main-btn { min-height: 112px; padding: 16px 54px 16px 16px; }
+
+    .queue-toolbar,
+    .timer-intro {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 14px 20px;
       align-items: center;
       margin-bottom: 20px;
-      padding: 20px;
-      background: var(--bg-card);
-      box-shadow: var(--shadow-md);
-      border-radius: var(--radius-md);
+      padding: 16px 2px;
     }
-        .timer-intro h1 {
+    .timer-intro {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+    }
+    .timer-intro h1 {
       color: var(--text-main);
       font-size: 20px;
       font-weight: 800;
@@ -1170,10 +1176,10 @@
       line-height: 1.1;
       margin: 3px 0 6px;
     }
-        .timer-intro p { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; max-width: 620px; }
+    .queue-toolbar p,
+    .timer-intro p { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; max-width: 620px; }
     .section-kicker { color: var(--sas-orange-hover); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
     .new-patient-cta { flex: 0 0 auto; min-height: 42px; padding: 0 15px; white-space: nowrap; }
-
     .specialty-overview-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
     .specialty-overview-card { appearance: none; background: var(--bg-card); border: none; border-radius: 10px; box-shadow: var(--shadow-md); color: var(--text-main); cursor: pointer; padding: 16px; text-align: left; transition: box-shadow 0.18s ease, transform 0.18s ease; }
     .specialty-overview-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
@@ -1195,10 +1201,11 @@
       header { padding-left: 14px; padding-right: 14px; }
       main { padding: 16px 12px 24px; }
       .stats-bar, .bottom-bar { padding-left: 14px; padding-right: 14px; }
-      .queues-grid { padding: 12px; gap: 12px; }    .timer-intro { grid-template-columns: 1fr; padding: 16px; }
+      .queues-grid { padding: 12px; gap: 12px; }
+      .queue-toolbar, .timer-intro { grid-template-columns: 1fr; padding: 16px 0; }
+      .timer-intro { padding: 16px; }
       .new-patient-cta { width: 100%; }
-      .priority-list, .specialty-overview-grid { grid-template-columns: 1fr; }
-      .specialty-overview-card { padding: 14px; }
+      .specialty-overview-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -1280,6 +1287,15 @@
   <main>
     <!-- ABA 1: VOLANTES & GESTÃO DE FILAS -->
     <div class="app-view active" id="viewVolantes">
+      <div class="queue-toolbar">
+        <div>
+          <span class="section-kicker">Filas por especialidade</span>
+          <p>Selecione uma especialidade para abrir e operar a fila.</p>
+        </div>
+        <button class="btn btn-primary new-patient-cta" onclick="openAddModal()">
+          <span aria-hidden="true">＋</span> Novo paciente
+        </button>
+      </div>
       <div id="queuesContainer">
         <!-- Populated by JS -->
       </div>
@@ -1722,7 +1738,6 @@
 
     function render() {
       renderSpecialtyFilters();
-      
       renderQueues();
       renderStats();
     }
@@ -1735,14 +1750,6 @@
         door: specPatients.filter(p => p.statusBySpec[spec.id] === 'door').length,
         inRoom: specPatients.filter(p => p.statusBySpec[spec.id] === 'in_room').length
       };
-    }      ];
-
-      container.innerHTML = priorities.map(priority => `
-        <div class="priority-item">
-          <span class="priority-marker ${priority.level}"></span>
-          <div><strong>${priority.title}</strong><span>${priority.description}</span></div>
-        </div>
-      `).join('');
     }
 
     function renderOverviewCards() {
