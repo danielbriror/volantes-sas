@@ -547,20 +547,17 @@
       box-shadow: var(--shadow-md);
     }
 
-    .patient-card.status-free {
-      border-left: 6px solid #10B981;
-    }
-
-    .patient-card.status-door {
-      border-left: 6px solid #F59E0B;
-    }
-
-    .patient-card.status-in_room {
-      border-left: 6px solid #3B82F6;
+    /* Cor da borda esquerda é definida inline por card (cor da especialidade
+       correspondente); aqui só a largura/estilo, iguais para todo status. */
+    .patient-card.status-free,
+    .patient-card.status-door,
+    .patient-card.status-in_room,
+    .patient-card.status-busy-elsewhere {
+      border-left-width: 6px;
+      border-left-style: solid;
     }
 
     .patient-card.status-busy-elsewhere {
-      border-left: 6px solid #EF4444;
       opacity: 0.92;
     }
 
@@ -569,6 +566,13 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 8px;
+    }
+
+    .patient-name-line {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     .patient-name {
@@ -1941,21 +1945,28 @@
       if (currentStage === 'in_room') cardClass = 'status-in_room';
       if (isBusyElsewhere) cardClass = 'status-busy-elsewhere';
 
+      // Cor de destaque do card: por padrão a da especialidade da lista atual;
+      // se ocupado em outra especialidade, usa a cor de lá em vez de vermelho genérico.
+      let borderColor = currentSpec.color;
+      if (currentStage === 'door') borderColor = '#F59E0B';
+      if (currentStage === 'in_room') borderColor = '#3B82F6';
+      if (isBusyElsewhere) borderColor = busySpecObj ? busySpecObj.color : '#EF4444';
+
       const stageTimerText = getCurrentStageTimeText(patient, currentSpec.id, currentStage);
       const totalTimerText = getTotalTimeText(patient);
 
       return `
-        <div class="patient-card ${cardClass}">
+        <div class="patient-card ${cardClass}" style="border-left-color: ${borderColor};">
           <div class="patient-top">
-            <div>
-              <div class="patient-name">${patient.name}</div>
-              <div class="wristband-tags" style="margin-top: 5px;">
+            <div class="patient-name-line">
+              <span class="patient-name">${patient.name}</span>
+              <span class="wristband-tags">
                 ${patient.specialties.map(sId => {
                   const spec = SPECIALTIES.find(s => s.id === sId) || { color: '#94A3B8', name: sId };
                   const isDone = patient.statusBySpec[sId] === 'done';
                   return `<span class="wristband-dot ${isDone ? 'done' : ''}" style="background: ${spec.color};" title="${spec.name}${isDone ? ' (Concluído)' : ''}">${isDone ? '✓' : ''}</span>`;
                 }).join('')}
-              </div>
+              </span>
             </div>
             <span class="patient-id" title="Toque para ver ficha" onclick="handleSearch('${patient.id}')">${patient.id}</span>
           </div>
