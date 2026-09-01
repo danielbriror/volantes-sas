@@ -16,7 +16,7 @@
       --sas-navy-dark: #0F1B30;
       --sas-orange: #F37021;
       --sas-orange-hover: #D95C10;
-      --sas-bg: #F8FAFC;
+      --sas-bg: #F4F6F9;
       --sas-card-bg: #FFFFFF;
       --sas-text: #0F172A;
       --sas-text-muted: #64748B;
@@ -356,6 +356,35 @@
       border: 1px solid var(--sas-border-light);
     }
 
+    /* Timers & Badges */
+    .timer-badge-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F8FAFC;
+      border: 1px solid var(--sas-border-light);
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .timer-stage {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--sas-navy);
+    }
+
+    .timer-stage.stage-waiting { color: #059669; }
+    .timer-stage.stage-door { color: #D97706; }
+    .timer-stage.stage-in_room { color: #2563EB; }
+
+    .timer-total {
+      color: var(--sas-text-muted);
+      font-size: 10.5px;
+    }
+
     /* Pulseiras & Tags */
     .wristband-tags {
       display: flex;
@@ -654,6 +683,28 @@
       transform: scale(1.25);
     }
 
+    /* Timeline Breakdown in Details */
+    .timeline-box {
+      background: #F8FAFC;
+      border: 1px solid var(--sas-border-light);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-top: 8px;
+    }
+
+    .timeline-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--sas-border-light);
+    }
+
+    .timeline-row:last-child {
+      border-bottom: none;
+    }
+
     /* Floating Search Bar Bottom */
     .bottom-bar {
       position: fixed;
@@ -774,10 +825,10 @@
   <div class="modal-overlay" id="searchModal">
     <div class="modal-sheet">
       <div class="modal-header">
-        <div class="modal-title">Resultado da Busca</div>
+        <div class="modal-title">Resultado da Busca & Histórico de Tempos</div>
         <button class="close-btn" onclick="closeModal('searchModal')">✕</button>
       </div>
-      <div id="searchResultsList" style="display: flex; flex-direction: column; gap: 10px;">
+      <div id="searchResultsList" style="display: flex; flex-direction: column; gap: 12px;">
         <!-- Populated by JS -->
       </div>
     </div>
@@ -884,7 +935,8 @@
     let patients = JSON.parse(localStorage.getItem('sas_volantes_patients')) || [];
     let selectedSpecialtyFilter = 'all'; // 'all' or specialty id
 
-    // --- 3. DADOS DE DEMONSTRAÇÃO (ALFA) ---
+    // --- 3. DADOS DE DEMONSTRAÇÃO (ALFA COM CRONÔMETROS REAIS) ---
+    const now = Date.now();
     const DEMO_PATIENTS = [
       {
         id: 'SAS-101',
@@ -892,7 +944,11 @@
         specialties: ['oftalmo', 'odonto'],
         statusBySpec: { oftalmo: 'door', odonto: 'waiting' },
         currentLocation: { spec: 'oftalmo', stage: 'door' },
-        registeredAt: new Date(Date.now() - 40 * 60000).toISOString()
+        registeredAt: now - 38 * 60000,
+        stages: {
+          oftalmo: { waitingStart: now - 38 * 60000, doorStart: now - 6 * 60000 },
+          odonto: { waitingStart: now - 38 * 60000 }
+        }
       },
       {
         id: 'SAS-102',
@@ -900,7 +956,11 @@
         specialties: ['dermato', 'oftalmo'],
         statusBySpec: { dermato: 'in_room', oftalmo: 'waiting' },
         currentLocation: { spec: 'dermato', stage: 'in_room' },
-        registeredAt: new Date(Date.now() - 35 * 60000).toISOString()
+        registeredAt: now - 45 * 60000,
+        stages: {
+          dermato: { waitingStart: now - 45 * 60000, doorStart: now - 22 * 60000, roomStart: now - 14 * 60000 },
+          oftalmo: { waitingStart: now - 45 * 60000 }
+        }
       },
       {
         id: 'SAS-103',
@@ -908,7 +968,12 @@
         specialties: ['pediatria', 'oftalmo', 'odonto'],
         statusBySpec: { pediatria: 'waiting', oftalmo: 'waiting', odonto: 'waiting' },
         currentLocation: null,
-        registeredAt: new Date(Date.now() - 25 * 60000).toISOString()
+        registeredAt: now - 20 * 60000,
+        stages: {
+          pediatria: { waitingStart: now - 20 * 60000 },
+          oftalmo: { waitingStart: now - 20 * 60000 },
+          odonto: { waitingStart: now - 20 * 60000 }
+        }
       },
       {
         id: 'SAS-104',
@@ -916,15 +981,23 @@
         specialties: ['gineco', 'dermato'],
         statusBySpec: { gineco: 'waiting', dermato: 'waiting' },
         currentLocation: null,
-        registeredAt: new Date(Date.now() - 20 * 60000).toISOString()
+        registeredAt: now - 15 * 60000,
+        stages: {
+          gineco: { waitingStart: now - 15 * 60000 },
+          dermato: { waitingStart: now - 15 * 60000 }
+        }
       },
       {
         id: 'SAS-105',
         name: 'Sebastião Gomes Pereira',
         specialties: ['oftalmo', 'clinica'],
-        statusBySpec: { oftalmo: 'waiting', clinica: 'waiting' },
-        currentLocation: null,
-        registeredAt: new Date(Date.now() - 15 * 60000).toISOString()
+        statusBySpec: { oftalmo: 'door', clinica: 'waiting' },
+        currentLocation: { spec: 'oftalmo', stage: 'door' },
+        registeredAt: now - 28 * 60000,
+        stages: {
+          oftalmo: { waitingStart: now - 28 * 60000, doorStart: now - 4 * 60000 },
+          clinica: { waitingStart: now - 28 * 60000 }
+        }
       },
       {
         id: 'SAS-106',
@@ -932,7 +1005,11 @@
         specialties: ['odonto', 'gineco'],
         statusBySpec: { odonto: 'in_room', gineco: 'waiting' },
         currentLocation: { spec: 'odonto', stage: 'in_room' },
-        registeredAt: new Date(Date.now() - 10 * 60000).toISOString()
+        registeredAt: now - 50 * 60000,
+        stages: {
+          odonto: { waitingStart: now - 50 * 60000, doorStart: now - 28 * 60000, roomStart: now - 18 * 60000 },
+          gineco: { waitingStart: now - 50 * 60000 }
+        }
       }
     ];
 
@@ -963,7 +1040,50 @@
       }
     }
 
-    // --- 4. GESTÃO DE CORES DAS ESPECIALIDADES ---
+    // --- 4. FORMATADORES DE TEMPO E CRONÔMETRO ---
+    function formatDuration(ms) {
+      if (!ms || ms < 0) return '0 min';
+      const totalSeconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const hours = Math.floor(minutes / 60);
+      
+      if (hours > 0) {
+        const remainingMin = minutes % 60;
+        return `${hours}h ${remainingMin}m`;
+      }
+      return `${minutes} min`;
+    }
+
+    function getCurrentStageTimeText(patient, specId, stage) {
+      if (!patient.stages || !patient.stages[specId]) return '';
+      const st = patient.stages[specId];
+      const curTime = Date.now();
+
+      if (stage === 'waiting') {
+        const start = st.waitingStart || patient.registeredAt;
+        const dur = curTime - start;
+        return `⏱️ ${formatDuration(dur)} na tenda`;
+      }
+      if (stage === 'door') {
+        const start = st.doorStart || curTime;
+        const dur = curTime - start;
+        return `🚪 ${formatDuration(dur)} na porta`;
+      }
+      if (stage === 'in_room') {
+        const start = st.roomStart || curTime;
+        const dur = curTime - start;
+        return `🩺 ${formatDuration(dur)} em consulta`;
+      }
+      return '';
+    }
+
+    function getTotalTimeText(patient) {
+      const start = patient.registeredAt || Date.now();
+      const end = patient.completedAt || Date.now();
+      return `⏳ Total: ${formatDuration(end - start)}`;
+    }
+
+    // --- 5. GESTÃO DE CORES DAS ESPECIALIDADES ---
     function openColorsModal() {
       renderColorsCustomizer();
       openModal('colorsModal');
@@ -1006,7 +1126,7 @@
       vibrate();
     }
 
-    // --- 5. RENDERIZAÇÃO ---
+    // --- 6. RENDERIZAÇÃO ---
     function render() {
       renderSpecialtyFilters();
       renderQueues();
@@ -1111,7 +1231,6 @@
     }
 
     function renderPatientCard(patient, currentSpec, currentStage) {
-      // Checa se o paciente está ocupado em outra especialidade
       const isBusyElsewhere = patient.currentLocation && patient.currentLocation.spec !== currentSpec.id;
       const busySpecObj = isBusyElsewhere ? SPECIALTIES.find(s => s.id === patient.currentLocation.spec) : null;
       const busyStageLabel = isBusyElsewhere ? (patient.currentLocation.stage === 'door' ? 'Na Porta' : 'Em Consulta') : '';
@@ -1120,6 +1239,9 @@
       if (currentStage === 'door') cardClass = 'status-door';
       if (currentStage === 'in_room') cardClass = 'status-in_room';
       if (isBusyElsewhere) cardClass = 'status-busy-elsewhere';
+
+      const stageTimerText = getCurrentStageTimeText(patient, currentSpec.id, currentStage);
+      const totalTimerText = getTotalTimeText(patient);
 
       return `
         <div class="patient-card ${cardClass}">
@@ -1135,6 +1257,12 @@
               </div>
             </div>
             <span class="patient-id">${patient.id}</span>
+          </div>
+
+          <!-- Barra de Cronômetro da Etapa e Total -->
+          <div class="timer-badge-bar">
+            <span class="timer-stage stage-${currentStage}">${stageTimerText}</span>
+            <span class="timer-total">${totalTimerText}</span>
           </div>
 
           ${isBusyElsewhere ? `
@@ -1192,11 +1320,16 @@
       document.getElementById('statInRoom').innerText = inRoomCount;
     }
 
-    // --- 6. TRANSIÇÕES DE ESTADO DO PACIENTE ---
+    // --- 7. TRANSIÇÕES DE ESTADO COM MARCAÇÃO DE TEMPO ---
     function moveToDoor(patientId, specId) {
       const p = patients.find(x => x.id === patientId);
       if (!p) return;
 
+      const tNow = Date.now();
+      if (!p.stages) p.stages = {};
+      if (!p.stages[specId]) p.stages[specId] = {};
+      
+      p.stages[specId].doorStart = tNow;
       p.statusBySpec[specId] = 'door';
       p.currentLocation = { spec: specId, stage: 'door' };
       saveState();
@@ -1207,6 +1340,11 @@
       const p = patients.find(x => x.id === patientId);
       if (!p) return;
 
+      const tNow = Date.now();
+      if (!p.stages) p.stages = {};
+      if (!p.stages[specId]) p.stages[specId] = {};
+      
+      p.stages[specId].waitingStart = tNow;
       p.statusBySpec[specId] = 'waiting';
       p.currentLocation = null;
       saveState();
@@ -1217,6 +1355,11 @@
       const p = patients.find(x => x.id === patientId);
       if (!p) return;
 
+      const tNow = Date.now();
+      if (!p.stages) p.stages = {};
+      if (!p.stages[specId]) p.stages[specId] = {};
+      
+      p.stages[specId].roomStart = tNow;
       p.statusBySpec[specId] = 'in_room';
       p.currentLocation = { spec: specId, stage: 'in_room' };
       saveState();
@@ -1227,20 +1370,33 @@
       const p = patients.find(x => x.id === patientId);
       if (!p) return;
 
+      const tNow = Date.now();
+      if (!p.stages) p.stages = {};
+      if (!p.stages[specId]) p.stages[specId] = {};
+      
+      p.stages[specId].roomEnd = tNow;
       p.statusBySpec[specId] = 'done';
-      p.currentLocation = null; // Libera o paciente para as outras especialidades!
+      p.currentLocation = null;
 
-      // Verifica se o paciente concluiu todas as suas especialidades
+      // Para as demais especialidades pendentes, reseta o início do tempo de espera na tenda a partir de agora
+      p.specialties.forEach(s => {
+        if (p.statusBySpec[s] === 'waiting') {
+          if (!p.stages[s]) p.stages[s] = {};
+          p.stages[s].waitingStart = tNow;
+        }
+      });
+
       const allDone = p.specialties.every(s => p.statusBySpec[s] === 'done');
       if (allDone) {
         p.isComplete = true;
+        p.completedAt = tNow;
       }
 
       saveState();
       vibrate();
     }
 
-    // --- 7. BUSCA GLOBAL DE PACIENTES ---
+    // --- 8. BUSCA GLOBAL DE PACIENTES COM HISTÓRICO DE TEMPOS ---
     function handleSearch(query) {
       if (!query || query.trim().length === 0) {
         closeModal('searchModal');
@@ -1266,15 +1422,18 @@
             locText = '🏁 <b>Circuito Completo (Alta)</b>';
           }
 
+          const totalTime = getTotalTimeText(p);
+
           return `
             <div class="patient-card">
               <div class="patient-top">
                 <div>
                   <div class="patient-name">${p.name}</div>
-                  <div style="font-size: 12px; color: var(--sas-text-muted); margin-top: 2px;">Localização Atual: ${locText}</div>
+                  <div style="font-size: 12px; color: var(--sas-text-muted); margin-top: 2px;">Localização: ${locText}</div>
                 </div>
                 <span class="patient-id">${p.id}</span>
               </div>
+
               <div class="wristband-tags" style="margin-top: 6px;">
                 ${p.specialties.map(sId => {
                   const spec = SPECIALTIES.find(s => s.id === sId) || { color: '#94A3B8', name: sId };
@@ -1287,6 +1446,26 @@
                   return `<span class="wristband-tag ${st === 'done' ? 'done' : ''}" style="background: ${spec.color};">${spec.name}: ${badgeLabel}</span>`;
                 }).join('')}
               </div>
+
+              <!-- Detalhamento de Tempos por Especialidade -->
+              <div class="timeline-box">
+                <div style="font-size:11px; font-weight:800; color:var(--sas-navy); margin-bottom:4px;">⏱️ Tempos por Especialidade:</div>
+                ${p.specialties.map(sId => {
+                  const spec = SPECIALTIES.find(s => s.id === sId) || { name: sId };
+                  const st = p.stages && p.stages[sId] ? p.stages[sId] : {};
+                  const curSt = p.statusBySpec[sId];
+                  return `
+                    <div class="timeline-row">
+                      <span><b>${spec.name}</b></span>
+                      <span>${curSt === 'done' ? '✅ Concluído' : getCurrentStageTimeText(p, sId, curSt)}</span>
+                    </div>
+                  `;
+                }).join('')}
+                <div class="timeline-row" style="font-weight:800; color:var(--sas-orange-hover); margin-top:4px;">
+                  <span>Tempo Total de Circuito:</span>
+                  <span>${totalTime.replace('⏳ Total: ', '')}</span>
+                </div>
+              </div>
             </div>
           `;
         }).join('');
@@ -1295,7 +1474,7 @@
       openModal('searchModal');
     }
 
-    // --- 8. MODAIS & CADASTRO ---
+    // --- 9. MODAIS & CADASTRO ---
     function openModal(id) {
       document.getElementById(id).classList.add('active');
     }
@@ -1346,16 +1525,22 @@
         return;
       }
 
+      const tNow = Date.now();
       const statusBySpec = {};
-      selectedSpecs.forEach(s => statusBySpec[s] = 'waiting');
+      const stages = {};
+      selectedSpecs.forEach(s => {
+        statusBySpec[s] = 'waiting';
+        stages[s] = { waitingStart: tNow };
+      });
 
       const newPatient = {
         id: id || ('SAS-' + Math.floor(100 + Math.random() * 900)),
         name: name,
         specialties: selectedSpecs,
         statusBySpec: statusBySpec,
+        stages: stages,
         currentLocation: null,
-        registeredAt: new Date().toISOString()
+        registeredAt: tNow
       };
 
       patients.unshift(newPatient);
@@ -1368,12 +1553,16 @@
       openModal('settingsModal');
     }
 
-    // Inicialização
+    // Inicialização e Atualização Contínua dos Cronômetros em Tempo Real (a cada 15s)
     if (patients.length === 0) {
       loadDemoData();
     } else {
       render();
     }
+
+    setInterval(() => {
+      render();
+    }, 15000);
   </script>
 </body>
 </html>
