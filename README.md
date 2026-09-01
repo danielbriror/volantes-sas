@@ -25,8 +25,9 @@ quem está em consulta, especialidade por especialidade.
      aquela especialidade; não possui botões de movimentação.
 - A Visão Geral também inclui **Circuitos Finalizados**, reunindo pacientes que
   concluíram todas as especialidades previstas, com pulseira/ID, horário de
-  conclusão e tempo total. O contador superior **Circuito Completo** usa essa
-  mesma regra; esses pacientes não entram mais no número de **Na Tenda**.
+  conclusão e tempo total. O painel é **recolhível** e lembra no navegador se
+  foi deixado aberto ou fechado; o contador superior **Circuito Completo** usa
+  essa mesma regra. Esses pacientes não entram mais no número de **Na Tenda**.
 - Cada card de paciente mostra nome, pulseira/ID, especialidades paralelas,
   tempo na etapa atual e tempo total de espera.
 - Um botão por etapa move o paciente pela fila (Chamar para Porta → Entrou na
@@ -46,7 +47,7 @@ quem está em consulta, especialidade por especialidade.
 
 | Papel | Ação no app |
 |---|---|
-| **Volante** | Organiza a Tenda e move o paciente de **Aguardando** para **Na Porta**. |
+| **Volante** | Organiza a Tenda e move o paciente de **Aguardando** para **Na Porta** (seguindo a regra de intercalação 1:1 entre preferenciais e gerais). |
 | **Médico ou auxiliar da especialidade** | Confirma **Entrou na Consulta**, conclui o atendimento e decide/explica o próximo destino físico do paciente. |
 | **App** | Mostra pendências por especialidade e sugere retorno à Tenda, porta direta ou liberação, sempre para confirmação humana. |
 
@@ -54,6 +55,12 @@ quem está em consulta, especialidade por especialidade.
 > especialidade pendente, sem contar o próprio paciente que acabou de concluir
 > outra consulta. Antes de encaminhar direto, a equipe ainda deve confirmar que
 > a porta está apta a recebê-lo.
+
+### Gestão de Pacientes Preferenciais (Intercalação 1:1)
+
+- **Identificação Visual:** Pacientes prioritários (idosos, gestantes, PCDs, crianças de colo) recebem o badge `⭐ Preferencial` com destaque visual em seus cards, no modal de busca e nos circuitos finalizados.
+- **Intercalação na Fila da Tenda:** A lista de espera da Tenda organiza automaticamente a chamada alternando **1 paciente preferencial para 1 paciente geral** (preservando o FIFO de cada categoria). Isso garante prioridade de atendimento sem causar a inanição (*starvation*) dos pacientes gerais.
+- **Contador em Tempo Real:** O cabeçalho da coluna da Tenda exibe o número de pacientes preferenciais aguardando (ex: `⭐ 2 pref`).
 
 ### Aba "Temporizador Ver Magia"
 
@@ -74,7 +81,9 @@ seus cronômetros. Não use esses dados como registro clínico.
 ## Configurações
 
 - **Tema** claro/escuro/automático.
-- **Cores das pulseiras** de cada especialidade, personalizáveis.
+- **Especialidades & Paleta de pulseiras** — gerencie a equipe e as cores da operação:
+  - **Paleta central:** adicione novas cores pelo seletor de espectro, edite códigos existentes ou remova cores não utilizadas. Ao editar uma cor, as especialidades associadas são atualizadas conjuntamente.
+  - **Especialidades do dia:** marque especialidades como *Presente* ou *Ausente* de acordo com a escala dos profissionais no mutirão (especialidades ausentes sem fila pendente ficam ocultas na visão geral); adicione novas especialidades personalizadas (com ícone/emoji e cor da paleta); edite nomes ou ícones; e remova especialidades que não possuam pacientes vinculados.
 - **Armazenamento local** — comportamento padrão. Sem URL de integração, cada
   aparelho mantém sua própria cópia no `localStorage` e funciona offline.
 - **Sincronização com a Fila Operacional** — o front-end já está implementado,

@@ -505,14 +505,51 @@
       background: var(--bg-card);
       border: 1px solid var(--border-light);
       border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .completed-circuits-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
       padding: 12px;
+      border: 0;
+      background: rgba(100, 116, 139, 0.08);
+      color: #64748B;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .completed-circuits-header:hover {
+      background: rgba(100, 116, 139, 0.14);
+    }
+
+    .completed-circuits-header .queue-title {
+      flex: 1;
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .completed-circuits-section.expanded .expand-chevron {
+      transform: rotate(180deg);
+    }
+
+    .completed-circuits-body {
+      display: none;
+      border-top: 1px solid var(--border-light);
+      padding: 12px;
+    }
+
+    .completed-circuits-section.expanded .completed-circuits-body {
+      display: block;
     }
 
     .completed-circuits-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 8px;
-      margin-top: 10px;
     }
 
     .queue-title {
@@ -610,6 +647,43 @@
       border-radius: 5px;
       white-space: nowrap;
       cursor: pointer;
+    }
+
+    .priority-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.16);
+      color: #D97706;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    [data-theme="dark"] .priority-badge {
+      background: rgba(245, 158, 11, 0.22);
+      color: #FBBF24;
+      border-color: rgba(245, 158, 11, 0.40);
+    }
+
+    .priority-queue-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.20);
+      color: #D97706;
+      font-size: 9.5px;
+      font-weight: 700;
+    }
+
+    [data-theme="dark"] .priority-queue-badge {
+      background: rgba(245, 158, 11, 0.25);
+      color: #FBBF24;
     }
 
     /* Timers & Badges */
@@ -1014,11 +1088,110 @@
       color: var(--sas-orange-hover);
     }
 
-    /* Color Customizer List */
+    /* Paleta central de pulseiras e gestão de especialidades */
+    .wristband-palette-card, .specialty-manage-card {
+      margin-bottom: 14px;
+      padding: 12px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      background: var(--bg-card-sub);
+    }
+
+    .palette-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .palette-heading strong {
+      color: var(--text-main);
+      font-size: 12px;
+    }
+
+    .palette-heading span {
+      color: var(--text-muted);
+      font-size: 10.5px;
+    }
+
+    .wristband-palette-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .palette-color-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px 4px 4px;
+      border: 1px solid var(--border-light);
+      border-radius: 999px;
+      background: var(--bg-card);
+    }
+
+    .palette-color-input {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .palette-color-input::-webkit-color-swatch-wrapper { padding: 0; }
+    .palette-color-input::-webkit-color-swatch { border: none; border-radius: 50%; }
+
+    .palette-color-code {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    .palette-delete-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      min-height: 24px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      touch-action: manipulation;
+    }
+
+    .palette-delete-btn:hover { color: var(--danger); background: rgba(239, 68, 68, 0.12); }
+
+    .palette-add-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 11px;
+      margin-top: 11px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .palette-add-row .btn { padding: 7px 10px; font-size: 10.5px; }
+
     .color-spec-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
       padding: 9px 11px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-light);
@@ -1026,8 +1199,14 @@
       background: var(--bg-card-sub);
     }
 
+    .color-spec-row.inactive-spec {
+      opacity: 0.75;
+      border-style: dashed;
+    }
+
     .color-spec-info {
       display: flex;
+      min-width: 0;
       align-items: center;
       gap: 8px;
       font-size: 11.5px;
@@ -1035,51 +1214,91 @@
       color: var(--text-main);
     }
 
+    .color-spec-info span.spec-name-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .spec-status-pill {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .spec-status-pill.active {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+    }
+
+    .spec-status-pill.inactive {
+      background: rgba(100, 116, 139, 0.18);
+      color: #64748B;
+    }
+
     .color-spec-controls {
       display: flex;
+      flex: 0 0 auto;
       align-items: center;
-      gap: 10px;
+      gap: 6px;
     }
 
-    .color-picker-input {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      width: 34px;
-      height: 34px;
+    .color-select {
+      max-width: 120px;
+      padding: 6px 8px;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      background: var(--bg-card);
+      color: var(--text-main);
+      font: inherit;
+      font-size: 10.5px;
+      cursor: pointer;
+    }
+
+    .color-preview-dot {
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       border: 2px solid var(--bg-modal);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      cursor: pointer;
-      padding: 0;
-      background: transparent;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
     }
 
-    .color-picker-input::-webkit-color-swatch-wrapper {
-      padding: 0;
+    .spec-edit-form-box {
+      background: var(--bg-card);
+      border: 1px solid var(--sas-orange);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      margin-bottom: 8px;
     }
 
-    .color-picker-input::-webkit-color-swatch {
-      border: none;
-      border-radius: 50%;
-    }
-
-    .color-presets {
+    .spec-edit-form-grid {
       display: flex;
-      gap: 5px;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
-    .color-preset-dot {
-      width: 19px;
-      height: 19px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 1px solid rgba(0,0,0,0.2);
-      transition: transform 0.15s;
+    .spec-add-box {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px dashed var(--border-light);
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
     }
 
-    .color-preset-dot:hover {
-      transform: scale(1.25);
+    .spec-add-grid {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 480px) {
+      .color-spec-row { align-items: flex-start; flex-direction: column; }
+      .color-spec-controls { width: 100%; justify-content: space-between; }
+      .color-select { max-width: none; flex: 1; }
     }
 
     /* Timeline Breakdown in Details */
@@ -1320,11 +1539,11 @@
   <div class="modal-overlay" id="colorsModal">
     <div class="modal-sheet">
       <div class="modal-header">
-        <div class="modal-title">🎨 Cores das Especialidades & Pulseiras</div>
+        <div class="modal-title">🎨 Paleta de Pulseiras</div>
         <button class="close-btn" onclick="closeModal('colorsModal')">✕</button>
       </div>
       <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
-        Ajuste as cores de cada especialidade conforme o estoque físico de pulseiras ou cordões disponíveis na expedição:
+        Crie e mantenha uma única paleta conforme o estoque físico de pulseiras ou cordões. Depois, atribua uma cor da paleta a cada especialidade.
       </p>
       <div id="colorsCustomizerList">
         <!-- Populated by JS -->
@@ -1494,21 +1713,36 @@
       { id: 'clinica', name: 'Clínica Geral', color: '#DC2626', icon: '🩺' }
     ];
 
-    const COLOR_PRESETS = [
+    const DEFAULT_WRISTBAND_PALETTE = [
       '#2563EB', '#059669', '#D97706', '#DB2777', '#7C3AED', '#DC2626', '#0891B2', '#475569', '#EAB308', '#000000'
     ];
 
-    let SPECIALTIES = JSON.parse(localStorage.getItem('sas_volantes_specialties')) || DEFAULT_SPECIALTIES;
-    let patients = JSON.parse(localStorage.getItem('sas_volantes_patients')) || [];
+    function safeJsonParse(key, fallback) {
+      try {
+        const item = localStorage.getItem(key);
+        return item !== null ? JSON.parse(item) : fallback;
+      } catch (_) {
+        return fallback;
+      }
+    }
+
+    let SPECIALTIES = (safeJsonParse('sas_volantes_specialties', DEFAULT_SPECIALTIES) || DEFAULT_SPECIALTIES)
+      .map(spec => ({ ...spec, active: spec.active !== false }));
+    let WRISTBAND_PALETTE = getInitialWristbandPalette();
+    let patients = safeJsonParse('sas_volantes_patients', []);
 
     // Sincronização com a Fila Operacional (Google Apps Script) — ver google-apps-script/README.md
     let sasApiUrl = localStorage.getItem('sas_api_url') || '';
     let syncStatus = 'idle'; // 'idle' | 'ok' | 'error'
 
     // Seleção múltipla de especialidades (Array)
-    let selectedSpecialties = JSON.parse(localStorage.getItem('sas_selected_specs_v2')) || ['all'];
+    let selectedSpecialties = safeJsonParse('sas_selected_specs_v2', ['all']);
     // Estado de cards expandidos na visão geral
-    let expandedSpecialties = JSON.parse(localStorage.getItem('sas_expanded_specs')) || {};
+    let expandedSpecialties = safeJsonParse('sas_expanded_specs', {});
+    // Painel geral de circuitos completos; fechado inicialmente como as especialidades.
+    let completedCircuitsExpanded = Boolean(safeJsonParse('sas_completed_circuits_expanded', false));
+    // Especialidade em edição no configurador de operação.
+    let editingSpecialtyId = null;
 
     // Dados inteiramente fictícios para ensaiar uma operação já em andamento.
     // 60 pacientes ativos: 30 com 1 especialidade, 18 com 2, 9 com 3 e 3 com 4.
@@ -1542,6 +1776,7 @@
     const DEMO_SPECIALTY_IDS = ['oftalmo', 'odonto', 'dermato', 'gineco', 'pediatria', 'clinica'];
     const DEMO_SPECIALTY_COUNT_PATTERN = [1, 2, 1, 3, 1, 2, 1, 1, 4, 1, 2, 1, 3, 1, 2, 1, 1, 2, 3, 2];
     const DEMO_BUSY_PATIENT_INDEXES = [1, 8, 14, 23, 30, 37, 43, 48, 59];
+    const DEMO_PRIORITY_INDEXES = [0, 5, 11, 16, 22, 28, 33, 39, 45, 51, 56];
     const DEMO_SPECIALTY_OFFSETS = [0, 2, 4, 1];
 
     function buildDemoPatients(referenceTime = Date.now()) {
@@ -1553,6 +1788,7 @@
           .map(offset => DEMO_SPECIALTY_IDS[(primarySpecIndex + offset) % DEMO_SPECIALTY_IDS.length]);
         const primarySpec = specialties[0];
         const isBusy = DEMO_BUSY_PATIENT_INDEXES.includes(index);
+        const isPriority = DEMO_PRIORITY_INDEXES.includes(index);
         const busyStage = index % 2 === 0 ? 'door' : 'in_room';
         const waitedMinutes = 8 + ((index * 7) % 83);
         const registeredAt = referenceTime - waitedMinutes * 60000;
@@ -1572,6 +1808,7 @@
         return {
           id: `SAS-${String(101 + index).padStart(3, '0')}`,
           name,
+          isPriority,
           specialties,
           statusBySpec,
           currentLocation,
@@ -1588,6 +1825,7 @@
           .map(offset => DEMO_SPECIALTY_IDS[(primarySpecIndex + offset) % DEMO_SPECIALTY_IDS.length]);
         const completedAt = referenceTime - (24 + index * 11) * 60000;
         const registeredAt = completedAt - ((specialtyCount - 1) * 30 + 25) * 60000;
+        const isPriority = index % 3 === 0;
         const stages = Object.fromEntries(specialties.map((specId, specIndex) => {
           const waitingStart = registeredAt + specIndex * 30 * 60000;
           return [specId, {
@@ -1601,6 +1839,7 @@
         return {
           id: `SAS-${String(161 + index).padStart(3, '0')}`,
           name,
+          isPriority,
           specialties,
           statusBySpec: Object.fromEntries(specialties.map(specId => [specId, 'done'])),
           currentLocation: null,
@@ -1654,9 +1893,11 @@
         const id = row.ID_Pulseira;
         if (!id) return;
         if (!byId[id]) {
+          const isPriority = Boolean(row.Preferencial === true || row.Preferencial === 'SIM' || row.Preferencial === 'true' || row.Prioritario || row.isPriority);
           byId[id] = {
             id,
             name: row.Nome_Paciente,
+            isPriority,
             specialties: [],
             statusBySpec: {},
             currentLocation: null,
@@ -1812,45 +2053,420 @@
       return `⏳ Total: ${formatDuration(end - start)}`;
     }
 
+    function normalizeHexColor(color) {
+      if (typeof color !== 'string') return null;
+      const match = color.trim().match(/^#?([0-9a-f]{6})$/i);
+      return match ? `#${match[1].toUpperCase()}` : null;
+    }
+
+    function getInitialWristbandPalette() {
+      try {
+        const stored = JSON.parse(localStorage.getItem('sas_wristband_palette'));
+        if (Array.isArray(stored) && stored.length > 0) {
+          const palette = [...stored, ...SPECIALTIES.map(spec => spec.color)]
+            .map(normalizeHexColor)
+            .filter(Boolean);
+          return [...new Set(palette)];
+        }
+      } catch (_) {
+        // fallback
+      }
+
+      const palette = [...DEFAULT_WRISTBAND_PALETTE, ...SPECIALTIES.map(spec => spec.color)]
+        .map(normalizeHexColor)
+        .filter(Boolean);
+      return [...new Set(palette)];
+    }
+
+    function persistWristbandConfiguration() {
+      localStorage.setItem('sas_wristband_palette', JSON.stringify(WRISTBAND_PALETTE));
+      localStorage.setItem('sas_volantes_specialties', JSON.stringify(SPECIALTIES));
+    }
+
+    function addWristbandColor(color) {
+      const normalized = normalizeHexColor(color);
+      if (!normalized || WRISTBAND_PALETTE.includes(normalized)) return false;
+      WRISTBAND_PALETTE.push(normalized);
+      persistWristbandConfiguration();
+      return true;
+    }
+
+    function updateWristbandColor(previousColor, nextColor) {
+      const previous = normalizeHexColor(previousColor);
+      const next = normalizeHexColor(nextColor);
+      const paletteIndex = WRISTBAND_PALETTE.indexOf(previous);
+      if (!previous || !next || paletteIndex === -1) return false;
+      if (previous !== next && WRISTBAND_PALETTE.includes(next)) return false;
+
+      WRISTBAND_PALETTE[paletteIndex] = next;
+      SPECIALTIES.forEach(spec => {
+        if (normalizeHexColor(spec.color) === previous) spec.color = next;
+      });
+      persistWristbandConfiguration();
+      return true;
+    }
+
+    function deleteWristbandColor(color) {
+      const normalized = normalizeHexColor(color);
+      const paletteIndex = WRISTBAND_PALETTE.indexOf(normalized);
+      if (!normalized || paletteIndex === -1) return false;
+      if (SPECIALTIES.some(spec => normalizeHexColor(spec.color) === normalized)) return false;
+
+      WRISTBAND_PALETTE.splice(paletteIndex, 1);
+      persistWristbandConfiguration();
+      return true;
+    }
+
+    function assignSpecialtyWristbandColor(specId, color) {
+      const normalized = normalizeHexColor(color);
+      const spec = SPECIALTIES.find(item => item.id === specId);
+      if (!spec || !normalized || !WRISTBAND_PALETTE.includes(normalized)) return false;
+
+      spec.color = normalized;
+      persistWristbandConfiguration();
+      return true;
+    }
+
+    function getActiveSpecialties() {
+      return SPECIALTIES.filter(spec => spec.active !== false);
+    }
+
+    function normalizeSpecialtyName(name) {
+      return typeof name === 'string' ? name.trim().replace(/\s+/g, ' ') : '';
+    }
+
+    function createSpecialtyId(name) {
+      const base = normalizeSpecialtyName(name)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'especialidade';
+      let id = base;
+      let suffix = 2;
+      while (SPECIALTIES.some(spec => spec.id === id)) {
+        id = `${base}-${suffix}`;
+        suffix += 1;
+      }
+      return id;
+    }
+
+    function addSpecialty({ name, icon, color }) {
+      const normalizedName = normalizeSpecialtyName(name);
+      const normalizedColor = normalizeHexColor(color);
+      if (!normalizedName || !normalizedColor || !WRISTBAND_PALETTE.includes(normalizedColor)) return null;
+      if (SPECIALTIES.some(spec => normalizeSpecialtyName(spec.name).toLowerCase() === normalizedName.toLowerCase())) return null;
+
+      const specialty = {
+        id: createSpecialtyId(normalizedName),
+        name: normalizedName,
+        icon: typeof icon === 'string' && icon.trim() ? icon.trim() : '🩺',
+        color: normalizedColor,
+        active: true
+      };
+      SPECIALTIES.push(specialty);
+      persistWristbandConfiguration();
+      return specialty;
+    }
+
+    function updateSpecialtyDetails(specId, { name, icon, color }) {
+      const specialty = SPECIALTIES.find(spec => spec.id === specId);
+      const normalizedName = normalizeSpecialtyName(name);
+      const normalizedColor = normalizeHexColor(color);
+      if (!specialty || !normalizedName || !normalizedColor || !WRISTBAND_PALETTE.includes(normalizedColor)) return false;
+      if (SPECIALTIES.some(spec => spec.id !== specId && normalizeSpecialtyName(spec.name).toLowerCase() === normalizedName.toLowerCase())) return false;
+
+      specialty.name = normalizedName;
+      specialty.icon = typeof icon === 'string' && icon.trim() ? icon.trim() : '🩺';
+      specialty.color = normalizedColor;
+      persistWristbandConfiguration();
+      return true;
+    }
+
+    function setSpecialtyAvailability(specId, active) {
+      const specialty = SPECIALTIES.find(spec => spec.id === specId);
+      if (!specialty) return false;
+      const willBeActive = Boolean(active);
+      const hasPendingPatients = patients.some(patient => patient.specialties.includes(specId) && patient.statusBySpec[specId] !== 'done');
+      if (!willBeActive && hasPendingPatients) return false;
+
+      specialty.active = willBeActive;
+      if (!willBeActive && typeof selectedSpecialties !== 'undefined') {
+        selectedSpecialties = selectedSpecialties.filter(id => id !== specId);
+        if (!selectedSpecialties.length) selectedSpecialties = ['all'];
+        localStorage.setItem('sas_selected_specs_v2', JSON.stringify(selectedSpecialties));
+      }
+      persistWristbandConfiguration();
+      return true;
+    }
+
+    function deleteSpecialty(specId) {
+      const specIndex = SPECIALTIES.findIndex(s => s.id === specId);
+      if (specIndex === -1) return false;
+      const hasPatients = patients.some(p => p.specialties.includes(specId));
+      if (hasPatients) return false;
+      if (SPECIALTIES.length <= 1) return false;
+
+      SPECIALTIES.splice(specIndex, 1);
+      if (typeof selectedSpecialties !== 'undefined') {
+        selectedSpecialties = selectedSpecialties.filter(id => id !== specId);
+        if (!selectedSpecialties.length) selectedSpecialties = ['all'];
+        localStorage.setItem('sas_selected_specs_v2', JSON.stringify(selectedSpecialties));
+      }
+      persistWristbandConfiguration();
+      return true;
+    }
+
+    let editingSpecialtyId = null;
+
     function openColorsModal() {
+      editingSpecialtyId = null;
       renderColorsCustomizer();
       openModal('colorsModal');
     }
 
     function renderColorsCustomizer() {
       const container = document.getElementById('colorsCustomizerList');
-      container.innerHTML = SPECIALTIES.map(spec => `
-        <div class="color-spec-row">
-          <div class="color-spec-info">
-            <span style="font-size:16px;">${spec.icon}</span>
-            <span>${spec.name}</span>
+      if (!container) return;
+
+      container.innerHTML = `
+        <!-- 1. Paleta de Pulseiras Físicas -->
+        <section class="wristband-palette-card">
+          <div class="palette-heading">
+            <strong>Paleta de Cores das Pulseiras</strong>
+            <span>Estoque físico de cordões / pulseiras</span>
           </div>
-          <div class="color-spec-controls">
-            <div class="color-presets">
-              ${COLOR_PRESETS.slice(0, 5).map(cp => `
-                <div class="color-preset-dot" style="background: ${cp};" onclick="changeSpecialtyColor('${spec.id}', '${cp}')"></div>
-              `).join('')}
+          <div class="wristband-palette-grid">
+            ${WRISTBAND_PALETTE.map(color => `
+              <div class="palette-color-item" title="Editar ${color}">
+                <input type="color" class="palette-color-input" value="${color}" aria-label="Editar cor ${color}" onchange="editPaletteColor('${color}', this.value)">
+                <span class="palette-color-code">${color}</span>
+                <button type="button" class="palette-delete-btn" aria-label="Remover cor ${color}" title="Remover cor da paleta" onclick="removePaletteColor('${color}')">✕</button>
+              </div>
+            `).join('')}
+          </div>
+          <div class="palette-add-row">
+            <input id="newWristbandColor" type="color" class="palette-color-input" value="#F25822" aria-label="Nova cor de pulseira">
+            <button type="button" class="btn btn-secondary" onclick="addPaletteColorFromInput()">+ Adicionar cor à paleta</button>
+          </div>
+        </section>
+
+        <!-- 2. Gestão de Especialidades (Equipe do Dia) -->
+        <section class="specialty-manage-card">
+          <div class="palette-heading">
+            <strong>Especialidades Médicas (Equipe do Dia)</strong>
+            <span>Presença dos profissionais hoje e cor da pulseira</span>
+          </div>
+
+          <div id="specialtiesManageList">
+            ${SPECIALTIES.map(spec => {
+              const isEditing = editingSpecialtyId === spec.id;
+              const pendingCount = patients.filter(p => p.specialties.includes(spec.id) && p.statusBySpec[spec.id] !== 'done').length;
+              const totalCount = patients.filter(p => p.specialties.includes(spec.id)).length;
+
+              if (isEditing) {
+                return `
+                  <div class="spec-edit-form-box">
+                    <div style="font-size: 11px; font-weight: 700; color: var(--sas-orange); margin-bottom: 8px;">✏️ Editando especialidade</div>
+                    <div class="spec-edit-form-grid">
+                      <input type="text" id="editSpecIcon_${spec.id}" value="${spec.icon}" maxlength="4" class="input-modern" style="width: 44px; text-align: center; font-size: 14px;" title="Ícone / Emoji">
+                      <input type="text" id="editSpecName_${spec.id}" value="${spec.name}" class="input-modern" style="flex: 1; min-width: 140px; font-size: 12px; padding: 6px 8px;" placeholder="Nome da especialidade">
+                      <select id="editSpecColor_${spec.id}" class="color-select" title="Cor da pulseira">
+                        ${WRISTBAND_PALETTE.map(color => `<option value="${color}" ${normalizeHexColor(spec.color) === color ? 'selected' : ''}>${color}</option>`).join('')}
+                      </select>
+                      <button type="button" class="btn btn-primary" style="padding: 6px 10px; font-size: 11px;" onclick="saveEditingSpecialty('${spec.id}')">Salvar</button>
+                      <button type="button" class="btn btn-undo" style="padding: 6px 10px; font-size: 11px;" onclick="cancelEditingSpecialty()">Cancelar</button>
+                    </div>
+                  </div>
+                `;
+              }
+
+              const isActive = spec.active !== false;
+              return `
+                <div class="color-spec-row ${isActive ? '' : 'inactive-spec'}">
+                  <div class="color-spec-info">
+                    <span style="font-size: 16px;">${spec.icon}</span>
+                    <span class="spec-name-label">${spec.name}</span>
+                    <span class="spec-status-pill ${isActive ? 'active' : 'inactive'}">
+                      ${isActive ? '🟢 Presente' : '⚪ Ausente'}
+                    </span>
+                  </div>
+                  <div class="color-spec-controls">
+                    <button type="button" class="btn ${isActive ? 'btn-undo' : 'btn-secondary'}" style="padding: 4px 7px; font-size: 10px;" title="${isActive ? 'Desativar se o profissional não estiver presente hoje' : 'Ativar especialidade'}" onclick="toggleSpecialtyAvailabilityFromModal('${spec.id}')">
+                      ${isActive ? 'Ausente' : 'Presente'}
+                    </button>
+                    <span class="color-preview-dot" style="background: ${spec.color};" aria-hidden="true"></span>
+                    <select class="color-select" aria-label="Cor de ${spec.name}" onchange="changeSpecialtyColor('${spec.id}', this.value)" title="Alterar cor da pulseira">
+                      ${WRISTBAND_PALETTE.map(color => `<option value="${color}" ${normalizeHexColor(spec.color) === color ? 'selected' : ''}>${color}</option>`).join('')}
+                    </select>
+                    <button type="button" class="btn btn-undo" style="padding: 4px 7px; font-size: 11px;" title="Editar nome e ícone" onclick="startEditingSpecialty('${spec.id}')">✏️</button>
+                    <button type="button" class="btn btn-undo" style="padding: 4px 7px; font-size: 11px;" title="${totalCount > 0 ? 'Não é possível remover pois há pacientes com esta especialidade' : 'Excluir especialidade'}" onclick="deleteSpecialtyFromModal('${spec.id}')" ${totalCount > 0 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>🗑️</button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- 3. Adicionar Nova Especialidade -->
+          <div class="spec-add-box">
+            <div style="font-size: 11.5px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">+ Adicionar Nova Especialidade</div>
+            <div class="spec-add-grid">
+              <input type="text" id="newSpecIcon" value="🩺" maxlength="4" class="input-modern" style="width: 44px; text-align: center; font-size: 14px;" title="Ícone / Emoji">
+              <input type="text" id="newSpecName" placeholder="Ex: Dermatologia, Nutrição..." class="input-modern" style="flex: 1; min-width: 140px; font-size: 11.5px; padding: 6px 8px;">
+              <select id="newSpecColor" class="color-select" title="Cor da pulseira">
+                ${WRISTBAND_PALETTE.map(color => `<option value="${color}">${color}</option>`).join('')}
+              </select>
+              <button type="button" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;" onclick="addSpecialtyFromModal()">+ Criar Especialidade</button>
             </div>
-            <input type="color" class="color-picker-input" value="${spec.color}" onchange="changeSpecialtyColor('${spec.id}', this.value)">
           </div>
-        </div>
-      `).join('');
+        </section>
+      `;
+    }
+
+    function startEditingSpecialty(specId) {
+      editingSpecialtyId = specId;
+      renderColorsCustomizer();
+    }
+
+    function cancelEditingSpecialty() {
+      editingSpecialtyId = null;
+      renderColorsCustomizer();
+    }
+
+    function saveEditingSpecialty(specId) {
+      const nameInput = document.getElementById(`editSpecName_${specId}`);
+      const iconInput = document.getElementById(`editSpecIcon_${specId}`);
+      const colorSelect = document.getElementById(`editSpecColor_${specId}`);
+      if (!nameInput || !colorSelect) return;
+
+      const name = nameInput.value.trim();
+      const icon = iconInput ? iconInput.value.trim() : '🩺';
+      const color = colorSelect.value;
+
+      if (!name) {
+        alert('Por favor, informe o nome da especialidade.');
+        return;
+      }
+
+      if (!updateSpecialtyDetails(specId, { name, icon, color })) {
+        alert('Não foi possível atualizar: verifique se já existe outra especialidade com esse nome.');
+        return;
+      }
+
+      editingSpecialtyId = null;
+      renderColorsCustomizer();
+      render();
+      vibrate();
+    }
+
+    function addSpecialtyFromModal() {
+      const nameInput = document.getElementById('newSpecName');
+      const iconInput = document.getElementById('newSpecIcon');
+      const colorSelect = document.getElementById('newSpecColor');
+      if (!nameInput || !colorSelect) return;
+
+      const name = nameInput.value.trim();
+      const icon = iconInput && iconInput.value.trim() ? iconInput.value.trim() : '🩺';
+      const color = colorSelect.value;
+
+      if (!name) {
+        alert('Por favor, digite o nome da nova especialidade.');
+        return;
+      }
+
+      const created = addSpecialty({ name, icon, color });
+      if (!created) {
+        alert('Já existe uma especialidade com esse nome ou a cor informada é inválida.');
+        return;
+      }
+
+      nameInput.value = '';
+      renderColorsCustomizer();
+      render();
+      vibrate();
+    }
+
+    function toggleSpecialtyAvailabilityFromModal(specId) {
+      const spec = SPECIALTIES.find(s => s.id === specId);
+      if (!spec) return;
+
+      const willBeActive = spec.active === false;
+      const pendingCount = patients.filter(p => p.specialties.includes(specId) && p.statusBySpec[specId] !== 'done').length;
+
+      if (!willBeActive && pendingCount > 0) {
+        alert(`Não é possível desativar "${spec.name}" agora porque existem ${pendingCount} paciente(s) com atendimento pendente nesta fila hoje.`);
+        return;
+      }
+
+      setSpecialtyAvailability(specId, willBeActive);
+      renderColorsCustomizer();
+      render();
+      vibrate();
+    }
+
+    function deleteSpecialtyFromModal(specId) {
+      const spec = SPECIALTIES.find(s => s.id === specId);
+      if (!spec) return;
+
+      if (!confirm(`Deseja realmente excluir a especialidade "${spec.name}"?`)) return;
+
+      if (!deleteSpecialty(specId)) {
+        alert(`Não foi possível remover "${spec.name}". Verifique se há pacientes associados a ela ou se é a única especialidade existente.`);
+        return;
+      }
+
+      renderColorsCustomizer();
+      render();
+      vibrate();
+    }
+
+    function addPaletteColorFromInput() {
+      const input = document.getElementById('newWristbandColor');
+      if (!input) return;
+      if (!addWristbandColor(input.value)) {
+        alert('Essa cor já existe na paleta. Escolha outra cor no espectro.');
+        return;
+      }
+      renderColorsCustomizer();
+      render();
+      vibrate();
+    }
+
+    function editPaletteColor(previousColor, nextColor) {
+      if (!updateWristbandColor(previousColor, nextColor)) {
+        alert('Não foi possível atualizar: escolha uma cor diferente das já existentes na paleta.');
+        renderColorsCustomizer();
+        return;
+      }
+      renderColorsCustomizer();
+      render();
+      vibrate();
+    }
+
+    function removePaletteColor(color) {
+      if (!deleteWristbandColor(color)) {
+        alert('Essa cor ainda está atribuída a uma especialidade. Selecione outra cor para ela antes de remover.');
+        return;
+      }
+      renderColorsCustomizer();
+      render();
+      vibrate();
     }
 
     function changeSpecialtyColor(specId, newColor) {
-      const spec = SPECIALTIES.find(s => s.id === specId);
-      if (spec) {
-        spec.color = newColor;
-        saveSpecialties();
-        renderColorsCustomizer();
-        vibrate();
-      }
+      if (!assignSpecialtyWristbandColor(specId, newColor)) return;
+      renderColorsCustomizer();
+      render();
+      vibrate();
     }
 
     function resetDefaultColors() {
+      if (!confirm('Deseja restaurar a paleta e a lista de especialidades para a configuração padrão da expedição?')) return;
       SPECIALTIES = JSON.parse(JSON.stringify(DEFAULT_SPECIALTIES));
-      saveSpecialties();
+      WRISTBAND_PALETTE = [...DEFAULT_WRISTBAND_PALETTE];
+      persistWristbandConfiguration();
       renderColorsCustomizer();
+      render();
       vibrate();
     }
 
@@ -1860,9 +2476,14 @@
       renderStats();
     }
 
+    function getVisibleSpecialties() {
+      return SPECIALTIES.filter(spec => spec.active !== false || patients.some(p => p.specialties.includes(spec.id) && p.statusBySpec[spec.id] !== 'done'));
+    }
+
     function renderSpecialtyFilters() {
       const container = document.getElementById('specialtyFilterBar');
       const isAllSelected = selectedSpecialties.includes('all') || selectedSpecialties.length === 0;
+      const visibleSpecs = getVisibleSpecialties();
 
       let html = `
         <button class="spec-pill ${isAllSelected ? 'active' : ''}" onclick="toggleSpecialtyFilter('all')">
@@ -1870,7 +2491,7 @@
         </button>
       `;
 
-      SPECIALTIES.forEach(spec => {
+      visibleSpecs.forEach(spec => {
         const count = patients.filter(p => p.specialties.includes(spec.id) && p.statusBySpec[spec.id] !== 'done').length;
         const isSelected = !isAllSelected && selectedSpecialties.includes(spec.id);
 
@@ -1916,6 +2537,13 @@
       vibrate();
     }
 
+    function toggleCompletedCircuits() {
+      completedCircuitsExpanded = !completedCircuitsExpanded;
+      localStorage.setItem('sas_completed_circuits_expanded', JSON.stringify(completedCircuitsExpanded));
+      render();
+      vibrate();
+    }
+
     function isCircuitComplete(patient) {
       return patient.specialties.length > 0 && patient.specialties.every(specId => patient.statusBySpec[specId] === 'done');
     }
@@ -1926,6 +2554,25 @@
 
     function getCompleteCircuitPatients() {
       return patients.filter(isCircuitComplete);
+    }
+
+    function getInterleavedWaitingList(list) {
+      if (!Array.isArray(list)) return [];
+      const priorityList = list.filter(p => p.isPriority);
+      const regularList = list.filter(p => !p.isPriority);
+      const result = [];
+      let pIdx = 0;
+      let rIdx = 0;
+
+      while (pIdx < priorityList.length || rIdx < regularList.length) {
+        if (pIdx < priorityList.length) {
+          result.push(priorityList[pIdx++]);
+        }
+        if (rIdx < regularList.length) {
+          result.push(regularList[rIdx++]);
+        }
+      }
+      return result;
     }
 
     function getDashboardCounts() {
@@ -1949,7 +2596,7 @@
       const isAll = selectedSpecialties.includes('all') || selectedSpecialties.length === 0;
 
       const specsToRender = isAll 
-        ? SPECIALTIES 
+        ? getVisibleSpecialties() 
         : SPECIALTIES.filter(s => selectedSpecialties.includes(s.id));
 
       let html = '';
@@ -1957,6 +2604,8 @@
       specsToRender.forEach(spec => {
         const specPatients = patients.filter(p => p.specialties.includes(spec.id));
         const waitingList = specPatients.filter(p => p.statusBySpec[spec.id] === 'waiting');
+        const orderedWaitingList = getInterleavedWaitingList(waitingList);
+        const priorityWaitingCount = waitingList.filter(p => p.isPriority).length;
         const doorList = specPatients.filter(p => p.statusBySpec[spec.id] === 'door');
         const inRoomList = specPatients.filter(p => p.statusBySpec[spec.id] === 'in_room');
         const completedList = getCompletedPatientsBySpec(spec.id);
@@ -1990,11 +2639,14 @@
                 <div class="queue-col col-tenda">
                   <div class="queue-title">
                     <span>1. Aguardando na Tenda</span>
-                    <span class="queue-count">${waitingList.length}</span>
+                    <div style="display:inline-flex; align-items:center; gap:5px;">
+                      ${priorityWaitingCount > 0 ? `<span class="priority-queue-badge" title="Fila com alternância 1:1 (${priorityWaitingCount} preferenciais)">⭐ ${priorityWaitingCount} pref</span>` : ''}
+                      <span class="queue-count">${waitingList.length}</span>
+                    </div>
                   </div>
                   <div class="patient-list">
-                    ${waitingList.length === 0 ? '<div class="empty-state">Nenhum paciente aguardando</div>' : ''}
-                    ${waitingList.map(p => renderPatientCard(p, spec, 'waiting')).join('')}
+                    ${orderedWaitingList.length === 0 ? '<div class="empty-state">Nenhum paciente aguardando</div>' : ''}
+                    ${orderedWaitingList.map(p => renderPatientCard(p, spec, 'waiting')).join('')}
                   </div>
                 </div>
 
@@ -2010,22 +2662,22 @@
                   </div>
                 </div>
 
-                <!-- Coluna 3: Em Atendimento -->
+                <!-- Coluna 3: Em Consulta / Procedimento -->
                 <div class="queue-col col-sala">
-                  <div class="queue-title" style="color: #3B82F6;">
-                    <span>3. Em Consulta com Médico</span>
-                    <span class="queue-count" style="background: rgba(59,130,246,0.2); color: #3B82F6;">${inRoomList.length}</span>
+                  <div class="queue-title" style="color: #10B981;">
+                    <span>3. Em Consulta</span>
+                    <span class="queue-count" style="background: rgba(16,185,129,0.2); color: #10B981;">${inRoomList.length}</span>
                   </div>
                   <div class="patient-list">
-                    ${inRoomList.length === 0 ? '<div class="empty-state">Consultório livre</div>' : ''}
+                    ${inRoomList.length === 0 ? '<div class="empty-state">Nenhum paciente em consulta</div>' : ''}
                     ${inRoomList.map(p => renderPatientCard(p, spec, 'in_room')).join('')}
                   </div>
                 </div>
 
-                <!-- Coluna 4: Finalizados nesta especialidade -->
-                <div class="queue-col col-finalizados">
+                <!-- Coluna 4: Concluído na Especialidade -->
+                <div class="queue-col col-concluido">
                   <div class="queue-title" style="color: #64748B;">
-                    <span>4. Finalizados</span>
+                    <span>4. Finalizados nesta área</span>
                     <span class="queue-count" style="background: rgba(100,116,139,0.15); color: #64748B;">${completedList.length}</span>
                   </div>
                   <div class="patient-list">
@@ -2042,13 +2694,18 @@
       if (isAll) {
         const completedCircuits = getCompleteCircuitPatients();
         html += `
-          <section class="completed-circuits-section">
-            <div class="queue-title" style="color: #64748B;">
-              <span>🏁 Circuitos Finalizados</span>
-              <span class="queue-count" style="background: rgba(100,116,139,0.15); color: #64748B;">${completedCircuits.length}</span>
-            </div>
-            <div class="completed-circuits-grid">
-              ${completedCircuits.length === 0 ? '<div class="empty-state">Nenhum paciente concluiu todas as especialidades ainda</div>' : completedCircuits.map(renderCompletedCircuitCard).join('')}
+          <section class="completed-circuits-section ${completedCircuitsExpanded ? 'expanded' : ''}">
+            <button id="completedCircuitsHeader" type="button" class="completed-circuits-header" onclick="toggleCompletedCircuits()" aria-expanded="${completedCircuitsExpanded}" aria-controls="completedCircuitsBody">
+              <span class="queue-title" style="color: #64748B;">
+                <span>🏁 Circuitos Finalizados</span>
+                <span class="queue-count" style="background: rgba(100,116,139,0.15); color: #64748B;">${completedCircuits.length}</span>
+              </span>
+              <span class="expand-chevron" aria-hidden="true">▼</span>
+            </button>
+            <div id="completedCircuitsBody" class="completed-circuits-body">
+              <div class="completed-circuits-grid">
+                ${completedCircuits.length === 0 ? '<div class="empty-state">Nenhum paciente concluiu todas as especialidades ainda</div>' : completedCircuits.map(renderCompletedCircuitCard).join('')}
+              </div>
             </div>
           </section>
         `;
@@ -2087,6 +2744,7 @@
           <div class="patient-top">
             <div class="patient-name-line">
               <span class="patient-name">${patient.name}</span>
+              ${patient.isPriority ? '<span class="priority-badge" title="Atendimento Preferencial (Idoso, Gestante, PCD, Criança de colo)">⭐ Preferencial</span>' : ''}
               <span class="wristband-tags">
                 ${patient.specialties.map(sId => {
                   const spec = SPECIALTIES.find(s => s.id === sId) || { color: '#94A3B8', name: sId };
@@ -2155,6 +2813,7 @@
           <div class="patient-top">
             <div class="patient-name-line">
               <span class="patient-name">${patient.name}</span>
+              ${patient.isPriority ? '<span class="priority-badge" title="Atendimento Preferencial (Idoso, Gestante, PCD, Criança de colo)">⭐ Preferencial</span>' : ''}
               <span class="wristband-tags">
                 ${patient.specialties.map(specId => {
                   const spec = SPECIALTIES.find(s => s.id === specId) || { color: '#64748B', name: specId };
@@ -2382,7 +3041,10 @@
             <div class="patient-card">
               <div class="patient-top">
                 <div>
-                  <div class="patient-name">${p.name}</div>
+                  <div class="patient-name-line">
+                    <span class="patient-name">${p.name}</span>
+                    ${p.isPriority ? '<span class="priority-badge" title="Atendimento Preferencial (Idoso, Gestante, PCD, Criança de colo)">⭐ Preferencial</span>' : ''}
+                  </div>
                   <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Localização: ${locText}</div>
                 </div>
                 <span class="patient-id">${p.id}</span>
