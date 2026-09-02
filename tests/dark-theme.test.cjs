@@ -356,14 +356,18 @@ test('painel de circuitos finalizados possui atributos de acessibilidade aria-co
   assert.match(source, /id="completedCircuitsBody"/);
 });
 
-function getInterleavedWaitingListForTest(list) {
-  const start = source.indexOf('function getInterleavedWaitingList(');
-  const end = source.indexOf('function getDashboardCounts()', start);
-  assert.notEqual(start, -1, 'getInterleavedWaitingList deve existir');
-  assert.notEqual(end, -1, 'getDashboardCounts deve seguir getInterleavedWaitingList');
+function getInterleavedWaitingListForTest(list, ratio = { priority: 1, regular: 1 }) {
+  const normalizeStart = source.indexOf('function normalizePriorityQueueRatio(');
+  const normalizeEnd = source.indexOf('function getPriorityQueueRatioLabel(', normalizeStart);
+  const queueStart = source.indexOf('function getInterleavedWaitingList(');
+  const queueEnd = source.indexOf('function getDashboardCounts()', queueStart);
+  assert.notEqual(normalizeStart, -1, 'normalizePriorityQueueRatio deve existir');
+  assert.notEqual(normalizeEnd, -1, 'getPriorityQueueRatioLabel deve seguir a normalização');
+  assert.notEqual(queueStart, -1, 'getInterleavedWaitingList deve existir');
+  assert.notEqual(queueEnd, -1, 'getDashboardCounts deve seguir os helpers da fila preferencial');
 
-  const sandbox = { list, result: null };
-  vm.runInNewContext(`${source.slice(start, end)}\nresult = getInterleavedWaitingList(list);`, sandbox);
+  const sandbox = { list, priorityQueueRatio: ratio, result: null };
+  vm.runInNewContext(`${source.slice(normalizeStart, normalizeEnd)}\n${source.slice(queueStart, queueEnd)}\nresult = getInterleavedWaitingList(list, priorityQueueRatio);`, sandbox);
   return sandbox.result;
 }
 
@@ -411,5 +415,30 @@ test('pacientes demo possuem identificação de preferencial e badge visual no m
   assert.match(source, /priority-badge/);
   assert.match(source, /⭐ Preferencial/);
   assert.match(source, /priority-queue-badge/);
+});
+
+test('proporção configurável aplica blocos preferencial:geral e preserva FIFO em cada grupo', () => {
+  const mixedList = [
+    { id: 'P-1', isPriority: true }, { id: 'P-2', isPriority: true },
+    { id: 'P-3', isPriority: true }, { id: 'P-4', isPriority: true },
+    { id: 'R-1', isPriority: false }, { id: 'R-2', isPriority: false },
+    { id: 'R-3', isPriority: false }, { id: 'R-4', isPriority: false }
+  ];
+
+  assert.deepEqual(
+    Array.from(getInterleavedWaitingListForTest(mixedList, { priority: 2, regular: 1 }), p => p.id),
+    ['P-1', 'P-2', 'R-1', 'P-3', 'P-4', 'R-2', 'R-3', 'R-4']
+  );
+  assert.deepEqual(
+    Array.from(getInterleavedWaitingListForTest(mixedList, { priority: 1, regular: 2 }), p => p.id),
+    ['P-1', 'R-1', 'R-2', 'P-2', 'R-3', 'R-4', 'P-3', 'P-4']
+  );
+});
+
+test('configuração de proporção possui controles persistidos nas Configurações', () => {
+  assert.match(source, /sas_priority_queue_ratio/);
+  assert.match(source, /id="priorityRatioInput"/);
+  assert.match(source, /id="regularRatioInput"/);
+  assert.match(source, /function savePriorityQueueRatio\(\)/);
 });
 

@@ -56,11 +56,12 @@ quem está em consulta, especialidade por especialidade.
 > outra consulta. Antes de encaminhar direto, a equipe ainda deve confirmar que
 > a porta está apta a recebê-lo.
 
-### Gestão de Pacientes Preferenciais (Intercalação 1:1)
+### Gestão de Pacientes Preferenciais (Proporção Configurável)
 
 - **Identificação Visual:** Pacientes prioritários (idosos, gestantes, PCDs, crianças de colo) recebem o badge `⭐ Preferencial` com destaque visual em seus cards, no modal de busca e nos circuitos finalizados.
-- **Intercalação na Fila da Tenda:** A lista de espera da Tenda organiza automaticamente a chamada alternando **1 paciente preferencial para 1 paciente geral** (preservando o FIFO de cada categoria). Isso garante prioridade de atendimento sem causar a inanição (*starvation*) dos pacientes gerais.
-- **Contador em Tempo Real:** O cabeçalho da coluna da Tenda exibe o número de pacientes preferenciais aguardando (ex: `⭐ 2 pref`).
+- **Intercalação na Fila da Tenda:** A lista de espera organiza a chamada por blocos, preservando o FIFO de cada categoria e evitando que os pacientes gerais fiquem sem atendimento. A proporção inicial é **1 preferencial : 1 geral**.
+- **Ajuste por Expedição:** Em **Configurações → Ordem de chamada na Tenda**, a coordenação pode alterar cada lado da proporção de `1` a `10` (por exemplo, `2:1` ou `1:2`). A escolha fica salva no navegador usado na operação e se aplica de imediato a todas as especialidades.
+- **Contador em Tempo Real:** O cabeçalho da coluna da Tenda exibe tanto a quantidade de preferenciais aguardando quanto a proporção ativa (ex.: `⭐ 2 pref · 2:1`).
 
 ### Aba "Temporizador Ver Magia"
 
