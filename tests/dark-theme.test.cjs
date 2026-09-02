@@ -22,6 +22,12 @@ test('tema escuro usa superfícies em grafite neutro', () => {
   }
 });
 
+test('script principal do app possui sintaxe JavaScript válida', () => {
+  const scripts = [...source.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(match => match[1]);
+  assert.equal(scripts.length, 1, 'o app deve possuir um único script embutido');
+  assert.doesNotThrow(() => new vm.Script(scripts[0]));
+});
+
 test('UI de volantes possui visão geral minimizável por linha', () => {
   assert.match(source, /class="specialty-row-card/);
   assert.match(source, /toggleExpandSpecialty/);
